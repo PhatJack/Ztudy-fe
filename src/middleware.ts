@@ -9,17 +9,27 @@ export function middleware(request: NextRequest) {
   const currentPath = request.nextUrl.pathname;
   const isProtected = protectedRoutes.includes(currentPath);
   if (currentPath === "/") {
-    return NextResponse.redirect("/dashboard");
+    return NextResponse.redirect(new URL("/dashboard", request.nextUrl.origin));
   }
-  if (isProtected) {
-    const token = cookies().get(COOKIE_KEY_ACCESS_TOKEN)?.value;
-    if (!token) {
-      return NextResponse.redirect("/login");
-    }
-  }
+  // if (isProtected) {
+  //   const token = cookies().get(COOKIE_KEY_ACCESS_TOKEN)?.value;
+  //   if (!token) {
+  //     return NextResponse.redirect(
+  //       new URL("/login", request.nextUrl.origin).toString()
+  //     );
+  //   }
+  // }
 }
 
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher: "/about/:path*",
+  matcher: [
+    "/dashboard",
+    "/profile",
+    "/solo",
+    "/study-goal",
+    "/leaderboard",
+    "/login",
+    "/register",
+  ],
 };

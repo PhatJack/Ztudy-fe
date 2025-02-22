@@ -1,12 +1,13 @@
 "use client";
 import Link from "next/link";
+import { Button } from "../ui/button";
 
 export default function NotFound() {
   return (
     <>
-      <div className="grid h-[100vh] place-items-center bg-white dark:bg-gray-800 px-6 py-24 sm:py-32 lg:px-8">
+      <div className="w-full grid h-[100vh] place-items-center bg-white dark:bg-gray-800 px-6 py-24 sm:py-32 lg:px-8">
         <div className="text-center">
-          <p className="text-base font-semibold text-indigo-600 dark:text-indigo-400">
+          <p className="text-base font-semibold text-primary">
             404
           </p>
           <h1 className="mt-4 text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-5xl">
@@ -16,13 +17,11 @@ export default function NotFound() {
             Sorry, we couldn’t find the page you’re looking for.
           </p>
           <div className="mt-10 flex items-center justify-center gap-x-6">
-            <Link
-              href="/"
-              replace={true}
-              className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400"
-            >
-              Go back home
-            </Link>
+            <Button asChild>
+              <Link href="/" replace={true} className="font-semibold">
+                Go back home
+              </Link>
+            </Button>
             <a
               href="#"
               className="text-sm font-semibold text-gray-900 dark:text-gray-300"
