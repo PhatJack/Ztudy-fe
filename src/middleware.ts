@@ -8,6 +8,7 @@ export function middleware(request: NextRequest) {
   const protectedRoutes = ["/dashboard", "/profile"];
   const currentPath = request.nextUrl.pathname;
   const isProtected = protectedRoutes.includes(currentPath);
+	console.log("currentPath", request.nextUrl);
   if (currentPath === "/") {
     return NextResponse.redirect(new URL("/dashboard", request.nextUrl.origin));
   }
