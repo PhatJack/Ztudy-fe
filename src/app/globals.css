@@ -12,6 +12,8 @@ body {
 	}
 }
 
+/* Theme: Sleek and Sexy */
+
 @layer base {
 	:root {
 		--background: 0 0% 98%;

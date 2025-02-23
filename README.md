@@ -45,14 +45,13 @@ This web application was built for study around the world can study online toget
 	* Django
 ```
 
-## Website Functions:
+## How to run
 
-```bash
-#USER
+ ```sh
+	pnpm i
+ ```
 
-#ADMIN
 
-```
 
 ### Make sure to star the repository if you find it helpful!
 

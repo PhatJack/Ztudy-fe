@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import DefaultLayout from "@/components/layout/DefaultLayout";
 import { Nunito } from "next/font/google";
+import Providers from "./providers";
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -45,7 +46,7 @@ export default function RootLayout({
       <body
         className={`${nunito.className} ${geistSans.variable} ${geistMono.variable} antialiased min-h-screen relative`}
       >
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

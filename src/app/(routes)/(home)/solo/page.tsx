@@ -1,5 +1,5 @@
 export default function Solo() {
-  return <div className="max-h-screen p-10 relative">
-		
+  return <div className="w-full max-h-screen relative">
+
 	</div>;
 }

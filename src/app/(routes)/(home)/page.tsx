@@ -1,5 +1,5 @@
-import React from "react";
+import { redirect } from "next/navigation";
 
 export default function Home() {
-  return <div className="h-[300vh]">Home Page</div>;
+  redirect("/dashboard");
 }
