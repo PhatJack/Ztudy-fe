@@ -16,7 +16,7 @@ export default function SidebarMenu() {
             href={item.href}
             className={cn(
               "flex flex-col justify-center items-center gap-1 rounded-md p-2 hover:bg-primary/10 transition-all",
-              isActive(item.href) && "bg-primary text-white"
+              isActive(item.href) && "bg-primary text-white hover:bg-primary/90"
             )}
           >
             <span>

@@ -42,9 +42,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html suppressHydrationWarning={true} lang="en">
       <body
-        className={`${nunito.className} ${geistSans.variable} ${geistMono.variable} antialiased min-h-screen relative`}
+        className={`${nunito.className} ${geistSans.variable} ${geistMono.variable} antialiased relative`}
       >
         <Providers>{children}</Providers>
       </body>

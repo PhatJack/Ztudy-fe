@@ -1,11 +1,11 @@
 import Link from "next/link";
-import React from "react";
+import React, { memo } from "react";
 import SidebarMenu from "./components/sidebar-menu";
 import { ModeToggle } from "../mode-toggle";
 
-export default function Sidebar() {
+function Sidebar() {
   return (
-    <div className="md:max-w-24 h-screen sticky top-0 p-2 box-border flex flex-col justify-between items-center bg-white dark:bg-background">
+    <div className="md:max-w-24 h-full fixed left-0 top-0 z-[100] p-2 box-border hidden md:flex flex-col justify-between items-center bg-white dark:bg-background border-r border-gray-200">
       <div className="w-full h-full flex flex-col justify-start items-center gap-4">
         <div className="w-full flex flex-col justify-center items-center">
           <Link
@@ -31,3 +31,4 @@ export default function Sidebar() {
     </div>
   );
 }
+export default memo(Sidebar);

@@ -1,3 +1,3 @@
 export default function Dashboard() {
-	return <div className="">Dashboard page</div>
+	return <div className="h-[300vh]">Dashboard page</div>
 }

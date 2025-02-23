@@ -1,14 +1,11 @@
 "use client";
-import React, { use, useEffect } from "react";
-import { Toaster } from "react-hot-toast";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import NextTopLoader from "nextjs-toploader";
+import React from "react";
+import { QueryClient } from "@tanstack/react-query";
 import Sidebar from "../includes/sidebar";
 import { Separator } from "../ui/separator";
 import Header from "../includes/header";
-import { redirect, usePathname } from "next/navigation";
-
-const queryClient = new QueryClient();
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 const DefaultLayout = ({
   children,
@@ -20,14 +17,22 @@ const DefaultLayout = ({
 
   return (
     <>
-      <div className="relative h-full w-full flex flex-col md:flex-row">
+      <div className={cn("overflow-hidden", isSolo && "size-full")}>
         <Sidebar />
-        <Separator orientation="vertical" />
-        <div className="w-full flex flex-col">
-          {!isSolo && <Header />}
-          <Separator />
+        <main
+          className={cn(
+            "ml-24 h-full w-full flex flex-col relative box-border",
+            isSolo ? "p-5" : "p-0"
+          )}
+        >
+          {/* {!isSolo && (
+              <>
+                <Header />
+                <Separator />
+              </>
+            )} */}
           {children}
-        </div>
+        </main>
       </div>
     </>
   );

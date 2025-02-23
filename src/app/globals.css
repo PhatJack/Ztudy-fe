@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+html,
+body {
+	height: 100%;
+}
+
 body {
 	font-family: Arial, Helvetica, sans-serif;
 }
@@ -74,7 +79,7 @@ body {
 
 @layer base {
 	* {
-		@apply border-border;
+		@apply border-border outline-ring/50;
 	}
 
 	body {
@@ -82,14 +87,15 @@ body {
 	}
 }
 
-
-
-@layer base {
-	* {
-		@apply border-border outline-ring/50;
+@media(max-aspect-ratio: 16 / 9) {
+	#video-player {
+		width: 177.77777778vh;
+		height: 120% !important
 	}
+}
 
-	body {
-		@apply bg-background text-foreground;
+@media(min-aspect-ratio: 16/9) {
+	#video-player {
+		height: 86.25vw !important
 	}
 }
