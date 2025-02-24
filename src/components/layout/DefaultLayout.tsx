@@ -17,20 +17,20 @@ const DefaultLayout = ({
 
   return (
     <>
-      <div className={cn("overflow-hidden", isSolo && "size-full")}>
+      <div className={cn("overflow-hidden")}>
         <Sidebar />
         <main
           className={cn(
-            "ml-24 h-full w-full flex flex-col relative box-border",
+            "ml-24 h-full flex flex-col relative box-border",
             isSolo ? "p-5" : "p-0"
           )}
         >
-          {/* {!isSolo && (
-              <>
-                <Header />
-                <Separator />
-              </>
-            )} */}
+          {!isSolo && (
+            <>
+              <Header />
+              <Separator />
+            </>
+          )}
           {children}
         </main>
       </div>
