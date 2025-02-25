@@ -26,7 +26,7 @@ This web application was built for study around the world can study online toget
 ### Frontend
 
 ```bash
-	* NextJS
+    * NextJS
     * React
     * Typescript
     * Redux Toolkit
@@ -42,13 +42,13 @@ This web application was built for study around the world can study online toget
 
 ```bash
     * Python 
-	* Django
+    * Django
 ```
 
 ## How to run
 
  ```sh
-	pnpm i
+     * pnpm i
  ```
 
 
