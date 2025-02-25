@@ -10,7 +10,7 @@ ID          | Full Name
 3121410379    Nguyen Tien Phat
 3121410401    Tran Nhu Phu Quang
 3121410066    Bui Hong Bao
-3121410070	  Hoang Gia Bao
+3121410070    Hoang Gia Bao
 31214100      Mai Trung Chinh
 
 
@@ -26,7 +26,7 @@ This web application was built for study around the world can study online toget
 ### Frontend
 
 ```bash
-	* NextJS
+    * NextJS
     * React
     * Typescript
     * Redux Toolkit
@@ -42,13 +42,13 @@ This web application was built for study around the world can study online toget
 
 ```bash
     * Python 
-	* Django
+    * Django
 ```
 
 ## How to run
 
  ```sh
-	pnpm i
+     * pnpm i
  ```
 
 
