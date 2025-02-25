@@ -4,6 +4,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import NextTopLoader from "nextjs-toploader";
 import { Toaster } from "react-hot-toast";
 import { getQueryClient } from "./get-query-client";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const queryClient = getQueryClient();
 
@@ -21,7 +22,7 @@ export default function Providers({
     >
       <QueryClientProvider client={queryClient}>
         <NextTopLoader color="hsl(340 100% 60%)" />
-        {children}
+        <TooltipProvider>{children}</TooltipProvider>
         <Toaster />
       </QueryClientProvider>
     </ThemeProvider>

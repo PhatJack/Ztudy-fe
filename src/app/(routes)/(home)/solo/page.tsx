@@ -4,10 +4,16 @@ import {
   Image,
   Target,
   TextQuote,
-  Watch,
 } from "lucide-react";
 import BackgroundIframe from "./components/BackgroundIframe";
 import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import TooltipTemplate from "@/components/tooltip/TooltipTemplate";
 
 export default function Solo() {
   const menuButton: {
@@ -34,7 +40,7 @@ export default function Solo() {
 
   return (
     <>
-      <BackgroundIframe src="https://www.youtube.com/watch?v=WnY-KZJ0uZg" />
+      <BackgroundIframe src="https://www.youtube.com/watch?v=ntLop32pYd0&list=RD8D9d9weVQnI&index=2" />
       <div className="relative">
         <div className="relative size-full flex justify-between items-center h-12 mb-4">
           <div className="flex gap-4">
@@ -67,17 +73,17 @@ export default function Solo() {
           </div>
           <div className="flex gap-4">
             {menuButton.map((item, index) => (
-              <Button
-                key={index}
-                title={item.label}
-                className="w-12 h-12 hover:bg-background/90 hover:text-foreground"
-                variant={"outline"}
-                size={"icon"}
-              >
-                <span className="text-xl">
-                  <item.icon />
-                </span>
-              </Button>
+              <TooltipTemplate content={item.label} key={index}>
+                <Button
+                  className="w-12 h-12 hover:bg-background/90 hover:text-foreground [&_svg]:size-5"
+                  variant={"outline"}
+                  size={"icon"}
+                >
+                  <span className="text-xl">
+                    <item.icon />
+                  </span>
+                </Button>
+              </TooltipTemplate>
             ))}
           </div>
         </div>

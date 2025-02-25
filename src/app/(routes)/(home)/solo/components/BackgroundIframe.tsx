@@ -1,4 +1,7 @@
+"use client";
+import { useGetDetailYoutubeApi } from "@/service/youtube/get-detail-youtube.api";
 import { UrlToEmbeded } from "@/util/urlToEmbed";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 
 interface Props {
   src: string;
@@ -25,14 +28,17 @@ interface Props {
  */
 
 export default function BackgroundIframe({ src }: Props) {
+  const video = UrlToEmbeded(src);
+  const { data, error } = useQuery(useGetDetailYoutubeApi(video?.videoId));
+
   return (
     <div>
       <iframe
         id="video-player"
         width={640}
         height={360}
-        src={UrlToEmbeded(src)}
-        title="YouTube video player"
+        src={video?.embedUrl}
+        title={data?.items[0].snippet.title}
         frameBorder="0"
         allow="accelerometer; autoplay;clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         referrerPolicy="strict-origin-when-cross-origin"
