@@ -21,7 +21,7 @@ const DefaultLayout = ({
         <Sidebar />
         <main
           className={cn(
-            "ml-24 h-full flex flex-col relative box-border",
+            "md:ml-24 h-full flex flex-col relative box-border",
             isSolo ? "p-5" : "p-0"
           )}
         >

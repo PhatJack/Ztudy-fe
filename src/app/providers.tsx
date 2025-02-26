@@ -5,6 +5,7 @@ import NextTopLoader from "nextjs-toploader";
 import { Toaster } from "react-hot-toast";
 import { getQueryClient } from "./get-query-client";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { SoloProvider } from "@/contexts/SoloContext";
 
 const queryClient = getQueryClient();
 
@@ -22,7 +23,9 @@ export default function Providers({
     >
       <QueryClientProvider client={queryClient}>
         <NextTopLoader color="hsl(340 100% 60%)" />
-        <TooltipProvider>{children}</TooltipProvider>
+        <TooltipProvider>
+          <SoloProvider>{children}</SoloProvider>
+        </TooltipProvider>
         <Toaster />
       </QueryClientProvider>
     </ThemeProvider>
