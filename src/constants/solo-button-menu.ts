@@ -1,30 +1,26 @@
-import { ChartNoAxesColumn, Expand, Image, TextQuote } from "lucide-react";
+import { PanelType } from "@/contexts/SoloContext";
+import { ChartNoAxesColumn, Image, TextQuote } from "lucide-react";
 
 interface MenuButton {
   icon: React.ElementType;
   label: string;
-	variable: string;
+  variable: PanelType;
 }
 
 export const menuButton: MenuButton[] = [
   {
     icon: Image,
     label: "Image",
-		variable: "isOpenBackgroundIframe",
+    variable: "backgroundIframe",
   },
   {
     icon: TextQuote,
     label: "Text",
-		variable: "isOpenQuote",
+    variable: "quote",
   },
   {
     icon: ChartNoAxesColumn,
     label: "Study Stat",
-		variable: "isOpenStudyStats",
-  },
-  {
-    icon: Expand,
-    label: "View fullscreen",
-		variable: "isOpenFullscreen",
-  },
+    variable: "studyStats",
+  }
 ];

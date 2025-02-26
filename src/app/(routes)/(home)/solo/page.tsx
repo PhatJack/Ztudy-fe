@@ -1,5 +1,5 @@
 "use client";
-import { Clock, Target } from "lucide-react";
+import { Clock, Expand, Minimize, Target } from "lucide-react";
 import BackgroundIframe from "./components/BackgroundIframe";
 import { Button } from "@/components/ui/button";
 import TooltipTemplate from "@/components/tooltip/TooltipTemplate";
@@ -7,13 +7,24 @@ import { menuButton } from "@/constants/solo-button-menu";
 import SessionGoal from "./components/session-goal";
 import Pomodoro from "./components/pomodoro";
 import { useSoloContext } from "@/hooks/useSoloContext";
-import { ButtonType } from "@/contexts/SoloContext";
 import Quote from "./components/quote";
+import StudyStat from "./components/study-stat";
+import BackgroundList from "./components/background-list";
 
 export default function Solo() {
   const [state, dispatch] = useSoloContext();
 
-  console.log(state);
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().then(() => {
+        dispatch({ type: "TOGGLE_FULL_SCREEN", payload: true });
+      });
+    } else if (document.exitFullscreen) {
+      document.exitFullscreen().then(() => {
+        dispatch({ type: "TOGGLE_FULL_SCREEN", payload: false });
+      });
+    }
+  };
 
   return (
     <>
@@ -21,6 +32,7 @@ export default function Solo() {
       <div className="relative">
         <div className="relative size-full flex justify-between items-center h-12 mb-4">
           <div className="flex gap-4">
+            {/* Pomodoro  */}
             <div
               onClick={() => {
                 dispatch({ type: "TOGGLE_BUTTON", payload: "isOpenPomodoro" });
@@ -39,6 +51,8 @@ export default function Solo() {
                 <strong>50:00:00</strong>
               </p>
             </div>
+
+            {/* Study Goal */}
             <div
               onClick={() => {
                 dispatch({
@@ -62,14 +76,15 @@ export default function Solo() {
             </div>
           </div>
           <div className="flex gap-4">
+            {/* Menu Buttons */}
             {menuButton.map((item, index) => (
               <TooltipTemplate content={item.label} key={index}>
                 <Button
                   type="button"
                   onClick={() => {
                     dispatch({
-                      type: "TOGGLE_BUTTON",
-                      payload: item.variable as ButtonType,
+                      type: "SET_ACTIVE_PANEL",
+                      payload: item.variable,
                     });
                   }}
                   className="w-12 h-12 hover:bg-background/90 hover:text-foreground [&_svg]:size-5 shadow-lg"
@@ -82,6 +97,19 @@ export default function Solo() {
                 </Button>
               </TooltipTemplate>
             ))}
+            <TooltipTemplate content={"Full screen"}>
+              <Button
+                type="button"
+                onClick={toggleFullscreen}
+                className="w-12 h-12 hover:bg-background/90 hover:text-foreground [&_svg]:size-5 shadow-lg"
+                variant={"outline"}
+                size={"icon"}
+              >
+                <span className="text-xl">
+                  {!state.isOpenFullScreen ? <Expand /> : <Minimize />}
+                </span>
+              </Button>
+            </TooltipTemplate>
           </div>
         </div>
         <div className="sticky top-0 h-[calc(100vh-3rem-1rem-2.5rem)] rounded-md overflow-hidden">
@@ -90,7 +118,11 @@ export default function Solo() {
             {state.isOpenSessionGoal ? <SessionGoal /> : null}
           </div>
           <div className="absolute top-0 right-0 flex flex-col min-w-64">
-            {state.isOpenQuote ? <Quote /> : null}
+            {state.activePanel === "quote" ? <Quote /> : null}
+            {state.activePanel === "studyStats" ? <StudyStat /> : null}
+            {state.activePanel === "backgroundIframe" ? (
+              <BackgroundList />
+            ) : null}
           </div>
         </div>
       </div>
