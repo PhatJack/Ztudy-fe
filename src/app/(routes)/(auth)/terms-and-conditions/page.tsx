@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import TermsAndConditionsPage from "../components/TermsAndConditionsPage";
+import TermsAndConditionsPage from "../_components/TermsAndConditionsPage";
 
 export const metadata: Metadata = {
   title: "Terms and Conditions",

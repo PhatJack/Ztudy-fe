@@ -42,7 +42,11 @@ const reducer = (state: InitialState, action: Action): InitialState => {
     case "TOGGLE_BUTTON":
       return { ...state, [action.payload]: !state[action.payload] };
     case "SET_ACTIVE_PANEL":
-      return { ...state, activePanel: action.payload };
+      return {
+        ...state,
+        activePanel:
+          state.activePanel === action.payload ? null : action.payload,
+      };
     case "TOGGLE_FULL_SCREEN":
       return { ...state, isOpenFullScreen: action.payload };
     default:
