@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import TooltipTemplate from "@/components/tooltip/TooltipTemplate";
 import { Button } from "@/components/ui/button";
 import { menuButton } from "@/constants/solo-button-menu";
@@ -8,20 +8,19 @@ import { Clock, Expand, Minimize, Target } from "lucide-react";
 import React from "react";
 
 const StickyMenu = () => {
+  const [state, dispatch] = useSoloContext();
 
-	const [state,dispatch] = useSoloContext();
-
-	const toggleFullscreen = () => {
-		if (!document.fullscreenElement) {
-			document.documentElement.requestFullscreen().then(() => {
-				dispatch({ type: "TOGGLE_FULL_SCREEN", payload: true });
-			});
-		} else if (document.exitFullscreen) {
-			document.exitFullscreen().then(() => {
-				dispatch({ type: "TOGGLE_FULL_SCREEN", payload: false });
-			});
-		}
-	};
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().then(() => {
+        dispatch({ type: "TOGGLE_FULL_SCREEN", payload: true });
+      });
+    } else if (document.exitFullscreen) {
+      document.exitFullscreen().then(() => {
+        dispatch({ type: "TOGGLE_FULL_SCREEN", payload: false });
+      });
+    }
+  };
   return (
     <>
       <div className="flex gap-4">
@@ -81,12 +80,9 @@ const StickyMenu = () => {
                 });
               }}
               className={cn(
-                `w-12 h-12 hover:bg-background/90 hover:text-foreground [&_svg]:size-5 shadow-lg`,
-                item.variable === state.activePanel
-                  ? "[&_svg]:text-white bg-primary"
-                  : ""
+                `w-12 h-12 [&_svg]:size-5 shadow-lg`
               )}
-              variant={"outline"}
+              variant={state.activePanel === item.variable ? "default" : "outline"}
               size={"icon"}
             >
               <span className="text-xl">

@@ -8,6 +8,8 @@ export interface InitialState {
   isOpenSessionGoal: boolean;
   isOpenFullScreen: boolean;
   activePanel: "quote" | "studyStats" | "backgroundIframe" | null;
+  quote: { content: string; author: string } | null;
+  isDisplayQuote: boolean;
 }
 
 // Define the action type
@@ -20,6 +22,13 @@ export type Action =
   | {
       type: "TOGGLE_FULL_SCREEN";
       payload: boolean;
+    }
+  | {
+      type: "SHUFFLE_QUOTE";
+      payload: { content: string; author: string };
+    }
+  | {
+      type: "TOGGLE_QUOTE";
     };
 
 // Create the initial state
@@ -28,6 +37,11 @@ const initialState: InitialState = {
   isOpenSessionGoal: true,
   isOpenFullScreen: false,
   activePanel: null, // Không có panel nào bật mặc định
+  isDisplayQuote: true,
+  quote: {
+    content: "Don't let yesterday take up too much of today.",
+    author: "Will Rogers",
+  },
 };
 
 // Create the context with an initial value of `null`
@@ -49,6 +63,10 @@ const reducer = (state: InitialState, action: Action): InitialState => {
       };
     case "TOGGLE_FULL_SCREEN":
       return { ...state, isOpenFullScreen: action.payload };
+    case "SHUFFLE_QUOTE":
+      return { ...state, quote: action.payload };
+    case "TOGGLE_QUOTE":
+      return { ...state, isDisplayQuote: !state.isDisplayQuote };
     default:
       return state;
   }

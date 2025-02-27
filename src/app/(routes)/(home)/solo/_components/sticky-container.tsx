@@ -3,9 +3,9 @@ import { useSoloContext } from "@/hooks/useSoloContext";
 import React from "react";
 import Pomodoro from "./pomodoro";
 import SessionGoal from "./session-goal";
-import { Quote } from "lucide-react";
 import StudyStat from "./study-stat";
 import BackgroundList from "./background-list";
+import Quote from "./quote";
 
 const StickyContainer = () => {
   const [state, _] = useSoloContext();
