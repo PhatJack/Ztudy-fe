@@ -45,12 +45,49 @@ This web application was built for study around the world can study online toget
     * Django
 ```
 
+
+
 ## How to run
+### Prerequisites
 
- ```sh
-     * pnpm i
- ```
+#### 1. Install Node.js and npm
+If you don't have Node.js installed, download and install it from [Node.js official site](https://nodejs.org/). This will also install `npm`.
 
+To check if `npm` is installed, run:
+```sh
+npm -v
+```
+
+#### 2. Install pnpm
+If you don't have `pnpm`, install it globally using `npm`:
+```sh
+npm install -g pnpm
+```
+
+Verify the installation:
+```sh
+pnpm -v
+```
+
+### Setup the Project
+
+#### 3. Clone the Repository
+```sh
+git clone https://github.com/PhatJack/zstudy.git
+cd zstudy
+```
+
+#### 4. Install Dependencies
+```sh
+pnpm install
+```
+
+#### 5. Start the Development Server
+```sh
+pnpm dev
+```
+
+The app should now be running at `http://localhost:3000/` 🚀
 
 
 ### Make sure to star the repository if you find it helpful!
