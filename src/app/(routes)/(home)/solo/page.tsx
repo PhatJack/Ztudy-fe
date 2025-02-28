@@ -1,7 +1,13 @@
+import { Metadata } from "next";
 import BackgroundIframe from "./_components/BackgroundIframe";
 import QuoteDisplay from "./_components/quote-display";
 import StickyContainer from "./_components/sticky-container";
 import StickyMenu from "./_components/sticky-menu";
+
+
+export const metadata: Metadata = {
+  title: "Solo session",
+};
 
 export default function Solo() {
   return (
