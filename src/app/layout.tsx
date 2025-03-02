@@ -44,7 +44,7 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning={true} lang="en">
       <body
-        className={`${nunito.className} ${geistSans.variable} ${geistMono.variable} antialiased relative`}
+        className={`${nunito.className} ${geistSans.variable} ${geistMono.variable} antialiased relative bg-muted/60`}
       >
         <Providers>{children}</Providers>
       </body>
