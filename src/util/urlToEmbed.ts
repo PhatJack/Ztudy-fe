@@ -24,7 +24,6 @@ export function UrlToEmbeded(
     start: "0",
     loop: "1",
     controls: "0",
-    modestbranding: "1",
     playsinline: "1",
     widgetid: "2",
     playlist: videoId, // Required for loop to work with a single video

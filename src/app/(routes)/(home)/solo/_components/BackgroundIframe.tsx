@@ -1,7 +1,9 @@
 "use client";
+import { useSoloContext } from "@/hooks/useSoloContext";
 import { useGetDetailYoutubeApi } from "@/service/youtube/get-detail-youtube.api";
 import { UrlToEmbeded } from "@/util/urlToEmbed";
-import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
+import React, { useEffect, useRef } from "react";
 
 interface Props {
   src: string;
@@ -27,19 +29,46 @@ interface Props {
  * - widgetid=2            // ID widget để phân biệt trình phát nếu có nhiều video trên trang.
  */
 
-export default function BackgroundIframe({ src }: Props) {
+function BackgroundIframe({ src }: Props) {
+  const [state, _] = useSoloContext();
+  const ref = useRef<HTMLIFrameElement>(null);
   const video = UrlToEmbeded(src);
   const { data, error } = useQuery(useGetDetailYoutubeApi(video?.videoId));
+  useEffect(() => {
+		const handlePlayerReady = (event: MessageEvent) => {
+			if (event.origin !== "https://www.youtube.com") return;
+	
+			const message = JSON.parse(event.data);
+			console.log(message)
+			if (message?.event === "onReady" && ref.current) {
+				console.log("YouTube Player is Ready");
+				// ref.current.contentWindow?.postMessage(
+				// 	JSON.stringify({
+				// 		event: "command",
+				// 		func: "setVolume",
+				// 		args: Array.isArray(state.volume) ? state.volume : [state.volume],
+				// 	}),
+				// 	"*"
+				// );
+			}
+		};
+
+		window.addEventListener("message", handlePlayerReady);
+		return () => window.removeEventListener("message", handlePlayerReady);
+	}, [state.volume]);
+	
 
   return (
     <div>
       <iframe
+        ref={ref}
         id="video-player"
         width={640}
         height={360}
         src={video?.embedUrl}
         title={data?.items[0].snippet.title}
         frameBorder="0"
+        seamless
         allow="accelerometer; autoplay;clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         referrerPolicy="strict-origin-when-cross-origin"
         allowFullScreen
@@ -48,3 +77,5 @@ export default function BackgroundIframe({ src }: Props) {
     </div>
   );
 }
+
+export default React.memo(BackgroundIframe);

@@ -2,10 +2,11 @@
 import TooltipTemplate from "@/components/tooltip/TooltipTemplate";
 import { Button } from "@/components/ui/button";
 import { menuButton } from "@/constants/solo-button-menu";
+import { PanelType } from "@/contexts/SoloContext";
 import { useSoloContext } from "@/hooks/useSoloContext";
 import { cn } from "@/lib/utils";
 import { Clock, Expand, Minimize, Target } from "lucide-react";
-import React from "react";
+import React, { useCallback } from "react";
 
 const StickyMenu = () => {
   const [state, dispatch] = useSoloContext();
@@ -21,6 +22,16 @@ const StickyMenu = () => {
       });
     }
   };
+
+  const handleClick = useCallback(
+    (variable: PanelType) => {
+      dispatch({
+        type: "SET_ACTIVE_PANEL",
+        payload: variable,
+      });
+    },
+    [dispatch]
+  );
   return (
     <>
       <div className="flex gap-4">
@@ -73,16 +84,11 @@ const StickyMenu = () => {
           <TooltipTemplate content={item.label} key={index}>
             <Button
               type="button"
-              onClick={() => {
-                dispatch({
-                  type: "SET_ACTIVE_PANEL",
-                  payload: item.variable,
-                });
-              }}
-              className={cn(
-                `w-12 h-12 [&_svg]:size-5 shadow-lg`
-              )}
-              variant={state.activePanel === item.variable ? "default" : "outline"}
+              onClick={() => handleClick(item.variable)}
+              className={cn(`w-12 h-12 [&_svg]:size-5 shadow-lg`)}
+              variant={
+                state.activePanel === item.variable ? "default" : "outline"
+              }
               size={"icon"}
             >
               <span className="text-xl">

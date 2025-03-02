@@ -6,7 +6,7 @@ const QuoteDisplay = () => {
   const [state,] = useSoloContext();
 
   return state.isDisplayQuote ? (
-    <div className="absolute top-3/4 right-0 md:top-[40%] md:right-10 text-center w-full md:w-[500px] md:text-right flex flex-col gap-1 text-white">
+    <div className="absolute top-3/4 right-0 md:top-[40%] md:right-10 text-center w-full md:w-[500px] md:text-right flex flex-col gap-1 text-white pointer-events-none select-none">
       <p
         className="text-2xl font-bold"
         style={{ textShadow: "rgba(12, 4, 3, 0.5) -6px 6px 6px" }}
