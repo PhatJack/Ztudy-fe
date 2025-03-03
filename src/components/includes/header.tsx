@@ -1,3 +1,4 @@
+"use client"
 import React from "react";
 import { Button } from "../ui/button";
 import { DoorOpen, Undo2, UserRound } from "lucide-react";
@@ -11,8 +12,12 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { useRouter } from "nextjs-toploader/app";
 
 const Header = () => {
+
+	const router = useRouter()
+
   return (
     <header className="w-full p-2 bg-white dark:bg-background max-h-12 h-12 sticky top-0 border-b border-gray-200">
       <div className="w-full flex justify-between items-center">
@@ -55,7 +60,7 @@ const Header = () => {
               </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
-          <Button size={"sm"}>
+          <Button type="button" onClick={() => router.push("/solo")} size={"sm"}>
             <Undo2 />
             <span>Return to room</span>
           </Button>

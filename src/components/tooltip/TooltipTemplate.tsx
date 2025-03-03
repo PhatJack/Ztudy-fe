@@ -42,7 +42,7 @@ function TooltipTemplate({
   variant, // Extracted from VariantProps
 }: Props) {
   return (
-    <Tooltip delayDuration={0}>
+    <Tooltip delayDuration={200}>
       <TooltipTrigger asChild={triggerAsChild}>{children}</TooltipTrigger>
       <TooltipContent
         className={cn(tooltipVariants({ variant }), className)} // Combine CVA variants with custom className

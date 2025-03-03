@@ -3,7 +3,7 @@ import { useSoloContext } from "@/hooks/useSoloContext";
 import React from "react";
 
 const QuoteDisplay = () => {
-  const [state,] = useSoloContext();
+  const [state] = useSoloContext();
 
   return state.isDisplayQuote ? (
     <div className="absolute top-3/4 right-0 md:top-[40%] md:right-10 text-center w-full md:w-[500px] md:text-right flex flex-col gap-1 text-white pointer-events-none select-none">
@@ -23,4 +23,4 @@ const QuoteDisplay = () => {
   ) : null;
 };
 
-export default QuoteDisplay;
+export default React.memo(QuoteDisplay);

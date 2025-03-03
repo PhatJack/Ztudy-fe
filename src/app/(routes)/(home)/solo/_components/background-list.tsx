@@ -1,20 +1,39 @@
 "use client";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { useSoloContext } from "@/hooks/useSoloContext";
-import { Volume2, VolumeX } from "lucide-react";
-import React from "react";
-import { useCallback } from "react";
+import { UrlToEmbeded } from "@/util/urlToEmbed";
 import debounce from "lodash.debounce";
+import { Info, Volume2, VolumeX } from "lucide-react";
+import React, { useCallback, useState } from "react";
 const BackgroundList = () => {
+  const [errorLink, setErrorLink] = useState<boolean>(false);
   const [state, dispatch] = useSoloContext();
 
   const debouncedSetVolume = useCallback(
-    debounce((val) => {
-      dispatch({ type: "SET_VOLUME", payload: val });
-    }, 300), // Adjust debounce time (300ms)
-    []
+    (val: number[]) => {
+      dispatch({ type: "SET_VOLUME", payload: val[0] });
+    },
+    [dispatch]
+  );
+
+  const handleMute = useCallback(() => {
+    dispatch({ type: "SET_VOLUME", payload: state.volume > 0 ? 0 : 100 });
+  }, [state.volume, dispatch]);
+
+  const handleChangeBackground = useCallback(
+    debounce((e: React.ChangeEvent<HTMLInputElement>) => {
+      const video = UrlToEmbeded(e.target.value);
+      if (video) {
+        dispatch({ type: "SET_BACKGROUND", payload: video.videoId });
+      } else {
+        setErrorLink(true);
+      }
+    }, 500),
+    [dispatch]
   );
 
   return (
@@ -38,9 +57,20 @@ const BackgroundList = () => {
         </Label>
         <Input
           id="youtube-link"
+          type="text"
+          value={state.backgroundURL}
+          onChange={handleChangeBackground}
           placeholder="Paste the youtube link here"
           className="border-muted"
         />
+        {errorLink && (
+          <p className="border border-destructive rounded-md flex items-center gap-2 p-2">
+            <Info size={16} className="text-destructive" />
+            <span className="text-destructive text-sm">
+              Invalid Youtube link
+            </span>
+          </p>
+        )}
       </div>
       <div className="flex flex-col gap-2">
         <Label htmlFor="volume" className="flex items-center gap-1">
@@ -49,14 +79,21 @@ const BackgroundList = () => {
           </span>
         </Label>
         <div className="flex gap-1">
-          <span>
-            {state.volume > 0 ? <Volume2 size={16} /> : <VolumeX size={16} />}
-          </span>
+          <Button
+            type="button"
+            onClick={handleMute}
+            size={"icon"}
+            variant={"ghost"}
+            className="[&_svg:size-5] hover:bg-transparent hover:text-black"
+          >
+            {state.volume > 0 ? <Volume2 /> : <VolumeX />}
+          </Button>
           <Slider
             id="volume"
             step={1}
             min={0}
             max={100}
+            value={[state.volume]}
             onValueChange={(value) => debouncedSetVolume(value)}
           />
         </div>

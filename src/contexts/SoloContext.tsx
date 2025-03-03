@@ -11,6 +11,7 @@ export interface InitialState {
   quote: { content: string; author: string } | null;
   isDisplayQuote: boolean;
   volume: number;
+  backgroundURL: string;
 }
 
 // Define the action type
@@ -34,6 +35,10 @@ export type Action =
   | {
       type: "SET_VOLUME";
       payload: number;
+    }
+  | {
+      type: "SET_BACKGROUND";
+      payload: string;
     };
 
 // Create the initial state
@@ -41,13 +46,14 @@ const initialState: InitialState = {
   isOpenPomodoro: true,
   isOpenSessionGoal: true,
   isOpenFullScreen: false,
-  activePanel: "studyStats", // Không có panel nào bật mặc định
+  activePanel: "backgroundIframe", // Không có panel nào bật mặc định
   isDisplayQuote: true,
   quote: {
     content: "Don't let yesterday take up too much of today.",
     author: "Will Rogers",
   },
   volume: 0,
+  backgroundURL: "bNHHUFQtP88",
 };
 
 // Create the context with an initial value of `null`
@@ -75,6 +81,8 @@ const reducer = (state: InitialState, action: Action): InitialState => {
       return { ...state, isDisplayQuote: !state.isDisplayQuote };
     case "SET_VOLUME":
       return { ...state, volume: action.payload };
+    case "SET_BACKGROUND":
+      return { ...state, backgroundURL: action.payload };
     default:
       return state;
   }

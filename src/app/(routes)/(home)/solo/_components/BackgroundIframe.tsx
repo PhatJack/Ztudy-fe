@@ -1,13 +1,8 @@
 "use client";
 import { useSoloContext } from "@/hooks/useSoloContext";
-import { useGetDetailYoutubeApi } from "@/service/youtube/get-detail-youtube.api";
 import { UrlToEmbeded } from "@/util/urlToEmbed";
-import { useQuery } from "@tanstack/react-query";
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 
-interface Props {
-  src: string;
-}
 /**
  * YouTube Embed Parameters:
  *
@@ -29,51 +24,81 @@ interface Props {
  * - widgetid=2            // ID widget để phân biệt trình phát nếu có nhiều video trên trang.
  */
 
-function BackgroundIframe({ src }: Props) {
+function BackgroundIframe() {
   const [state, _] = useSoloContext();
-  const ref = useRef<HTMLIFrameElement>(null);
-  const video = UrlToEmbeded(src);
-  const { data, error } = useQuery(useGetDetailYoutubeApi(video?.videoId));
-  useEffect(() => {
-		const handlePlayerReady = (event: MessageEvent) => {
-			if (event.origin !== "https://www.youtube.com") return;
-	
-			const message = JSON.parse(event.data);
-			console.log(message)
-			if (message?.event === "onReady" && ref.current) {
-				console.log("YouTube Player is Ready");
-				// ref.current.contentWindow?.postMessage(
-				// 	JSON.stringify({
-				// 		event: "command",
-				// 		func: "setVolume",
-				// 		args: Array.isArray(state.volume) ? state.volume : [state.volume],
-				// 	}),
-				// 	"*"
-				// );
-			}
-		};
+  const playerRef = useRef<any>(null);
 
-		window.addEventListener("message", handlePlayerReady);
-		return () => window.removeEventListener("message", handlePlayerReady);
-	}, [state.volume]);
-	
+  const handleVolumeChange = useCallback(() => {
+    if (state.volume === 0) {
+      playerRef.current.mute();
+    } else {
+      playerRef.current.unMute();
+      playerRef.current.setVolume(state.volume);
+    }
+  }, [state.volume]);
+
+  useEffect(() => {
+    // Load the YouTube IFrame API script
+    const tag = document.createElement("script");
+    tag.src = "https://www.youtube.com/iframe_api";
+    const firstScriptTag = document.getElementsByTagName("script")[0];
+    firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
+
+    (window as any).onYouTubeIframeAPIReady = () => {
+      playerRef.current = new (window as any).YT.Player("video-player", {
+        height: "390",
+        width: "640",
+        videoId: `${state.backgroundURL}`,
+        playerVars: {
+          playsinline: 1,
+          mute: 1,
+          enablejsapi: 1,
+          autoplay: 1,
+          controls: 0,
+          showinfo: 0,
+          rel: 0,
+          loop: 1,
+          playlist: `${state.backgroundURL}`,
+        },
+        events: {
+          onReady: (event: any) => {
+            event.target.playVideo();
+          },
+        },
+      });
+    };
+
+    return () => {
+      delete (window as any).onYouTubeIframeAPIReady;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (playerRef.current) {
+      playerRef.current.loadVideoById({
+        videoId: `${state.backgroundURL}`,
+        startSeconds: 0,
+        endSeconds: 0,
+        suggestedQuality: "large",
+      });
+    }
+  }, [state.backgroundURL]);
+
+  useEffect(() => {
+    if (playerRef.current) {
+      console.log("playerRef.current", playerRef.current.getVolume());
+      handleVolumeChange();
+    }
+  }, [state.volume]);
 
   return (
     <div>
-      <iframe
-        ref={ref}
+      <div
         id="video-player"
-        width={640}
-        height={360}
-        src={video?.embedUrl}
-        title={data?.items[0].snippet.title}
-        frameBorder="0"
-        seamless
-        allow="accelerometer; autoplay;clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        referrerPolicy="strict-origin-when-cross-origin"
-        allowFullScreen
-        className="aspect-video min-w-full w-screen object-cover min-h-full box-border h-[56.25vw] pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-      ></iframe>
+        className="aspect-video min-w-full w-screen object-cover min-h-full
+      box-border h-[56.25vw] pointer-events-none absolute top-1/2 left-1/2
+      -translate-x-1/2 -translate-y-1/2"
+      ></div>
     </div>
   );
 }
