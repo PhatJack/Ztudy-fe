@@ -99,3 +99,23 @@ body {
 		height: 86.25vw !important
 	}
 }
+
+/* width */
+::-webkit-scrollbar {
+	width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+	background: hsl(var(--background));
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+	background: hsl(var(--primary));
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+	background: hsl(var(--primary) / 50);
+}

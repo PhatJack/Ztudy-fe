@@ -17,7 +17,7 @@ const DefaultLayout = ({
 
   return (
     <>
-      <div className={cn("overflow-hidden")}>
+      <div className={cn(isSolo && "overflow-hidden")}>
         <Sidebar />
         <main
           className={cn(
@@ -28,7 +28,6 @@ const DefaultLayout = ({
           {!isSolo && (
             <>
               <Header />
-              <Separator />
             </>
           )}
           {children}

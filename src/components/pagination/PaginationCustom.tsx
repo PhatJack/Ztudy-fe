@@ -35,7 +35,6 @@ const PaginationCustom = ({
         {totalPages > 0 && (
           <PaginationItem>
             <PaginationPrevious
-              to="#"
               aria-disabled={currentPage === 1}
               className={`cursor-pointer ${
                 currentPage === 1 ? "opacity-50 pointer-events-none" : ""
@@ -56,7 +55,7 @@ const PaginationCustom = ({
                 page === currentPage ? "bg-primary rounded-md" : ""
               }`}
             >
-              <PaginationLink to="#" onClick={() => handlePageClick(page)}>
+              <PaginationLink onClick={() => handlePageClick(page)}>
                 {page}
               </PaginationLink>
             </PaginationItem>
@@ -65,7 +64,6 @@ const PaginationCustom = ({
         {totalPages > 0 && (
           <PaginationItem>
             <PaginationNext
-              to="#"
               aria-disabled={currentPage === totalPages}
               className={`cursor-pointer ${
                 currentPage === totalPages
