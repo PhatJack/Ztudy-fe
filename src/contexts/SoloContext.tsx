@@ -12,6 +12,7 @@ export interface InitialState {
   isDisplayQuote: boolean;
   volume: number;
   backgroundURL: string;
+  isAddYtbScript: boolean;
 }
 
 // Define the action type
@@ -39,6 +40,10 @@ export type Action =
   | {
       type: "SET_BACKGROUND";
       payload: string;
+    }
+  | {
+      type: "SET_ADD_YTB_SCRIPT";
+      payload: boolean;
     };
 
 // Create the initial state
@@ -53,7 +58,8 @@ const initialState: InitialState = {
     author: "Will Rogers",
   },
   volume: 0,
-  backgroundURL: "bNHHUFQtP88",
+  backgroundURL: "https://www.youtube.com/watch?v=WnY-KZJ0uZg",
+  isAddYtbScript: false,
 };
 
 // Create the context with an initial value of `null`
@@ -83,6 +89,8 @@ const reducer = (state: InitialState, action: Action): InitialState => {
       return { ...state, volume: action.payload };
     case "SET_BACKGROUND":
       return { ...state, backgroundURL: action.payload };
+    case "SET_ADD_YTB_SCRIPT":
+      return { ...state, isAddYtbScript: action.payload };
     default:
       return state;
   }

@@ -1,56 +1,79 @@
-"use client"
+"use client";
 import type React from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
-import { Form } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { LoginBodySchema, useSignInMutation } from "@/service/(auth)/login.api";
 
-export function LoginForm({
-  className,
-  ...props
-}: React.ComponentPropsWithoutRef<"form">) {
-	
-  const loginForm = useForm();
-  const onSubmit = loginForm.handleSubmit((data) => {});
+export function LoginForm() {
+  const loginForm = useForm<LoginBodySchema>({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+  const signInMutation = useSignInMutation();
+  const onSubmit = loginForm.handleSubmit((data: LoginBodySchema) => {
+    signInMutation.mutate(data, {
+      onSuccess(data) {
+        console.log(data);
+      },
+      onError(error) {
+        console.log(error);
+      },
+    });
+  });
 
   return (
     <Form {...loginForm}>
-      <form
-        onSubmit={onSubmit}
-        className={cn("flex flex-col gap-6", className)}
-        {...props}
-      >
+      <form onSubmit={onSubmit} className={cn("space-y-4")}>
         <div className="flex flex-col items-center gap-2 text-center">
           <h1 className="text-2xl font-bold">Login to your account</h1>
           <p className="text-balance text-sm text-muted-foreground">
             Enter your email below to login to your account
           </p>
         </div>
-        <div className="grid gap-6">
-          <div className="grid gap-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="m@example.com"
-              required
-            />
-          </div>
-          <div className="grid gap-2">
-            <div className="flex items-center">
-              <Label htmlFor="password">Password</Label>
-              <Link
-                href="/forgot-password"
-                className="ml-auto text-sm underline-offset-4 hover:underline"
-              >
-                Forgot your password?
-              </Link>
-            </div>
-            <Input id="password" type="password" required />
-          </div>
+        <div className="grid gap-4">
+          <FormField
+            control={loginForm.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter your email" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={loginForm.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Enter your email"
+                    type="password"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <Button type="submit" className="w-full">
             Login
           </Button>

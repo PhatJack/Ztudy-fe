@@ -27,13 +27,8 @@ export async function signInApi(
   body: LoginBodySchema
 ): Promise<LoginResponseSchema> {
   const response = await apiClient.post<LoginResponseSchema>(
-    "/auth/login",
-    body,
-    {
-      headers: {
-        "No-Auth": true,
-      },
-    }
+    "/auth/login/",
+    body
   );
   return response.data;
 }
@@ -45,11 +40,12 @@ export function useSignInMutation() {
     mutationKey: ["sign-in"],
     mutationFn: (body: LoginBodySchema) => signInApi(body),
     onSuccess: (data) => {
-      setCookie(COOKIE_KEY_ACCESS_TOKEN, data.tokens.accessToken);
-      setCookie(COOKIE_KEY_REFRESH_TOKEN, data.tokens.refreshToken);
-      queryClient.resetQueries({
-        queryKey: ["current-user"],
-      });
+      console.log(data);
+      // setCookie(COOKIE_KEY_ACCESS_TOKEN, data.tokens.accessToken);
+      // setCookie(COOKIE_KEY_REFRESH_TOKEN, data.tokens.refreshToken);
+      // queryClient.resetQueries({
+      //   queryKey: ["current-user"],
+      // });
     },
   });
 }

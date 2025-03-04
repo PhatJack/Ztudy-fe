@@ -28,7 +28,8 @@ const BackgroundList = () => {
     debounce((e: React.ChangeEvent<HTMLInputElement>) => {
       const video = UrlToEmbeded(e.target.value);
       if (video) {
-        dispatch({ type: "SET_BACKGROUND", payload: video.videoId });
+				setErrorLink(false)
+        dispatch({ type: "SET_BACKGROUND", payload: e.target.value});
       } else {
         setErrorLink(true);
       }
@@ -58,7 +59,7 @@ const BackgroundList = () => {
         <Input
           id="youtube-link"
           type="text"
-          value={state.backgroundURL}
+          defaultValue={state.backgroundURL}
           onChange={handleChangeBackground}
           placeholder="Paste the youtube link here"
           className="border-muted"

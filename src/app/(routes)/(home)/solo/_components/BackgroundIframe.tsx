@@ -1,7 +1,7 @@
 "use client";
 import { useSoloContext } from "@/hooks/useSoloContext";
 import { UrlToEmbeded } from "@/util/urlToEmbed";
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 /**
  * YouTube Embed Parameters:
@@ -25,30 +25,29 @@ import React, { useCallback, useEffect, useRef } from "react";
  */
 
 function BackgroundIframe() {
-  const [state, _] = useSoloContext();
-  const playerRef = useRef<any>(null);
+  const [state, dispatch] = useSoloContext();
+  const youtubeRef = useRef<any>(null);
+  const videoRef = useRef<any>(null);
 
   const handleVolumeChange = useCallback(() => {
     if (state.volume === 0) {
-      playerRef.current.mute();
+      console.log(youtubeRef.current);
+      videoRef.current.mute();
     } else {
-      playerRef.current.unMute();
-      playerRef.current.setVolume(state.volume);
+      videoRef.current.unMute();
+      videoRef.current.setVolume(state.volume);
     }
   }, [state.volume]);
 
   useEffect(() => {
-    // Load the YouTube IFrame API script
-    const tag = document.createElement("script");
-    tag.src = "https://www.youtube.com/iframe_api";
-    const firstScriptTag = document.getElementsByTagName("script")[0];
-    firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
-
-    (window as any).onYouTubeIframeAPIReady = () => {
-      playerRef.current = new (window as any).YT.Player("video-player", {
+    // Function to initialize youtube
+    const initializeyoutube = () => {
+      console.log("create youtubeRef");
+      const video = UrlToEmbeded(state.backgroundURL);
+      youtubeRef.current = new window.YT.Player("video-youtube", {
         height: "390",
         width: "640",
-        videoId: `${state.backgroundURL}`,
+        videoId: `${video?.videoId}`,
         playerVars: {
           playsinline: 1,
           mute: 1,
@@ -58,46 +57,65 @@ function BackgroundIframe() {
           showinfo: 0,
           rel: 0,
           loop: 1,
-          playlist: `${state.backgroundURL}`,
+          playlist: `${video?.videoId}`,
         },
         events: {
           onReady: (event: any) => {
+            videoRef.current = event.target;
+            event.target.mute();
             event.target.playVideo();
           },
         },
       });
     };
 
-    return () => {
-      delete (window as any).onYouTubeIframeAPIReady;
-    };
-  }, []);
+    // Check if YouTube API is already loaded
+    if (!state.isAddYtbScript) {
+      console.log("Loading YouTube API script");
+      const tag = document.createElement("script");
+      tag.src = "https://www.youtube.com/iframe_api";
+      const firstScriptTag = document.getElementsByTagName("script")[0];
+      firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
+      dispatch({ type: "SET_ADD_YTB_SCRIPT", payload: true });
+
+      // Set up callback for first load
+      (window as any).onYouTubeIframeAPIReady = initializeyoutube;
+    } else if (window.YT && window.YT.Player) {
+      // YouTube API is already loaded, initialize youtube directly
+      console.log("YouTube API already loaded, initializing youtube directly");
+      initializeyoutube();
+    }
+  }, [state.backgroundURL, state.isAddYtbScript]);
 
   useEffect(() => {
-    if (playerRef.current) {
-      playerRef.current.loadVideoById({
-        videoId: `${state.backgroundURL}`,
-        startSeconds: 0,
-        endSeconds: 0,
-        suggestedQuality: "large",
-      });
+    if (videoRef.current) {
+      const video = UrlToEmbeded(state.backgroundURL);
+      try {
+        videoRef.current.loadVideoById({
+          videoId: `${video?.videoId}`,
+          startSeconds: 0,
+          endSeconds: 0,
+          suggestedQuality: "large",
+        });
+        videoRef.current.loadPlaylist(video?.videoId);
+        videoRef.current.setLoop(true);
+      } catch (error) {
+        console.error("Error loading video:", error);
+      }
     }
   }, [state.backgroundURL]);
 
   useEffect(() => {
-    if (playerRef.current) {
-      console.log("playerRef.current", playerRef.current.getVolume());
+    if (videoRef.current) {
       handleVolumeChange();
     }
-  }, [state.volume]);
+  }, [state.volume, videoRef.current]);
 
   return (
     <div>
       <div
-        id="video-player"
-        className="aspect-video min-w-full w-screen object-cover min-h-full
-      box-border h-[56.25vw] pointer-events-none absolute top-1/2 left-1/2
-      -translate-x-1/2 -translate-y-1/2"
+        id="video-youtube"
+        className="aspect-video min-w-full w-screen object-cover min-h-full box-border h-[56.25vw] pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
       ></div>
     </div>
   );

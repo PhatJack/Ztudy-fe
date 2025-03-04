@@ -27,7 +27,7 @@ export default function SidebarMenu() {
                 )}
               />
             </span>
-            <span className={`text-xs`}>
+            <span className={`text-xs whitespace-nowrap`}>
               <strong>{item.label}</strong>
             </span>
           </Link>

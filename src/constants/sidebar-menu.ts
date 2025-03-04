@@ -1,4 +1,11 @@
-import { Globe, Home, Target, UserCircle2, UserRound } from "lucide-react";
+import {
+  Globe,
+  Home,
+  Target,
+  UserCircle2,
+  UserRound,
+  UsersRound,
+} from "lucide-react";
 
 export const menu: {
   icon: React.ElementType;
@@ -14,6 +21,11 @@ export const menu: {
     icon: UserCircle2,
     label: "Solo Study",
     href: "/solo",
+  },
+  {
+    icon: UsersRound,
+    label: "Study Group",
+    href: "/study-group",
   },
   {
     icon: Target,

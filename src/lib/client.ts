@@ -4,8 +4,14 @@ import {
 } from "@/constants/cookies";
 import axios, { AxiosRequestConfig, AxiosResponse, isAxiosError } from "axios";
 import { getCookie, setCookie } from "cookies-next";
+import { jwtSchema } from "./schemas/jwt.schema";
+import { jwtDecode } from "jwt-decode";
+import { refreshTokenApi } from "@/service/(auth)/refresh-token.api";
 const client = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL: process.env.NEXT_PUBLIC_DJANGO_SERVER_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
 export const apiClient = {
@@ -46,85 +52,86 @@ export const apiClient = {
   },
 };
 
-// async function getAccessToken(): Promise<string | null> {
-//   let accessToken: string | undefined = undefined;
+let isRefreshing = false;
+let refreshPromise: Promise<string> | null = null;
 
-//   try {
-//     accessToken = getCookie(COOKIE_KEY_ACCESS_TOKEN);
-//     if (accessToken) {
-//       const payload = accessTokenPayloadSchema.parse(jwtDecode(accessToken));
-//       if (payload.exp * 1000 > Date.now()) {
-//         return accessToken;
-//       }
-//     }
-//   } catch (error) {
-//     console.error("Failed to parse access token payload", error);
-//   }
+async function getAccessToken(): Promise<string | null> {
+  let accessToken: string | undefined = undefined;
 
-//   let refreshToken: string | undefined = undefined;
-
-//   try {
-//     refreshToken = getCookie(COOKIE_KEY_REFRESH_TOKEN);
-//     if (!refreshToken) {
-//       return null;
-//     }
-//   } catch (error) {
-//     console.error("Failed to get refresh token", error);
-//     return null;
-//   }
-
-//   if (!isRefreshing) {
-//     isRefreshing = true;
-//     refreshPromise = refreshTokenApi({ refreshToken })
-//       .then((response) => {
-//         const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
-//           response.tokens;
-//         setCookie(COOKIE_KEY_ACCESS_TOKEN, newAccessToken);
-//         setCookie(COOKIE_KEY_REFRESH_TOKEN, newRefreshToken);
-//         return newAccessToken;
-//       })
-//       .catch((error) => {
-//         throw error;
-//       })
-//       .finally(() => {
-//         isRefreshing = false;
-//         refreshPromise = null;
-//       });
-//   }
-
-//   return refreshPromise;
-// }
-
-client.interceptors.request.use(
-  async (config) => {
-    // const accessToken = await getAccessToken();
-    // if (accessToken) {
-    //   config.headers["Authorization"] = `Bearer ${accessToken}`;
-    // }
-    return config;
-  },
-  null,
-  {
-    runWhen: (request) => !request.headers["No-Auth"],
-  }
-);
-client.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
-    if (isAxiosError(error)) {
-      if (error.code === "ERR_NETWORK") {
-        throw {
-          type: "NetworkError",
-          message: "Failed to connect to the server",
-        };
+  try {
+    accessToken = getCookie(COOKIE_KEY_ACCESS_TOKEN);
+    if (accessToken) {
+      const payload = jwtSchema.parse(jwtDecode(accessToken));
+      if (payload.payload.exp * 1000 > Date.now()) {
+        return accessToken;
       }
-      throw error.response?.data;
+      // const payload
     }
-    throw {
-      type: "UnknownError",
-      message: "An unknown error occurred",
-    };
+  } catch (error) {
+    console.error("Failed to parse access token payload", error);
   }
-);
+  let refreshToken: string | undefined = undefined;
+  try {
+    refreshToken = getCookie(COOKIE_KEY_REFRESH_TOKEN);
+    if (!refreshToken) {
+      return null;
+    }
+  } catch (error) {
+    console.error("Failed to get refresh token", error);
+    return null;
+  }
+
+  if (!isRefreshing) {
+    isRefreshing = true;
+    refreshPromise = refreshTokenApi({ refresh: refreshToken })
+      .then((response) => {
+        const { access: newAccessToken, refresh: newRefreshToken } = response;
+        setCookie(COOKIE_KEY_ACCESS_TOKEN, newAccessToken);
+        setCookie(COOKIE_KEY_REFRESH_TOKEN, newRefreshToken);
+        return newAccessToken;
+      })
+      .catch((error) => {
+        throw error;
+      })
+      .finally(() => {
+        isRefreshing = false;
+        refreshPromise = null;
+      });
+  }
+
+  return refreshPromise;
+}
+
+// client.interceptors.request.use(
+//   async (config) => {
+//     // const accessToken = await getAccessToken();
+//     // if (accessToken) {
+//     //   config.headers["Authorization"] = `Bearer ${accessToken}`;
+//     // }
+//     return config;
+//   },
+//   null,
+//   {
+//     runWhen: (request) => !request.headers["No-Auth"],
+//   }
+// );
+// client.interceptors.response.use(
+//   (response) => {
+//     return response;
+//   },
+//   (error) => {
+//     if (isAxiosError(error)) {
+//       if (error.code === "ERR_NETWORK") {
+//         throw {
+//           type: "NetworkError",
+//           message: "Failed to connect to the server",
+//         };
+//       }
+//       throw error.response?.data;
+//     }
+//     throw {
+//       type: "UnknownError",
+//       message: "An unknown error occurred",
+//     };
+//   }
+// );

@@ -20,7 +20,7 @@ const Quote = () => {
   }, [dispatch]);
 
   return (
-    <div className="w-[267px] min-w-[267px] p-5 rounded-md bg-background">
+    <div className="w-[267px] min-w-[267px] p-5 rounded-md bg-background shadow-lg">
       <div className="flex justify-between items-center">
         <div className="flex items-center">
           <span>
