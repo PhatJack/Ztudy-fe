@@ -22,7 +22,7 @@ export default function Providers({
       disableTransitionOnChange
     >
       <QueryClientProvider client={queryClient}>
-        <NextTopLoader color="hsl(340 100% 60%)" />
+        <NextTopLoader color="hsl(30 100% 70%)" />
         <TooltipProvider>
           <SoloProvider>{children}</SoloProvider>
         </TooltipProvider>

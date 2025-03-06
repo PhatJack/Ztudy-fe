@@ -13,15 +13,24 @@ import {
 } from "../ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useRouter } from "nextjs-toploader/app";
+import Link from "next/link";
+import { useQuery } from "@tanstack/react-query";
+import { createGetCurrentUserInformationQueryOptions } from "@/service/(current-user)/get-current-user-information";
 
 const Header = () => {
 
 	const router = useRouter()
 
+	const currentUser = useQuery(createGetCurrentUserInformationQueryOptions())
+
+	// console.log(currentUser)
+
   return (
     <header className="w-full p-2 bg-white dark:bg-background max-h-12 h-12 sticky top-0 border-b border-gray-200">
       <div className="w-full flex justify-between items-center">
-        <div className=""></div>
+        <div className="">
+
+				</div>
         <div className="w-full flex justify-end items-center gap-4">
           <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
@@ -43,19 +52,19 @@ const Header = () => {
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
                 <DropdownMenuItem>
-                  <div className="flex items-center gap-2">
+                  <Link href={"/profile"} className="flex items-center gap-2">
                     <UserRound size={16} />
                     <span>Profile</span>
-                  </div>
+                  </Link>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
                 <DropdownMenuItem>
-                  <div className="flex items-center gap-2">
+                  <Link href={"/logout"} className="flex items-center gap-2">
                     <DoorOpen size={16} />
                     <span>Logout</span>
-                  </div>
+                  </Link>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
             </DropdownMenuContent>

@@ -5,20 +5,24 @@ import type { NextRequest } from "next/server";
 
 // This function can be marked `async` if using `await` inside
 export function middleware(request: NextRequest) {
-  const protectedRoutes = ["/dashboard", "/profile"];
+  const protectedRoutes = [
+    "/dashboard",
+    "/profile",
+    "/solo",
+    "/study-goal",
+    "/leaderboard",
+    "/study-group",
+  ];
   const currentPath = request.nextUrl.pathname;
   const isProtected = protectedRoutes.includes(currentPath);
-  if (currentPath === "/") {
-    return NextResponse.redirect(new URL("/dashboard", request.nextUrl.origin));
+  if (isProtected) {
+    const token = cookies().get(COOKIE_KEY_ACCESS_TOKEN)?.value;
+    if (!token) {
+      return NextResponse.redirect(
+        new URL("/login", request.nextUrl.origin).toString()
+      );
+    }
   }
-  // if (isProtected) {
-  //   const token = cookies().get(COOKIE_KEY_ACCESS_TOKEN)?.value;
-  //   if (!token) {
-  //     return NextResponse.redirect(
-  //       new URL("/login", request.nextUrl.origin).toString()
-  //     );
-  //   }
-  // }
 }
 
 // See "Matching Paths" below to learn more

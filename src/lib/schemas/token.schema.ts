@@ -6,7 +6,7 @@ export const refreshTokenSchema = z.string();
 export type RefreshTokenSchema = z.infer<typeof refreshTokenSchema>;
 
 export const tokenSchema = z.object({
-  accessToken: accessTokenSchema,
-  refreshToken: refreshTokenSchema,
+  access: accessTokenSchema,
+  refresh: refreshTokenSchema,
 });
 export type TokenSchema = z.infer<typeof tokenSchema>;

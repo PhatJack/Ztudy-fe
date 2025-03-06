@@ -17,8 +17,11 @@ const payloadSchema = z.object({
 
 // Combined schema for the entire JWT object
 export const jwtSchema = z.object({
-  header: headerSchema,
-  payload: payloadSchema,
+  token_type: z.literal("access"), // Restricting to "access" as per your example
+  exp: z.number().int(), // Integer timestamp for expiration
+  iat: z.number().int(), // Integer timestamp for issued-at
+  jti: z.string().length(32), // 32-character string based on your example
+  user_id: z.number().int(), // Integer user ID
 });
 
 // Type inference for TypeScript

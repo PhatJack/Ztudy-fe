@@ -8,6 +8,17 @@
 		"start": "next start",
 		"lint": "next lint"
 	},
+	"author": {
+		"name": "Jack Phat dev"
+	},
+	"keywords": [
+		"nextjs",
+		"tailwindcss",
+		"typescript",
+		"ztudy",
+		"front-end",
+		"school project"
+	],
 	"dependencies": {
 		"@hookform/resolvers": "^4.1.0",
 		"@radix-ui/react-avatar": "^1.1.3",

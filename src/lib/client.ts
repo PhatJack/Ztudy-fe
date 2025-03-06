@@ -62,7 +62,7 @@ async function getAccessToken(): Promise<string | null> {
     accessToken = getCookie(COOKIE_KEY_ACCESS_TOKEN);
     if (accessToken) {
       const payload = jwtSchema.parse(jwtDecode(accessToken));
-      if (payload.payload.exp * 1000 > Date.now()) {
+      if (payload.exp * 1000 > Date.now()) {
         return accessToken;
       }
       // const payload
@@ -102,36 +102,31 @@ async function getAccessToken(): Promise<string | null> {
   return refreshPromise;
 }
 
-// client.interceptors.request.use(
-//   async (config) => {
-//     // const accessToken = await getAccessToken();
-//     // if (accessToken) {
-//     //   config.headers["Authorization"] = `Bearer ${accessToken}`;
-//     // }
-//     return config;
-//   },
-//   null,
-//   {
-//     runWhen: (request) => !request.headers["No-Auth"],
-//   }
-// );
-// client.interceptors.response.use(
-//   (response) => {
-//     return response;
-//   },
-//   (error) => {
-//     if (isAxiosError(error)) {
-//       if (error.code === "ERR_NETWORK") {
-//         throw {
-//           type: "NetworkError",
-//           message: "Failed to connect to the server",
-//         };
-//       }
-//       throw error.response?.data;
-//     }
-//     throw {
-//       type: "UnknownError",
-//       message: "An unknown error occurred",
-//     };
-//   }
-// );
+client.interceptors.request.use(async (config) => {
+  const accessToken = await getAccessToken();
+  if (accessToken) {
+    config.headers["Authorization"] = `Bearer ${accessToken}`;
+  }
+  return config;
+}, null);
+client.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    if (isAxiosError(error)) {
+      console.log(error);
+      if (error.code === "ERR_NETWORK") {
+        throw {
+          type: "NetworkError",
+          message: "Failed to connect to the server",
+        };
+      }
+      throw error.response?.data;
+    }
+    throw {
+      type: "UnknownError",
+      message: "An unknown error occurred",
+    };
+  }
+);

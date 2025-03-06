@@ -5,18 +5,30 @@ import {
 } from "@/constants/cookies";
 import { apiClient } from "@/lib/client";
 import { tokenSchema } from "@/lib/schemas/token.schema";
+import { userSchema } from "@/lib/schemas/user/user.schema";
 import { useMutation } from "@tanstack/react-query";
 import { setCookie } from "cookies-next";
 import { z } from "zod";
 
 export const loginBodySchema = z.object({
-  email: z.string().email(),
+  email: z.string().email("Invalid email address"),
   password: z.string(),
 });
+
 export type LoginBodySchema = z.infer<typeof loginBodySchema>;
+
+const loginUserSchema = userSchema.omit({
+  id: true,
+  last_login: true,
+  is_superuser: true,
+  is_staff: true,
+  date_joined: true,
+});
+
 export const loginResponseSchema = z.object({
-  message: z.string(),
-  tokens: tokenSchema,
+  user: loginUserSchema,
+  access: tokenSchema.pick({ access: true }),
+  refresh: tokenSchema.pick({ refresh: true }),
 });
 export type LoginResponseSchema = z.infer<typeof loginResponseSchema>;
 export const loginErrorResponseSchema = z.object({
@@ -33,19 +45,22 @@ export async function signInApi(
   return response.data;
 }
 
-export function useSignInMutation() {
+export function useLoginMutation() {
   const queryClient = getQueryClient();
 
-  return useMutation({
-    mutationKey: ["sign-in"],
+  return useMutation<
+    LoginResponseSchema,
+    LoginErrorResponseSchema,
+    LoginBodySchema
+  >({
+    mutationKey: ["login"],
     mutationFn: (body: LoginBodySchema) => signInApi(body),
     onSuccess: (data) => {
-      console.log(data);
-      // setCookie(COOKIE_KEY_ACCESS_TOKEN, data.tokens.accessToken);
-      // setCookie(COOKIE_KEY_REFRESH_TOKEN, data.tokens.refreshToken);
-      // queryClient.resetQueries({
-      //   queryKey: ["current-user"],
-      // });
+      setCookie(COOKIE_KEY_ACCESS_TOKEN, data.access);
+      setCookie(COOKIE_KEY_REFRESH_TOKEN, data.refresh);
+      queryClient.resetQueries({
+        queryKey: ["current-user"],
+      });
     },
   });
 }

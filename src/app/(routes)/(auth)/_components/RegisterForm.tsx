@@ -1,20 +1,58 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+import {
+  registerBodySchema,
+  RegisterBodySchema,
+  useRegisterMutation,
+} from "@/service/(auth)/register.api";
 import Link from "next/link";
+import { useRouter } from "nextjs-toploader/app";
 import React from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export function RegisterForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"form">) {
-	
-  const registerForm = useForm();
-  const onSubmit = registerForm.handleSubmit((data) => {});
+  const registerForm = useForm<RegisterBodySchema>({
+    defaultValues: {
+      email: "",
+      password1: "",
+      password2: "",
+    },
+    resolver: zodResolver(registerBodySchema),
+  });
+  const router = useRouter();
+  const registerMutation = useRegisterMutation();
+  const onSubmit = registerForm.handleSubmit((data: RegisterBodySchema) => {
+    try {
+      registerMutation.mutate(data, {
+        onSuccess: (res) => {
+          toast.success("Account created successfully");
+          router.push("/login");
+        },
+        onError: (error: any) => {
+          toast.error(
+            error?.non_field_errors?.[0] || "Invalid email or password"
+          );
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  });
 
   return (
     <Form {...registerForm}>
@@ -29,46 +67,60 @@ export function RegisterForm({
             Enter your email below to register to your account
           </p>
         </div>
-        <div className="grid gap-6">
-          <div className="grid gap-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="m@example.com"
-              required
-            />
-          </div>
-          <div className="grid gap-2">
-            <div className="flex items-center">
-              <Label htmlFor="password">Password</Label>
-            </div>
-            <Input
-              id="password"
-              type="password"
-              required
-              placeholder="**********"
-            />
-          </div>
-          <div className="grid gap-2">
-            <div className="flex items-center">
-              <Label htmlFor="confirm-password">Confirm Password</Label>
-              <Link
-                href="/forgot-password"
-                className="ml-auto text-sm underline-offset-4 hover:underline"
-              >
-                Forgot your password?
-              </Link>
-            </div>
-            <Input
-              id="confirm-password"
-              type="password"
-              required
-              placeholder="**********"
-            />
-          </div>
-          <Button type="submit" className="w-full">
-            Register
+        <div className="grid gap-4">
+          <FormField
+            control={registerForm.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter your email" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={registerForm.control}
+            name="password1"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Enter your password"
+                    type="password"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={registerForm.control}
+            name="password2"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Confirm Password</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Confirm your password"
+                    type="password"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={registerMutation.isPending}
+          >
+            {registerMutation.isPending ? "Registering..." : "Register"}
           </Button>
           <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
             <span className="relative z-10 bg-background px-2 text-muted-foreground">

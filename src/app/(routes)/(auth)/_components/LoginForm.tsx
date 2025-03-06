@@ -13,30 +13,53 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { LoginBodySchema, useSignInMutation } from "@/service/(auth)/login.api";
+import {
+  loginBodySchema,
+  LoginBodySchema,
+  useLoginMutation,
+} from "@/service/(auth)/login.api";
+import toast from "react-hot-toast";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "nextjs-toploader/app";
+import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 
 export function LoginForm() {
+  const [isShowing, setIsShowing] = useState<boolean>(false);
   const loginForm = useForm<LoginBodySchema>({
     defaultValues: {
       email: "",
       password: "",
     },
+    resolver: zodResolver(loginBodySchema),
   });
-  const signInMutation = useSignInMutation();
-  const onSubmit = loginForm.handleSubmit((data: LoginBodySchema) => {
-    signInMutation.mutate(data, {
+  const router = useRouter();
+  const loginMutation = useLoginMutation();
+  const onSubmit = (data: LoginBodySchema) => {
+    loginMutation.mutate(data, {
       onSuccess(data) {
-        console.log(data);
+        toast.success("Login successful");
+        router.push("/dashboard");
       },
-      onError(error) {
+      onError(error: any) {
         console.log(error);
+        toast.error(
+          error?.non_field_errors?.[0] || "Invalid email or password"
+        );
       },
     });
-  });
+  };
+
+  const handleShowPassword = () => {
+    setIsShowing(!isShowing);
+  };
 
   return (
     <Form {...loginForm}>
-      <form onSubmit={onSubmit} className={cn("space-y-4")}>
+      <form
+        onSubmit={loginForm.handleSubmit(onSubmit)}
+        className={cn("space-y-4")}
+      >
         <div className="flex flex-col items-center gap-2 text-center">
           <h1 className="text-2xl font-bold">Login to your account</h1>
           <p className="text-balance text-sm text-muted-foreground">
@@ -64,18 +87,30 @@ export function LoginForm() {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="Enter your email"
-                    type="password"
-                    {...field}
-                  />
+                  <div className="relative">
+                    <Input
+                      placeholder="Enter your email"
+                      type={isShowing ? "text" : "password"}
+                      {...field}
+                    />
+                    <span
+                      className="absolute inset-y-0 right-0 flex items-center px-2"
+                      onClick={handleShowPassword}
+                    >
+                      {isShowing ? <EyeOff size={20}/> : <Eye size={20}/>}
+                    </span>
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full">
-            Login
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={loginMutation.isPending}
+          >
+            {loginMutation.isPending ? "Loading..." : "Login"}
           </Button>
           <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
             <span className="relative z-10 bg-background px-2 text-muted-foreground">
