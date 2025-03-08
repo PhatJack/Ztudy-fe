@@ -21,12 +21,12 @@ const Header = () => {
 
 	const router = useRouter()
 
-	const currentUser = useQuery(createGetCurrentUserInformationQueryOptions())
+	// const currentUser = useQuery(createGetCurrentUserInformationQueryOptions())
 
 	// console.log(currentUser)
 
   return (
-    <header className="w-full p-2 bg-white dark:bg-background max-h-12 h-12 sticky top-0 border-b border-gray-200">
+    <header className="w-full p-2 bg-white dark:bg-background max-h-12 h-12 sticky top-0 border-b border-gray-200 shadow-sm">
       <div className="w-full flex justify-between items-center">
         <div className="">
 

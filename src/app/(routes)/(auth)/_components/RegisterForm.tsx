@@ -21,6 +21,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
+import LoadingSpinner from "@/components/loading/loading-spinner";
 
 export function RegisterForm({
   className,
@@ -75,7 +76,11 @@ export function RegisterForm({
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter your email" {...field} />
+                  <Input
+                    placeholder="Enter your email"
+                    {...field}
+                    disabled={registerMutation.isPending}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -92,6 +97,7 @@ export function RegisterForm({
                     placeholder="Enter your password"
                     type="password"
                     {...field}
+                    disabled={registerMutation.isPending}
                   />
                 </FormControl>
                 <FormMessage />
@@ -109,6 +115,7 @@ export function RegisterForm({
                     placeholder="Confirm your password"
                     type="password"
                     {...field}
+                    disabled={registerMutation.isPending}
                   />
                 </FormControl>
                 <FormMessage />
@@ -120,7 +127,7 @@ export function RegisterForm({
             className="w-full"
             disabled={registerMutation.isPending}
           >
-            {registerMutation.isPending ? "Registering..." : "Register"}
+            {registerMutation.isPending ? <LoadingSpinner /> : "Register"}
           </Button>
           <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
             <span className="relative z-10 bg-background px-2 text-muted-foreground">

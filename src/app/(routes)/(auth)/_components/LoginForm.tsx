@@ -23,6 +23,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "nextjs-toploader/app";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import LoadingSpinner from "@/components/loading/loading-spinner";
 
 export function LoginForm() {
   const [isShowing, setIsShowing] = useState<boolean>(false);
@@ -74,7 +75,11 @@ export function LoginForm() {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter your email" {...field} />
+                  <Input
+                    placeholder="Enter your email"
+                    {...field}
+                    disabled={loginMutation.isPending}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -92,12 +97,13 @@ export function LoginForm() {
                       placeholder="Enter your email"
                       type={isShowing ? "text" : "password"}
                       {...field}
+                      disabled={loginMutation.isPending}
                     />
                     <span
                       className="absolute inset-y-0 right-0 flex items-center px-2"
                       onClick={handleShowPassword}
                     >
-                      {isShowing ? <EyeOff size={20}/> : <Eye size={20}/>}
+                      {isShowing ? <EyeOff size={20} /> : <Eye size={20} />}
                     </span>
                   </div>
                 </FormControl>
@@ -110,7 +116,7 @@ export function LoginForm() {
             className="w-full"
             disabled={loginMutation.isPending}
           >
-            {loginMutation.isPending ? "Loading..." : "Login"}
+            {loginMutation.isPending ? <LoadingSpinner /> : "Login"}
           </Button>
           <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
             <span className="relative z-10 bg-background px-2 text-muted-foreground">

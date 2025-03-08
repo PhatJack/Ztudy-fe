@@ -8,7 +8,7 @@ export default function AuthLayout({
       <div className="flex flex-col gap-4 p-6 md:p-10 bg-background">
         <div className="flex justify-center gap-2 md:justify-start">
           <Link href="/" className="flex items-center gap-2 font-semibold">
-            <div className="flex size-10 items-center justify-center rounded-md bg-primary text-primary-foreground">
+            <div className="flex size-16 sm:size-10 items-center justify-center rounded-md bg-primary text-primary-foreground">
               <span className="w-2/3 aspect-square bg-primary flex justify-center items-center rounded-full">
                 <svg
                   className="size-8 stroke-2 fill-white"
