@@ -1,13 +1,13 @@
 import React, { createContext, useMemo, useReducer, Dispatch } from "react";
 
 // Define the type for the state
-export type PanelType = "quote" | "studyStats" | "backgroundIframe";
+export type PanelType = "quote" | "studyStats" | "backgroundIframe" | "sound";
 
 export interface InitialState {
   isOpenPomodoro: boolean;
   isOpenSessionGoal: boolean;
   isOpenFullScreen: boolean;
-  activePanel: "quote" | "studyStats" | "backgroundIframe" | null;
+  activePanel: PanelType | null;
   quote: { content: string; author: string } | null;
   isDisplayQuote: boolean;
   volume: number;

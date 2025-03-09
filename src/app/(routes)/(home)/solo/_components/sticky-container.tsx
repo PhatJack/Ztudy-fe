@@ -6,6 +6,7 @@ import SessionGoal from "./session-goal";
 import StudyStat from "./study-stat";
 import BackgroundList from "./background-list";
 import Quote from "./quote";
+import SoundList from "./sound-list";
 
 const StickyContainer = () => {
   const [state, _] = useSoloContext();
@@ -18,6 +19,7 @@ const StickyContainer = () => {
       </div>
       <div className="absolute top-0 right-0 flex flex-col min-w-64">
         {state.activePanel === "quote" ? <Quote /> : null}
+        {state.activePanel === "sound" ? <SoundList /> : null}
         {state.activePanel === "studyStats" ? <StudyStat /> : null}
         {state.activePanel === "backgroundIframe" ? <BackgroundList /> : null}
       </div>

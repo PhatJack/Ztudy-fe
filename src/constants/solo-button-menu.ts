@@ -1,5 +1,5 @@
 import { PanelType } from "@/contexts/SoloContext";
-import { ChartNoAxesColumn, Image, TextQuote } from "lucide-react";
+import { ChartNoAxesColumn, Image, Music, TextQuote } from "lucide-react";
 
 interface MenuButton {
   icon: React.ElementType;
@@ -14,6 +14,11 @@ export const menuButton: MenuButton[] = [
     variable: "backgroundIframe",
   },
   {
+    icon: Music,
+    label: "Sound",
+    variable: "sound",
+  },
+  {
     icon: TextQuote,
     label: "Text",
     variable: "quote",
@@ -22,5 +27,5 @@ export const menuButton: MenuButton[] = [
     icon: ChartNoAxesColumn,
     label: "Study Stat",
     variable: "studyStats",
-  }
+  },
 ];
