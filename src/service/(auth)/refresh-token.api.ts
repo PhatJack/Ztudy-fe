@@ -18,12 +18,7 @@ export async function refreshTokenApi(
 ): Promise<RefreshTokenResponseSchema> {
   const response = await apiClient.post<RefreshTokenResponseSchema>(
     "/auth/token/refresh",
-    body,
-    {
-      headers: {
-        "No-Auth": "true",
-      },
-    }
+    body
   );
   return response.data;
 }
