@@ -1,17 +1,11 @@
 "use client";
 import LoadingSpinner from "@/components/loading/loading-spinner";
 import VolumeChange from "@/components/solo/volume-change";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Slider } from "@/components/ui/slider";
 import { useSoloContext } from "@/hooks/useSoloContext";
 import { useListSounds } from "@/service/(solo)/list-sounds.api";
 import { useQuery } from "@tanstack/react-query";
-import debounce from "lodash.debounce";
-import { Info, Volume2, VolumeX } from "lucide-react";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 const SoundList = () => {
   const [state, dispatch] = useSoloContext();
   const soundsQuery = useQuery(useListSounds());
@@ -28,6 +22,16 @@ const SoundList = () => {
   const handleMute = useCallback(() => {
     dispatch({ type: "SET_VOLUME", payload: state.volume > 0 ? 0 : 100 });
   }, [state.volume, dispatch]);
+
+	useEffect(() => {
+		if(sounds) {
+			sounds.forEach((sound) => {
+				const audio = new Audio(sound.sound_file)
+				audio.volume = 0
+				audio.play()
+			})
+		}
+	},[sounds])
 
   return (
     <div className="w-[267px] min-w-[267px] bg-background rounded-md p-5 shadow-lg flex flex-col space-y-2">

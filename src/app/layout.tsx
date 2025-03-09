@@ -1,19 +1,8 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import DefaultLayout from "@/components/layout/DefaultLayout";
-import { Nunito } from "next/font/google";
+import { Nunito, Signika_Negative } from "next/font/google";
 import Providers from "./providers";
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
 
 const nunito = Nunito({
   subsets: ["latin"],
@@ -44,9 +33,7 @@ export default function RootLayout({
 }>) {
   return (
     <html suppressHydrationWarning={true} lang="en">
-      <body
-        className={`${nunito.className} ${geistSans.variable} ${geistMono.variable} antialiased relative bg-muted/60`}
-      >
+      <body className={`${nunito.className} antialiased relative bg-muted/60`}>
         <Providers>{children}</Providers>
       </body>
     </html>
