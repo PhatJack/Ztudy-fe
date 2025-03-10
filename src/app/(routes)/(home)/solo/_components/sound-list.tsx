@@ -82,9 +82,6 @@ const SoundList = () => {
               <strong>{sound.sound_name}</strong>
             </span>
           </Label>
-          {/* <audio className="sr-only" autoPlay loop onVolumeChange={(e) => handleVolumeChange(sound.sound_file,(e.target as HTMLAudioElement).volume)}>
-            <source src={sound.sound_file} />
-          </audio> */}
           <VolumeChange
             step={0.1}
             minValue={0}

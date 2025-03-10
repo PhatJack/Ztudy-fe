@@ -43,4 +43,4 @@ const VolumeChange = ({
   );
 };
 
-export default VolumeChange;
+export default React.memo(VolumeChange);
