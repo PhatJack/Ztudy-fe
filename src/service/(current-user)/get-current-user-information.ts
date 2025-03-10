@@ -15,7 +15,7 @@ export type CurrentUserResponseSchema = z.infer<
   typeof currentUserResponseSchema
 >;
 
-export async function getCurrentUserInformationApi() {
+export async function getCurrentUserInformationApi() : Promise<CurrentUserResponseSchema> {
   const response = await apiClient.get<CurrentUserResponseSchema>(
     "/auth/user/"
   );

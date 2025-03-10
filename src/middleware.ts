@@ -17,11 +17,11 @@ export function middleware(request: NextRequest) {
   const isProtected = protectedRoutes.includes(currentPath);
   if (isProtected) {
     const token = cookies().get(COOKIE_KEY_ACCESS_TOKEN)?.value;
-    // if (!token) {
-    //   return NextResponse.redirect(
-    //     new URL("/login", request.nextUrl.origin).toString()
-    //   );
-    // }
+    if (!token) {
+      return NextResponse.redirect(
+        new URL("/login", request.nextUrl.origin).toString()
+      );
+    }
   }
 }
 
