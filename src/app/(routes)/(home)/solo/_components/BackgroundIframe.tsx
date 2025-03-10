@@ -31,7 +31,6 @@ function BackgroundIframe() {
 
   const handleVolumeChange = useCallback(() => {
     if (state.volume === 0) {
-      console.log(youtubeRef.current);
       videoRef.current.mute();
     } else {
       videoRef.current.unMute();
@@ -42,7 +41,6 @@ function BackgroundIframe() {
   useEffect(() => {
     // Function to initialize youtube
     const initializeyoutube = () => {
-      console.log("create youtubeRef");
       const video = UrlToEmbeded(state.backgroundURL);
       youtubeRef.current = new window.YT.Player("video-youtube", {
         height: "390",
@@ -82,7 +80,6 @@ function BackgroundIframe() {
       (window as any).onYouTubeIframeAPIReady = initializeyoutube;
     } else if (window.YT && window.YT.Player) {
       // YouTube API is already loaded, initialize youtube directly
-      console.log("YouTube API already loaded, initializing youtube directly");
       initializeyoutube();
     }
   }, [state.backgroundURL, state.isAddYtbScript]);

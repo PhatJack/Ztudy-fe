@@ -1,5 +1,6 @@
 "use client";
 
+import LoadingSpinner from "@/components/loading/loading-spinner";
 import TooltipTemplate from "@/components/tooltip/TooltipTemplate";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -7,22 +8,53 @@ import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useSoloContext } from "@/hooks/useSoloContext";
-import { CreateGoalBodySchema } from "@/service/(goal)/create-goal.api";
+import { createGetCurrentUserInformationQueryOptions } from "@/service/(current-user)/get-current-user-information";
+import {
+  CreateGoalBodySchema,
+  useCreateGoalMutation,
+} from "@/service/(goal)/create-goal.api";
+import { useListGoals } from "@/service/(goal)/list-goals.api";
+import { useQuery } from "@tanstack/react-query";
 import { OctagonAlert, Plus, Target, X } from "lucide-react";
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 
 const SessionGoal = () => {
+  const currentUserQuery = useQuery(
+    createGetCurrentUserInformationQueryOptions()
+  );
+  const userId = currentUserQuery.data?.id;
+  const createGoalMutation = useCreateGoalMutation();
+
+  const goalsQuery = useQuery(useListGoals({user: userId}));
+
+	const goals = goalsQuery.data?.results;
+
   const [, dispatch] = useSoloContext();
 
   const goalForm = useForm<CreateGoalBodySchema>({
     defaultValues: {
       title: "",
+      status: "OPEN",
     },
   });
 
   const onGoalSubmit = goalForm.handleSubmit((data: CreateGoalBodySchema) => {
-    console.log(data);
+    const formData = {
+      ...data,
+      user_id: currentUserQuery.data?.id,
+    };
+
+    createGoalMutation.mutate(formData, {
+      onSuccess: () => {
+        goalForm.reset();
+      },
+      onError: (error) => {
+        console.error(error);
+        toast.error("Failed to create goal");
+      },
+    });
   });
 
   return (
@@ -33,11 +65,16 @@ const SessionGoal = () => {
           <strong>Session Goal</strong>
         </span>
         <div className="flex items-center gap-2">
-					<TooltipTemplate variant={"accent"} content={"Supercharge your focus by setting clear, bite-sized goals for each work session. Instead of “finish project,” try “draft 500 words” or “review 3 pages.” Pair it with a timer (like 25 minutes) to keep momentum. Small wins stack up—define your target, crush it, and watch progress soar!"}>
-          <span className="cursor-pointer">
-            <OctagonAlert size={16} />
-          </span>
-					</TooltipTemplate>
+          <TooltipTemplate
+            variant={"accent"}
+            content={
+              "Supercharge your focus by setting clear, bite-sized goals for each work session. Instead of “finish project,” try “draft 500 words” or “review 3 pages.” Pair it with a timer (like 25 minutes) to keep momentum. Small wins stack up—define your target, crush it, and watch progress soar!"
+            }
+          >
+            <span className="cursor-pointer">
+              <OctagonAlert size={16} />
+            </span>
+          </TooltipTemplate>
           <span
             onClick={() =>
               dispatch({ type: "TOGGLE_BUTTON", payload: "isOpenSessionGoal" })
@@ -58,6 +95,11 @@ const SessionGoal = () => {
                   <Input
                     placeholder="shadcn"
                     {...field}
+                    disabled={
+                      goalForm.formState.isSubmitting ||
+                      !goalForm.formState.isValid ||
+                      !goalForm.formState.isDirty
+                    }
                     className="bg-white dark:bg-black border-2 border-gray-200"
                   />
                 </FormControl>
@@ -79,17 +121,27 @@ const SessionGoal = () => {
         </form>
       </Form>
       <div className="flex flex-col gap-3">
-        {Array.from({ length: 5 }).map((_, index) => (
-          <div key={index} className="flex items-center gap-1">
-            <Checkbox id={`goal${index}`} className="rounded-full" />
-            <Label
-              htmlFor={`goal${index}`}
-              className="peer-data-[state=checked]:line-through"
-            >
-              This is a goal
-            </Label>
+        {goalsQuery.isLoading ? (
+          <div className="h-[200px] w-full flex justify-center items-center">
+            <LoadingSpinner />
           </div>
-        ))}
+        ) : null}
+        {goals &&
+          goals.map((item, index) => (
+            <div key={index} className="flex items-center gap-1">
+              <Checkbox
+                id={`goal${index}`}
+                className="rounded-full"
+                checked={item.status === "COMPLETED" ? true : false}
+              />
+              <Label
+                htmlFor={`goal${index}`}
+                className="peer-data-[state=checked]:line-through"
+              >
+                {item.title}
+              </Label>
+            </div>
+          ))}
       </div>
     </div>
   );

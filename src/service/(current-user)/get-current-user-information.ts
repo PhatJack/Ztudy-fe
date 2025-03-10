@@ -4,7 +4,6 @@ import { apiClient } from "@/lib/client";
 import { userSchema } from "@/lib/schemas/user/user.schema";
 
 export const currentUserResponseSchema = userSchema.omit({
-  id: true,
   password: true,
   date_joined: true,
   last_login: true,

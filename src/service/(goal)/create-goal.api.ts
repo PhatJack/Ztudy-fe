@@ -5,7 +5,11 @@ import { useMutation } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
 import { z } from "zod";
 
-export const createGoalBodySchema = goalSchema.omit({ id: true, status: true });
+export const createGoalBodySchema = goalSchema.omit({
+  id: true,
+  created_at: true,
+  updated_at: true,
+});
 
 export type CreateGoalBodySchema = z.infer<typeof createGoalBodySchema>;
 
@@ -17,7 +21,7 @@ export async function createGoalApi(
   body: CreateGoalBodySchema
 ): Promise<CreateGoalResponseSchema> {
   const response = await apiClient.post<CreateGoalResponseSchema>(
-    "/goal",
+    "/session-goals/",
     body
   );
   return createGoalResponseSchema.parse(response.data);
