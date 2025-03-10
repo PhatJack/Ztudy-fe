@@ -4,30 +4,26 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { motivationalQuotes } from "@/constants/quotes";
 import { useSoloContext } from "@/hooks/useSoloContext";
+import { useGetRandomQuote } from "@/service/(solo)/quote/get-random-quote.api";
 import { useListQuotes } from "@/service/(solo)/quote/list-quotes.api";
 import { useQuery } from "@tanstack/react-query";
 import { Eye, EyeOff, MessageSquareQuote, RefreshCcw, X } from "lucide-react";
 import React, { useCallback } from "react";
 
 const Quote = () => {
-  const quotesQuery = useQuery(useListQuotes());
+  const quotesQuery = useQuery(useGetRandomQuote());
 
-  const quotes = quotesQuery.data?.results;
+  const quote = quotesQuery.data;
 
   const [state, dispatch] = useSoloContext();
 
   const randomQuote = useCallback(() => {
-    const quote = quotes
-      ? quotes[Math.floor(Math.random() * quotes.length)]
-      : {
-          quote: "Success is the sum of small efforts, repeated day in and day out.",
-          author: "Robert Collier",
-        };
+    quotesQuery.refetch();
     dispatch({
       type: "SHUFFLE_QUOTE",
-      payload: { content: quote.quote, author: quote.author },
+      payload: { content: quote?.quote ?? "", author: quote?.author ?? "" },
     });
-  }, [dispatch]);
+  }, [quote]);
 
   const toggleDisplay = useCallback(() => {
     dispatch({ type: "TOGGLE_QUOTE" });
@@ -40,7 +36,7 @@ const Quote = () => {
           <LoadingSpinner />
         </div>
       ) : null}
-      {quotesQuery.data && quotesQuery.data.results ? (
+      {quotesQuery.data ? (
         <>
           <div className="flex justify-between items-center">
             <div className="flex items-center">
