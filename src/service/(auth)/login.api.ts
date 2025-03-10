@@ -23,6 +23,12 @@ const loginUserSchema = userSchema.omit({
   is_superuser: true,
   is_staff: true,
   date_joined: true,
+	restored_at: true,
+	transaction_id: true,
+	created_at: true,
+	updated_at: true,
+	deleted_at: true,
+	password: true,
 });
 
 export const loginResponseSchema = z.object({

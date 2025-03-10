@@ -7,9 +7,19 @@ interface Props {
   volume: number;
   handleMute: () => void;
   debouncedSetVolume: (val: number[]) => void;
+  minValue?: number;
+  maxValue?: number;
+  step?: number;
 }
 
-const VolumeChange = ({ debouncedSetVolume, handleMute, volume }: Props) => {
+const VolumeChange = ({
+  debouncedSetVolume,
+  handleMute,
+  volume,
+  minValue = 0,
+  maxValue = 100,
+  step = 1,
+}: Props) => {
   return (
     <div className="flex gap-1">
       <Button
@@ -23,9 +33,9 @@ const VolumeChange = ({ debouncedSetVolume, handleMute, volume }: Props) => {
       </Button>
       <Slider
         id="volume"
-        step={1}
-        min={0}
-        max={100}
+        step={step}
+        min={minValue}
+        max={maxValue}
         value={[volume]}
         onValueChange={(value) => debouncedSetVolume(value)}
       />

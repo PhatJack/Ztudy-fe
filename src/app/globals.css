@@ -86,14 +86,14 @@ body {
 }
 
 @media(max-aspect-ratio: 16 / 9) {
-	#video-player {
+	#video-youtube {
 		width: 177.77777778vh;
 		height: 120% !important
 	}
 }
 
 @media(min-aspect-ratio: 16/9) {
-	#video-player {
+	#video-youtube {
 		height: 86.25vw !important
 	}
 }

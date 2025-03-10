@@ -38,7 +38,7 @@ export function LoginForm() {
   const loginMutation = useLoginMutation();
   const onSubmit = (data: LoginBodySchema) => {
     loginMutation.mutate(data, {
-      onSuccess(data) {
+      onSuccess() {
         toast.success("Login successful");
         router.push("/dashboard");
       },
