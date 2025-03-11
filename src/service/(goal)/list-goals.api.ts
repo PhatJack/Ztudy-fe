@@ -20,16 +20,16 @@ export const goalResponseBodySchema = createListResponseSchema(goalSchema);
 export type GoalResponseBodySchema = z.infer<typeof goalResponseBodySchema>;
 
 export async function listGoalsApi(
-  body?: GoalQuerySchema
+  query: GoalQuerySchema
 ): Promise<GoalResponseBodySchema> {
   const response = await apiClient.get<GoalResponseBodySchema>(
     "/session-goals/",
-    body
+    query
   );
   return goalResponseBodySchema.parse(response.data);
 }
 
-export const useListGoals = (query?: GoalQuerySchema) => {
+export const useListGoals = (query: GoalQuerySchema = {}) => {
   const queryKey = ["goals", query] as const;
   return queryOptions<GoalResponseBodySchema>({
     queryKey,

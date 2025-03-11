@@ -3,8 +3,12 @@ import { useListBackgroundVideoTypes } from "@/service/(solo)/background/list-ba
 import { useSuspenseQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 
-const BackgroundTypesList = () => {
-  const [activeTab, setActiveTab] = useState<number>(0);
+interface Props {
+  activeTab: number;
+  setActiveTab: (tab: number) => void;
+}
+
+const BackgroundTypesList = ({ activeTab, setActiveTab }: Props) => {
   const backgroundVideoTypesQuery = useSuspenseQuery(
     useListBackgroundVideoTypes()
   );
@@ -25,7 +29,7 @@ const BackgroundTypesList = () => {
             type="button"
             size={"sm"}
             variant={activeTab === backgroundType.id ? "black" : "white"}
-						className="h-5 px-1.5 rounded-full"
+            className="h-5 px-1.5 rounded-full"
             key={backgroundType.id}
             onClick={() => setActiveTab(backgroundType.id)}
           >

@@ -7,7 +7,7 @@ import QuoteDisplay from "./quote-display";
 const SoloPage = () => {
   return (
     <>
-      <BackgroundIframe />
+      {/* <BackgroundIframe /> */}
       <div className="relative">
         <div className="relative size-full flex justify-between items-center h-12 mb-4">
           <StickyMenu />
