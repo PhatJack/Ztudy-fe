@@ -5,8 +5,6 @@ import { userSchema } from "@/lib/schemas/user/user.schema";
 
 export const currentUserResponseSchema = userSchema.omit({
   password: true,
-  date_joined: true,
-  last_login: true,
   is_staff: true,
   is_superuser: true,
 });

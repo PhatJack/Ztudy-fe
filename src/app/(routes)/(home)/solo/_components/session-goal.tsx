@@ -121,7 +121,7 @@ const SessionGoal = () => {
         </form>
       </Form>
       <div className="flex flex-col gap-3">
-        {goalsQuery.isLoading ? (
+        {/* {goalsQuery.isLoading ? (
           <div className="h-[200px] w-full flex justify-center items-center">
             <LoadingSpinner />
           </div>
@@ -141,7 +141,7 @@ const SessionGoal = () => {
                 {item.title}
               </Label>
             </div>
-          ))}
+          ))} */}
       </div>
     </div>
   );

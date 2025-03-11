@@ -17,6 +17,8 @@ export const userSchema = baseSchema.extend({
   date_joined: z.date(),
   restored_at: z.date().nullable(),
   transaction_id: z.string().nullable(),
+	created_at: z.coerce.date(),
+	updated_at: z.coerce.date(),
 });
 
 export type UserSchema = z.infer<typeof userSchema>;
