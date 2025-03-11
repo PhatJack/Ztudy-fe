@@ -13,7 +13,7 @@ export type ListStudyGroupResponse = z.infer<
 >;
 
 export async function listStudyGroupsApi() : Promise<ListStudyGroupResponse> {
-  await new Promise((resolve) => setTimeout(resolve, 2000));
+  
   const res = await apiClient.get<ListStudyGroupResponse>("/rooms/");
   return res.data;
 }

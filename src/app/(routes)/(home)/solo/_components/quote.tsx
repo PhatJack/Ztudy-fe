@@ -2,13 +2,11 @@
 import LoadingSpinner from "@/components/loading/loading-spinner";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { motivationalQuotes } from "@/constants/quotes";
 import { useSoloContext } from "@/hooks/useSoloContext";
 import { useGetRandomQuote } from "@/service/(solo)/quote/get-random-quote.api";
-import { useListQuotes } from "@/service/(solo)/quote/list-quotes.api";
 import { useQuery } from "@tanstack/react-query";
 import { Eye, EyeOff, MessageSquareQuote, RefreshCcw, X } from "lucide-react";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 
 const Quote = () => {
   const quotesQuery = useQuery(useGetRandomQuote());
@@ -17,17 +15,22 @@ const Quote = () => {
 
   const [state, dispatch] = useSoloContext();
 
-  const randomQuote = useCallback(() => {
-    quotesQuery.refetch();
-    dispatch({
-      type: "SHUFFLE_QUOTE",
-      payload: { content: quote?.quote ?? "", author: quote?.author ?? "" },
-    });
-  }, [quote]);
+  const randomQuote = useCallback(async () => {
+    await quotesQuery.refetch();
+  }, [dispatch, quotesQuery.refetch]);
 
   const toggleDisplay = useCallback(() => {
     dispatch({ type: "TOGGLE_QUOTE" });
   }, [dispatch]);
+
+  useEffect(() => {
+    if (quote) {
+      dispatch({
+        type: "SHUFFLE_QUOTE",
+        payload: { content: quote.quote ?? "", author: quote.author ?? "" },
+      });
+    }
+  }, [quotesQuery.data]);
 
   return (
     <div className="w-[267px] min-w-[267px] p-5 rounded-md bg-background shadow-lg">

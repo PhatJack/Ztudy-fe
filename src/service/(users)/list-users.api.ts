@@ -22,7 +22,6 @@ export type ListUsersResponse = z.infer<typeof listUsersResponseSchema>;
 export async function listUsersApi(
   query?: ListUsersQuerySchema
 ): Promise<ListUsersResponse> {
-  await new Promise((resolve) => setTimeout(resolve, 2000));
   const res = await apiClient.get<ListUsersResponse>("/users/", query ?? {});
   return res.data;
 }

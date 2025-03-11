@@ -9,7 +9,7 @@ export type GetRandomQuoteResponseBodySchema = z.infer<
   typeof getRandomQuoteResponseBodySchema
 >;
 
-export async function getRandomQuoteApi() {
+export async function getRandomQuoteApi(): Promise<GetRandomQuoteResponseBodySchema> {
   const res = await apiClient.get<GetRandomQuoteResponseBodySchema>(
     "/motivational-quotes/random-quote/"
   );
