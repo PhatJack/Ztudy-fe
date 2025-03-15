@@ -104,7 +104,6 @@ async function getAccessToken(): Promise<string | null> {
 }
 
 client.interceptors.request.use(async (config) => {
-	await new Promise((resolve) => setTimeout(resolve, 2000));
   const accessToken = await getAccessToken();
   if (accessToken) {
     config.headers["Authorization"] = `Bearer ${accessToken}`;
