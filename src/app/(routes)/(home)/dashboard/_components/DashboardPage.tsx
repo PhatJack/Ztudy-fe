@@ -1,4 +1,5 @@
-import React, { Suspense } from "react";
+"use client";
+import React, { Suspense, useEffect } from "react";
 import ZtudyCommunity from "./ZtudyCommunity";
 import LoadingSpinner from "@/components/loading/loading-spinner";
 import AvatarCustom from "@/components/avatar/AvatarCustom";
@@ -6,6 +7,9 @@ import { Plus, Target } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useQuery } from "@tanstack/react-query";
+import { createGetCurrentUserInformationQueryOptions } from "@/service/(current-user)/get-current-user-information";
+import { useListGoals } from "@/service/(goal)/list-goals.api";
 
 const tabs: { name: string; value: string }[] = [
   { name: "Open Goals", value: "openGoals" },
@@ -13,6 +17,17 @@ const tabs: { name: string; value: string }[] = [
 ];
 
 const DashboardPage = () => {
+  const userQuery = useQuery(createGetCurrentUserInformationQueryOptions());
+  const user = userQuery.data;
+  const todosListQuery = useQuery({
+    ...useListGoals({ user: 4 }),
+    enabled: !!user,
+  });
+
+  // useEffect(() => {
+  //   console.log("Todo state: " + todosListQuery.status);
+  // }, [todosListQuery.status]);
+
   return (
     <div className="relative flex h-[calc(100vh-3rem)]">
       <div className="flex-1 flex justify-center lg:py-10 lg:px-6 px-4 pt-10 w-full">
@@ -22,7 +37,7 @@ const DashboardPage = () => {
               <AvatarCustom src="/daddy-chill.gif" className="w-12 h-12" />
               <div className="lg:text-left text-center">
                 <h1 className="font-medium text-muted-foreground">
-                  Hello, John!
+                  Hello, {user?.username}!
                 </h1>
                 <p className="font-bold text-3xl lg:text-2xl leading-6 font-sans">
                   Welcome back to Ztudy!
@@ -59,8 +74,9 @@ const DashboardPage = () => {
                       <TabsTrigger
                         key={tab.value}
                         value={tab.value}
-												title={tab.name}
-                        className={`rounded-none bg-transparent h-full data-[state=active]:shadow-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:font-bold relative inline-block before:block before:h-0 before:content-[attr(title)] before:font-bold before:overflow-hidden before:invisible`}>
+                        title={tab.name}
+                        className={`rounded-none bg-transparent h-full data-[state=active]:shadow-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:font-bold relative inline-block before:block before:h-0 before:content-[attr(title)] before:font-bold before:overflow-hidden before:invisible`}
+                      >
                         {tab.name}
                       </TabsTrigger>
                     ))}
@@ -70,8 +86,8 @@ const DashboardPage = () => {
                   </TabsContent>
                   <TabsContent value="completedGoals">
                     <div className="flex flex-col space-y-2">
-											<p className="font-bold">Your completed goals! 👏</p>
-										</div>
+                      <p className="font-bold">Your completed goals! 👏</p>
+                    </div>
                   </TabsContent>
                 </Tabs>
               </div>
