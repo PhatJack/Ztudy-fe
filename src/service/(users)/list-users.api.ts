@@ -20,18 +20,18 @@ export const listUsersResponseSchema = createListResponseSchema(userSchema);
 export type ListUsersResponse = z.infer<typeof listUsersResponseSchema>;
 
 export async function listUsersApi(
-  query?: ListUsersQuerySchema
+  query: ListUsersQuerySchema
 ): Promise<ListUsersResponse> {
-  const res = await apiClient.get<ListUsersResponse>("/users/", query ?? {});
+  const res = await apiClient.get<ListUsersResponse>("/users/", query);
   return res.data;
 }
 
-export function useListUsers(query?: ListUsersQuerySchema) {
+export function useListUsers(query: ListUsersQuerySchema = {}) {
   const queryKey = ["users", query] as const;
 
   return queryOptions<ListUsersResponse>({
     queryKey,
-    queryFn: () => listUsersApi(listUsersQuerySchema.parse(query ?? {})),
+    queryFn: () => listUsersApi(listUsersQuerySchema.parse(query)),
     throwOnError: isAxiosError,
   });
 }
