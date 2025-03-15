@@ -39,8 +39,8 @@ export function LoginForm() {
   const onSubmit = (data: LoginBodySchema) => {
     loginMutation.mutate(data, {
       onSuccess() {
+				router.push("/dashboard");
         toast.success("Login successful");
-        router.push("/dashboard");
       },
       onError(error: any) {
         console.log(error);
@@ -62,7 +62,7 @@ export function LoginForm() {
         className={cn("space-y-4")}
       >
         <div className="flex flex-col items-center gap-2 text-center">
-          <h1 className="text-2xl font-bold">Login to your account</h1>
+          <h1 className="text-2xl font-bold">Login to your account </h1>
           <p className="text-balance text-sm text-muted-foreground">
             Enter your email below to login to your account
           </p>
