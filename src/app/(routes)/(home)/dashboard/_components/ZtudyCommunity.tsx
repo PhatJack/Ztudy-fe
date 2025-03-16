@@ -7,9 +7,8 @@ import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import React from "react";
 
 const ZtudyCommunity = () => {
-  const usersQuery = useSuspenseQuery(useListUsers());
+  const usersQuery = useSuspenseQuery({...useListUsers(),staleTime: 3 * 60 * 1000});
   const users = usersQuery.data?.results;
-	console.error(usersQuery)
 
   return (
     <div className="flex flex-col space-y-2 divide-y divide-background dark:divide-input">

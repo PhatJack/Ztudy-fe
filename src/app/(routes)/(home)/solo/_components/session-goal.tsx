@@ -27,9 +27,9 @@ const SessionGoal = () => {
   const userId = currentUserQuery.data?.id;
   const createGoalMutation = useCreateGoalMutation();
 
-  const goalsQuery = useQuery(useListGoals({user: userId}));
+  // const goalsQuery = useQuery(useListGoals({user: userId}));
 
-	const goals = goalsQuery.data?.results;
+	// const goals = goalsQuery.data?.results;
 
   const [, dispatch] = useSoloContext();
 

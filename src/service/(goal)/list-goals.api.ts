@@ -16,7 +16,7 @@ export const goalQuerySchema = paginationRequestSchema.extend({
 export type GoalQuerySchema = z.infer<typeof goalQuerySchema>;
 
 export const goalResponseBodySchema =
-  createListResponseSchema<GoalQuerySchema>(goalSchema);
+  createListResponseSchema(goalSchema);
 
 export type GoalResponseBodySchema = z.infer<typeof goalResponseBodySchema>;
 
@@ -27,7 +27,7 @@ export async function listGoalsApi(
     "/session-goals/",
     query
   );
-  return response.data;
+  return goalResponseBodySchema.parse(response.data);
 }
 
 export const useListGoals = (query: GoalQuerySchema = {}) => {

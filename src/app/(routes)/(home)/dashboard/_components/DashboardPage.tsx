@@ -20,10 +20,10 @@ const DashboardPage = () => {
   const userQuery = useQuery(createGetCurrentUserInformationQueryOptions());
   const user = userQuery.data;
   const todosListQuery = useQuery({
-    ...useListGoals({ user: 4 }),
+    ...useListGoals({ user: user?.id }),
     enabled: !!user,
   });
-
+	console.log(todosListQuery.data)
   // useEffect(() => {
   //   console.log("Todo state: " + todosListQuery.status);
   // }, [todosListQuery.status]);
@@ -37,7 +37,7 @@ const DashboardPage = () => {
               <AvatarCustom src="/daddy-chill.gif" className="w-12 h-12" />
               <div className="lg:text-left text-center">
                 <h1 className="font-medium text-muted-foreground">
-                  Hello, {user?.username}!
+                  Hello, {user?.username || "username"}!
                 </h1>
                 <p className="font-bold text-3xl lg:text-2xl leading-6 font-sans">
                   Welcome back to Ztudy!
@@ -68,7 +68,7 @@ const DashboardPage = () => {
                 </Button>
               </div>
               <div className="w-full">
-                <Tabs defaultValue="openGoals" className="w-full">
+                {/* <Tabs defaultValue="openGoals" className="w-full">
                   <TabsList className="w-full p-0 bg-transparent justify-start border-b border-white rounded-none">
                     {tabs.map((tab) => (
                       <TabsTrigger
@@ -89,7 +89,7 @@ const DashboardPage = () => {
                       <p className="font-bold">Your completed goals! 👏</p>
                     </div>
                   </TabsContent>
-                </Tabs>
+                </Tabs> */}
               </div>
             </div>
             <div className="w-full lg:w-1/5"></div>

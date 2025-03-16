@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "../ui/button";
 import { DoorOpen, Undo2, UserPen, UserRound } from "lucide-react";
 import {
@@ -13,17 +13,14 @@ import {
 } from "../ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useRouter } from "nextjs-toploader/app";
-import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { createGetCurrentUserInformationQueryOptions } from "@/service/(current-user)/get-current-user-information";
-import { deleteCookie } from "cookies-next";
-import {
-  COOKIE_KEY_ACCESS_TOKEN,
-  COOKIE_KEY_REFRESH_TOKEN,
-} from "@/constants/cookies";
 import toast from "react-hot-toast";
+import { useLogoutMutation } from "@/service/(auth)/logout.api";
 
 const Header = () => {
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const logoutMutation = useLogoutMutation();
   const router = useRouter();
 
   const currentUserQuery = useQuery(
@@ -33,10 +30,15 @@ const Header = () => {
   const currentUser = currentUserQuery.data;
 
   const handleLogout = () => {
-    deleteCookie(COOKIE_KEY_ACCESS_TOKEN);
-    deleteCookie(COOKIE_KEY_REFRESH_TOKEN);
-    router.push("/login");
-    toast.success("Logged out successfully");
+    logoutMutation.mutate(
+      {},
+      {
+        onSuccess: () => {
+          router.push("/login");
+          toast.success("Logged out successfully");
+        },
+      }
+    );
   };
 
   return (
@@ -48,7 +50,11 @@ const Header = () => {
             <div className="size-8 rounded-full bg-gray-300 animate-pulse"></div>
           ) : null}
           {currentUserQuery.isSuccess ? (
-            <DropdownMenu modal={false}>
+            <DropdownMenu
+              modal={false}
+              open={openModal}
+              onOpenChange={setOpenModal}
+            >
               <DropdownMenuTrigger asChild>
                 <Avatar className="w-8 h-8 cursor-pointer">
                   <AvatarImage src="/daddy-chill.gif" />
@@ -73,29 +79,31 @@ const Header = () => {
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
-                  <DropdownMenuItem>
-                    <Link href={"/profile"} className="flex items-center gap-2">
+                  <DropdownMenuItem
+                    onSelect={() => {
+                      router.push("/profile");
+                      setOpenModal(false);
+                    }}
+                  >
+                    <span className="flex items-center gap-2">
                       <UserRound size={16} />
                       <span>Profile</span>
-                    </Link>
+                    </span>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
-                    <Link href={"/profile"} className="flex items-center gap-2">
+                    <span className="flex items-center gap-2">
                       <UserPen size={16} />
                       <span>Edit Profile</span>
-                    </Link>
+                    </span>
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
-                  <DropdownMenuItem>
-                    <div
-                      onClick={handleLogout}
-                      className="flex items-center gap-2 cursor-pointer"
-                    >
+                  <DropdownMenuItem onSelect={handleLogout}>
+                    <span className="flex items-center gap-2 cursor-pointer">
                       <DoorOpen size={16} />
                       <span>Logout</span>
-                    </div>
+                    </span>
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
               </DropdownMenuContent>

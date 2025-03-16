@@ -2,7 +2,7 @@ import { z } from "zod";
 
 // Defines a generic pagination response schema where T is the type of each result item
 export const paginationResponseSchema = z.object({
-  count: z.number().positive().int(),
+  count: z.number(),
   next: z.string().nullable(),
   previous: z.string().nullable(),
 });
