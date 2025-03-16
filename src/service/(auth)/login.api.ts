@@ -60,9 +60,7 @@ export function useLoginMutation() {
   >({
     mutationKey: ["login"],
     mutationFn: (body: LoginBodySchema) => signInApi(body),
-    onSuccess: (data) => {
-      setCookie(COOKIE_KEY_ACCESS_TOKEN, data.access);
-      setCookie(COOKIE_KEY_REFRESH_TOKEN, data.refresh);
+    onSuccess: () => {
       queryClient.resetQueries({
         queryKey: ["current-user"],
       });

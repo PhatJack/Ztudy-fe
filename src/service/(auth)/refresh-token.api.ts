@@ -13,12 +13,10 @@ export type RefreshTokenResponseSchema = z.infer<
   typeof refreshTokenResponseSchema
 >;
 
-export async function refreshTokenApi(
-  body: RefreshTokenBody
-): Promise<RefreshTokenResponseSchema> {
+export async function refreshTokenApi(): Promise<RefreshTokenResponseSchema> {
   const response = await apiClient.post<RefreshTokenResponseSchema>(
     "/auth/token/refresh",
-    body
+    {}
   );
   return response.data;
 }

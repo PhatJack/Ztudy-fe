@@ -10,7 +10,7 @@ export const paginationResponseSchema = z.object({
 export function createListResponseSchema<T>(ItemSchema: z.ZodType<T>) {
   return paginationResponseSchema.merge(
     z.object({
-      results: z.array(ItemSchema),
+      results: z.array(ItemSchema).catch([]),
     })
   );
 }

@@ -1,15 +1,21 @@
-import {
-  COOKIE_KEY_ACCESS_TOKEN,
-  COOKIE_KEY_REFRESH_TOKEN,
-} from "@/constants/cookies";
-import axios, { AxiosRequestConfig, AxiosResponse, isAxiosError } from "axios";
-import { getCookie, setCookie } from "cookies-next";
-import { jwtSchema } from "./schemas/jwt.schema";
-import { jwtDecode } from "jwt-decode";
+// import {
+//   COOKIE_KEY_ACCESS_TOKEN,
+//   COOKIE_KEY_REFRESH_TOKEN,
+// } from "@/constants/cookies";
+import axios, {
+  AxiosError,
+  AxiosRequestConfig,
+  AxiosResponse,
+  isAxiosError,
+} from "axios";
+// import { getCookie, setCookie } from "cookies-next";
+// import { jwtSchema } from "./schemas/jwt.schema";
+// import { jwtDecode } from "jwt-decode";
 import { refreshTokenApi } from "@/service/(auth)/refresh-token.api";
+import { redirect } from "next/navigation";
 const client = axios.create({
   baseURL: process.env.NEXT_PUBLIC_DJANGO_SERVER_URL,
-	withCredentials: true,
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },
@@ -53,68 +59,24 @@ export const apiClient = {
   },
 };
 
-let isRefreshing = false;
-let refreshPromise: Promise<string> | null = null;
-
-async function getAccessToken(): Promise<string | null> {
-  let accessToken: string | undefined = undefined;
-
-  try {
-    accessToken = getCookie(COOKIE_KEY_ACCESS_TOKEN);
-    if (accessToken) {
-      const payload = jwtSchema.parse(jwtDecode(accessToken));
-      if (payload.exp * 1000 > Date.now()) {
-        return accessToken;
-      }
-      // const payload
-    }
-  } catch (error) {
-    console.error("Failed to parse access token payload", error);
-  }
-  let refreshToken: string | undefined = undefined;
-  try {
-    refreshToken = getCookie(COOKIE_KEY_REFRESH_TOKEN);
-    if (!refreshToken) {
-      return null;
-    }
-  } catch (error) {
-    console.error("Failed to get refresh token", error);
-    return null;
-  }
-
-  if (!isRefreshing) {
-    isRefreshing = true;
-    refreshPromise = refreshTokenApi({ refresh: refreshToken })
-      .then((response) => {
-        const { access: newAccessToken, refresh: newRefreshToken } = response;
-        setCookie(COOKIE_KEY_ACCESS_TOKEN, newAccessToken);
-        setCookie(COOKIE_KEY_REFRESH_TOKEN, newRefreshToken);
-        return newAccessToken;
-      })
-      .catch((error) => {
-        throw error;
-      })
-      .finally(() => {
-        isRefreshing = false;
-        refreshPromise = null;
-      });
-  }
-
-  return refreshPromise;
-}
-
-client.interceptors.request.use(async (config) => {
-  const accessToken = await getAccessToken();
-  if (accessToken) {
-    config.headers["Authorization"] = `Bearer ${accessToken}`;
-  }
-  return config;
-}, null);
 client.interceptors.response.use(
   (response) => {
     return response;
   },
-  (error) => {
+  async (error: any) => {
+    const originalRequest = error.config;
+    if (
+      error.response?.data?.code === "token_not_valid" &&
+      !originalRequest?._retry
+    ) {
+      originalRequest._retry = true;
+      try {
+        await refreshTokenApi();
+        return client(originalRequest);
+      } catch (error) {
+        return redirect("/login");
+      }
+    }
     if (isAxiosError(error)) {
       console.log(error);
       if (error.code === "ERR_NETWORK") {

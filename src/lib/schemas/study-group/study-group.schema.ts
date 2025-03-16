@@ -11,8 +11,9 @@ export const studyGroupSchema = z.object({
   is_active: z.boolean(),
   creator_user: z.string(),
   category: z.string(),
-  max_participants: z.number(),
+  max_participants: z.string(),
   type: StudyGroupType,
+	thumbnail: z.string().nullable(),
 });
 
 export type StudyGroupSchema = z.infer<typeof studyGroupSchema>;

@@ -24,7 +24,7 @@ export async function createGoalApi(
     "/session-goals/",
     body
   );
-  return createGoalResponseSchema.parse(response.data);
+  return response.data
 }
 
 export function useCreateGoalMutation() {
