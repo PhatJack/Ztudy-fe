@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useQuery } from "@tanstack/react-query";
-import { createGetCurrentUserInformationQueryOptions } from "@/service/(current-user)/get-current-user-information";
+import { createGetCurrentUserInformationQueryOptions } from "@/service/(current-user)/get-current-user-information.api";
 import { useListGoals } from "@/service/(goal)/list-goals.api";
 
 const tabs: { name: string; value: string }[] = [

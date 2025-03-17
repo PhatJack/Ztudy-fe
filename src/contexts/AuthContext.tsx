@@ -1,6 +1,6 @@
 "use client";
 import { UserSchema } from "@/lib/schemas/user/user.schema";
-import { CurrentUserResponseSchema } from "@/service/(current-user)/get-current-user-information";
+import { CurrentUserResponseSchema } from "@/service/(current-user)/get-current-user-information.api";
 import { createContext, Dispatch, FC, useMemo, useReducer } from "react";
 
 export interface InitialAuthState {
