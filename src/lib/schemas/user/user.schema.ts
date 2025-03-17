@@ -15,8 +15,6 @@ export const userSchema = baseSchema.extend({
   first_name: z.string(),
   last_name: z.string(),
   date_joined: z.date(),
-  restored_at: z.date().nullable(),
-  transaction_id: z.string().nullable(),
 	created_at: z.coerce.date(),
 	updated_at: z.coerce.date(),
 });

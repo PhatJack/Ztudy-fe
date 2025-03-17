@@ -20,7 +20,7 @@ export async function getCurrentUserInformationApi() : Promise<CurrentUserRespon
 }
 
 export function createGetCurrentUserInformationQueryOptions() {
-  return queryOptions({
+  return queryOptions<CurrentUserResponseSchema>({
     queryKey: ["users", "current-user", "information"],
     queryFn: () => getCurrentUserInformationApi(),
   });

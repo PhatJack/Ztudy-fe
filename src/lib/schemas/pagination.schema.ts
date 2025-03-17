@@ -21,3 +21,9 @@ export const paginationRequestSchema = z.object({
   search: z.string().optional(),
   ordering: z.string().optional(),
 });
+
+export type PaginationRequestSchema = z.infer<typeof paginationRequestSchema>;
+
+export const keyParamsSchema = z.record(z.string(), z.any());
+
+export type KeyParamsSchema = z.infer<typeof keyParamsSchema>;

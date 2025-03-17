@@ -1,18 +1,9 @@
-// import {
-//   COOKIE_KEY_ACCESS_TOKEN,
-//   COOKIE_KEY_REFRESH_TOKEN,
-// } from "@/constants/cookies";
 import axios, {
-  AxiosError,
   AxiosRequestConfig,
   AxiosResponse,
   isAxiosError,
 } from "axios";
-// import { getCookie, setCookie } from "cookies-next";
-// import { jwtSchema } from "./schemas/jwt.schema";
-// import { jwtDecode } from "jwt-decode";
 import { refreshTokenApi } from "@/service/(auth)/refresh-token.api";
-import { redirect } from "next/navigation";
 const client = axios.create({
   baseURL: process.env.NEXT_PUBLIC_DJANGO_SERVER_URL,
   withCredentials: true,
@@ -74,7 +65,8 @@ client.interceptors.response.use(
         await refreshTokenApi();
         return client(originalRequest);
       } catch (error) {
-        return redirect("/login");
+				window.location.href = '/login';
+        return Promise.reject(error);
       }
     }
     if (isAxiosError(error)) {

@@ -12,7 +12,7 @@ export const createStudyGroupBodySchema = studyGroupSchema.omit({
   is_active: true,
   code_invite: true,
 	thumbnail: true,
-});
+})
 
 export type CreateStudyGroupBodySchema = z.infer<
   typeof createStudyGroupBodySchema
@@ -28,7 +28,7 @@ export async function createStudyGroupApi(
   body: CreateStudyGroupBodySchema
 ): Promise<CreateStudyGroupResponseSchema> {
   const res = await apiClient.post<CreateStudyGroupResponseSchema>(
-    "/study-groups/",
+    "/rooms/",
     body
   );
   return res.data;
@@ -46,7 +46,7 @@ export function useCreateStudyGroupMutation() {
     mutationFn: (body: CreateStudyGroupBodySchema) =>
       createStudyGroupApi(createStudyGroupBodySchema.parse(body)),
     throwOnError: isAxiosError,
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["rooms"] });
     },
   });
