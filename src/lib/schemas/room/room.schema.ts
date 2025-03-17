@@ -1,8 +1,8 @@
 import { z } from "zod";
 
-export const StudyGroupType = z.enum(["PUBLIC", "PRIVATE"]);
+export const roomType = z.enum(["PUBLIC", "PRIVATE"]);
 
-export const studyGroupSchema = z.object({
+export const roomSchema = z.object({
   id: z.number(),
   name: z.string(),
   code_invite: z.string(),
@@ -12,8 +12,8 @@ export const studyGroupSchema = z.object({
   creator_user: z.number(),
   category: z.coerce.number(),
   max_participants: z.number(),
-  type: StudyGroupType,
-	thumbnail: z.string().nullable(),
+  type: roomType,
+  thumbnail: z.string().nullable(),
 });
 
-export type StudyGroupSchema = z.infer<typeof studyGroupSchema>;
+export type RoomSchema = z.infer<typeof roomSchema>;

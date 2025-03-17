@@ -11,7 +11,7 @@ export function middleware(request: NextRequest) {
     "/solo",
     "/study-goal",
     "/leaderboard",
-    "/study-group",
+    "/rooms",
   ];
   const currentPath = request.nextUrl.pathname;
   const isProtected = protectedRoutes.includes(currentPath);

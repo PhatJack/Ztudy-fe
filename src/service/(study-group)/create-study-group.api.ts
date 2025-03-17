@@ -1,50 +1,39 @@
 import { getQueryClient } from "@/app/get-query-client";
 import { apiClient } from "@/lib/client";
-import { studyGroupSchema } from "@/lib/schemas/study-group/study-group.schema";
+import { roomSchema } from "@/lib/schemas/room/room.schema";
 import { useMutation } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
 import { z } from "zod";
 
-export const createStudyGroupBodySchema = studyGroupSchema.omit({
+export const createRoomBodySchema = roomSchema.omit({
   id: true,
   created_at: true,
   updated_at: true,
   is_active: true,
   code_invite: true,
-	thumbnail: true,
-})
+  thumbnail: true,
+});
 
-export type CreateStudyGroupBodySchema = z.infer<
-  typeof createStudyGroupBodySchema
->;
+export type CreateRoomBodySchema = z.infer<typeof createRoomBodySchema>;
 
-const createStudyGroupResponseSchema = studyGroupSchema;
+const createRoomResponseSchema = createRoomBodySchema;
 
-export type CreateStudyGroupResponseSchema = z.infer<
-  typeof createStudyGroupResponseSchema
->;
+export type CreateRoomResponseSchema = z.infer<typeof createRoomResponseSchema>;
 
-export async function createStudyGroupApi(
-  body: CreateStudyGroupBodySchema
-): Promise<CreateStudyGroupResponseSchema> {
-  const res = await apiClient.post<CreateStudyGroupResponseSchema>(
-    "/rooms/",
-    body
-  );
+export async function createRoomApi(
+  body: CreateRoomBodySchema
+): Promise<CreateRoomResponseSchema> {
+  const res = await apiClient.post<CreateRoomResponseSchema>("/rooms/", body);
   return res.data;
 }
 
-export function useCreateStudyGroupMutation() {
+export function useCreateRoomMutation() {
   const queryClient = getQueryClient();
   const mutationKey = ["create-study-group"] as const;
-  return useMutation<
-    CreateStudyGroupResponseSchema,
-    unknown,
-    CreateStudyGroupBodySchema
-  >({
+  return useMutation<CreateRoomResponseSchema, unknown, CreateRoomBodySchema>({
     mutationKey,
-    mutationFn: (body: CreateStudyGroupBodySchema) =>
-      createStudyGroupApi(createStudyGroupBodySchema.parse(body)),
+    mutationFn: (body: CreateRoomBodySchema) =>
+      createRoomApi(createRoomBodySchema.parse(body)),
     throwOnError: isAxiosError,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["rooms"] });
