@@ -1,4 +1,5 @@
 "use client";
+import React from 'react'
 import TooltipTemplate from "@/components/tooltip/TooltipTemplate";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,7 +18,6 @@ import {
 import { useEditChangePasswordMutation } from "@/service/(current-user)/edit-change-password.api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertCircleIcon } from "lucide-react";
-import React from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
@@ -26,6 +26,7 @@ const ChangePassword = () => {
 
   const changePasswordForm = useForm<ChangePasswordSchema>({
     defaultValues: {
+      old_password: "",
       new_password1: "",
       new_password2: "",
     },
@@ -39,8 +40,10 @@ const ChangePassword = () => {
         toast.success("Password changed successfully.");
       },
       onError: (error) => {
-				console.log(error)
-        toast.error(error.response?.data.detail || "An error occurred.");
+        console.log(error);
+				if(error?.old_password){
+					toast.error(error?.old_password?.[0] || "An error occurred.");
+				}
       },
     });
   };
@@ -63,6 +66,23 @@ const ChangePassword = () => {
           onSubmit={changePasswordForm.handleSubmit(onSubmit)}
           className="w-full space-y-4"
         >
+          <FormField
+            control={changePasswordForm.control}
+            name="old_password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Current Password</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    type="password"
+                    placeholder={"Enter your current password"}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <FormField
             control={changePasswordForm.control}
             name="new_password1"
@@ -108,4 +128,4 @@ const ChangePassword = () => {
   );
 };
 
-export default ChangePassword;
+export default React.memo(ChangePassword);
