@@ -4,17 +4,13 @@ import {
   KeyParamsSchema,
   paginationRequestSchema,
 } from "@/lib/schemas/pagination.schema";
-import {
-  StudyRoomCategoriesSchema,
-  studyRoomCategoriesSchema,
-} from "@/lib/schemas/study-group/study-room-categories.schema";
+import { roomCategoriesSchema } from "@/lib/schemas/room/room-categories.schema";
 import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
 import { z } from "zod";
 
-export const listRoomCategoriesResponseSchema = createListResponseSchema(
-  studyRoomCategoriesSchema
-);
+export const listRoomCategoriesResponseSchema =
+  createListResponseSchema(roomCategoriesSchema);
 
 export type ListRoomCategoriesResponseSchema = z.infer<
   typeof listRoomCategoriesResponseSchema
@@ -30,7 +26,7 @@ export type ListRoomCategoriesQuerySchema = z.infer<
 
 export async function listRoomCategoriesApi(
   query: ListRoomCategoriesQuerySchema = {}
-) {
+): Promise<ListRoomCategoriesResponseSchema> {
   const res = await apiClient.get<ListRoomCategoriesResponseSchema>(
     "/room-categories/",
     query
