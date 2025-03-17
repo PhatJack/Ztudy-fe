@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { DoorOpen, Undo2, UserPen, UserRound } from "lucide-react";
 import {
@@ -17,6 +17,7 @@ import { useQuery } from "@tanstack/react-query";
 import { createGetCurrentUserInformationQueryOptions } from "@/service/(current-user)/get-current-user-information";
 import toast from "react-hot-toast";
 import { useLogoutMutation } from "@/service/(auth)/logout.api";
+import { useAuthContext } from "@/hooks/useAuthContext";
 
 const Header = () => {
   const [openModal, setOpenModal] = useState<boolean>(false);
@@ -26,6 +27,8 @@ const Header = () => {
   const currentUserQuery = useQuery(
     createGetCurrentUserInformationQueryOptions()
   );
+
+  const [state, dispatch] = useAuthContext();
 
   const currentUser = currentUserQuery.data;
 
@@ -41,7 +44,13 @@ const Header = () => {
     );
   };
 
-  return (
+	useEffect(() => {
+		if(currentUser) {
+			dispatch({ type: "SET_USER", payload: currentUser });
+		}
+	},[currentUser])
+
+	return (
     <header className="w-full p-2 bg-white dark:bg-background max-h-12 h-12 sticky top-0 border-b border-gray-200 shadow-sm">
       <div className="w-full flex justify-between items-center">
         <div className=""></div>

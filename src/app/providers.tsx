@@ -5,7 +5,8 @@ import NextTopLoader from "nextjs-toploader";
 import toast, { Toaster } from "react-hot-toast";
 import { getQueryClient } from "./get-query-client";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 const queryClient = getQueryClient();
 
@@ -23,9 +24,11 @@ export default function Providers({
     >
       <QueryClientProvider client={queryClient}>
         <NextTopLoader color="hsl(30 100% 70%)" />
-        <TooltipProvider>{children}</TooltipProvider>
+        <AuthProvider>
+          <TooltipProvider>{children}</TooltipProvider>
+        </AuthProvider>
         <Toaster />
-				<ReactQueryDevtools initialIsOpen={true} />
+        <ReactQueryDevtools initialIsOpen={true} />
       </QueryClientProvider>
     </ThemeProvider>
   );

@@ -20,6 +20,9 @@ const RoomsContainer = () => {
       <div className="space-y-2">
         <h2 className="text-lg font-semibold">Public Rooms</h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 gap-2">
+          {publicRooms.length === 0 ? (
+            <p className="">No public rooms available.</p>
+          ) : null}
           {publicRooms.map((room, index) => (
             <div
               key={index}
@@ -50,9 +53,12 @@ const RoomsContainer = () => {
           ))}
         </div>
       </div>
-      {/* <div className="space-y-2">
+      <div className="space-y-2">
         <h2 className="text-lg font-semibold">Private Rooms</h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 gap-2">
+          {privateRooms.length === 0 ? (
+            <p className="">No private rooms available.</p>
+          ) : null}
           {privateRooms.map((room, index) => (
             <div
               key={index}
@@ -75,7 +81,7 @@ const RoomsContainer = () => {
             </div>
           ))}
         </div>
-      </div> */}
+      </div>
     </div>
   );
 };

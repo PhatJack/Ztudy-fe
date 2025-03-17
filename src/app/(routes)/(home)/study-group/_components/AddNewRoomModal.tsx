@@ -26,45 +26,59 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { createGetCurrentUserInformationQueryOptions } from "@/service/(current-user)/get-current-user-information";
-import { useStudyListRoomCategories } from "@/service/(room)/room-categories/list-study-room-categories.api";
+import { useAuthContext } from "@/hooks/useAuthContext";
+import { useListStudyRoomCategoriesInfinite } from "@/service/(room)/room-categories/list-study-room-categories.api";
 import {
   createStudyGroupBodySchema,
   CreateStudyGroupBodySchema,
   useCreateStudyGroupMutation,
 } from "@/service/(study-group)/create-study-group.api";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { PlusCircle } from "lucide-react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { useInView } from "react-intersection-observer";
 
 const AddNewRoomModal = () => {
-  const userQuery = useQuery(createGetCurrentUserInformationQueryOptions());
-  const roomCategoriesQuery = useQuery({
-    ...useStudyListRoomCategories(),
-		staleTime: 300000,
-    enabled: false,
+  const [open, setOpen] = useState<boolean>(false);
+  const [state] = useAuthContext();
+  const { ref, inView } = useInView();
+  const {
+    data,
+    error,
+    isFetching,
+    isLoading,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useInfiniteQuery({
+    ...useListStudyRoomCategoriesInfinite(),
   });
   const addRoomMutation = useCreateStudyGroupMutation();
   const addRoomForm = useForm<CreateStudyGroupBodySchema>({
     defaultValues: {
       name: "",
-      category: "",
-      max_participants: "",
+      category: -1,
+      max_participants: 1,
       type: "PUBLIC",
+      creator_user: 0,
     },
     resolver: zodResolver(createStudyGroupBodySchema),
   });
 
   const onSubmit = (data: CreateStudyGroupBodySchema) => {
-    console.log(data);
-    addRoomMutation.mutate(data, {
+    const newData = {
+      ...data,
+      creator_user: state?.user?.id ?? 0,
+      category: Number(data.category),
+    };
+    addRoomMutation.mutate(newData, {
       onSuccess: (data) => {
         console.log(data);
         toast.success("Room created successfully");
         addRoomForm.reset();
+        setOpen(false);
       },
       onError: (error) => {
         console.log(error);
@@ -73,19 +87,25 @@ const AddNewRoomModal = () => {
     });
   };
 
+  useEffect(() => {
+    if (inView) {
+      fetchNextPage();
+    }
+  }, [fetchNextPage, inView]);
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="min-w-[300px] h-[200px] text-lg flex-col [&_svg]:size-12 hover:bg-primary/90">
           <span>
             <PlusCircle />
           </span>
-          <span>Add New Room</span>
+          <span>Create Room</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add New Room</DialogTitle>
+          <DialogTitle>Create Room</DialogTitle>
           <DialogDescription>
             Create room to start a new study group
           </DialogDescription>
@@ -115,9 +135,6 @@ const AddNewRoomModal = () => {
                       <FormLabel>Category</FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        onOpenChange={(open) =>
-                          open && roomCategoriesQuery.refetch()
-                        }
                         defaultValue={String(field.value)}
                       >
                         <FormControl>
@@ -126,23 +143,37 @@ const AddNewRoomModal = () => {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {roomCategoriesQuery.isLoading &&
-                          roomCategoriesQuery.isFetching ? (
+                          {error ? (
+                            <p className="text-center w-full">
+                              Có lỗi xảy ra.Vui lòng thử F5
+                            </p>
+                          ) : null}
+                          {isLoading && isFetching ? (
                             <div className="w-full h-[100px] flex justify-center items-center">
                               <LoadingSpinner />
                             </div>
                           ) : (
-                            roomCategoriesQuery.data?.results.map(
-                              (category) => (
+                            <>
+                              <SelectItem key={-1} value={String(-1)} disabled>
+                                Choose a category
+                              </SelectItem>
+                              {data?.results?.map((category) => (
                                 <SelectItem
                                   key={category.id}
                                   value={String(category.id)}
                                 >
                                   {category.name}
                                 </SelectItem>
-                              )
-                            )
+                              ))}
+                            </>
                           )}
+                          {
+                            <p ref={ref} className="text-center w-full">
+                              {isFetchingNextPage
+                                ? "Loading more.."
+                                : "No more categories"}
+                            </p>
+                          }
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -161,7 +192,6 @@ const AddNewRoomModal = () => {
                           {...field}
                           type="number"
                           max={50}
-                          min={1}
                           onChange={(event) =>
                             field.onChange(+event.target.value)
                           }
@@ -179,37 +209,44 @@ const AddNewRoomModal = () => {
                   name="type"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Category</FormLabel>
-                      <FormControl>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={String(field.value)}
-                        >
-                          <FormControl>
-                            <SelectTrigger className="bg-input">
-                              <SelectValue placeholder="Select category" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="PUBLIC">PUBLIC</SelectItem>
-                            <SelectItem value="PRIVATE">PRIVATE</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </FormControl>
+                      <FormLabel>Type</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="bg-input">
+                            <SelectValue placeholder="Select category" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="PUBLIC">PUBLIC</SelectItem>
+                          <SelectItem value="PRIVATE">PRIVATE</SelectItem>
+                        </SelectContent>
+                      </Select>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                <Button type="submit" className="w-full">
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={addRoomMutation.isPending}
+                >
                   Create Room
                 </Button>
               </div>
             </form>
           </Form>
         </div>
+        {addRoomMutation.isPending ? (
+          <div className="absolute inset-0 bg-gray-400 bg-clip-padding backdrop-blur-sm backdrop-filter bg-opacity-0 flex justify-center items-center">
+            <LoadingSpinner />
+          </div>
+        ) : null}
       </DialogContent>
     </Dialog>
   );
 };
 
-export default AddNewRoomModal;
+export default React.memo(AddNewRoomModal);
