@@ -13,10 +13,9 @@ import { useDeleteGoalMutation } from "@/service/(goal)/delete-goal.api";
 
 interface Props {
   goal: GoalSchema;
-  tab: "OPEN" | "COMPLETED" | undefined;
 }
 
-const GoalItem = ({ goal, tab }: Props) => {
+const GoalItem = ({ goal }: Props) => {
   const patchGoalMutation = usePatchGoalMutation();
   const deleteGoalMutation = useDeleteGoalMutation();
 
@@ -44,15 +43,17 @@ const GoalItem = ({ goal, tab }: Props) => {
   };
 
   return (
-    <div className="flex justify-between items-center w-full px-3 py-2 rounded-lg bg-background">
+    <div className={`flex justify-between items-center w-full px-3 py-2 rounded-lg bg-background ${goal.status === "COMPLETED" ? "line-through" : ""}`}>
       <div className="flex items-center gap-2 flex-1">
         <Checkbox
           className="rounded-full"
+          disabled={goal.status === "COMPLETED" ? true : false}
+          defaultChecked={goal.status == "COMPLETED" ? true : false}
           onCheckedChange={(checked) => handleGoalStatus(checked)}
         />
         <span className="text-xs text-muted-foreground">{goal.goal}</span>
       </div>
-      {tab === "OPEN" && (
+      {goal.status === "OPEN" && (
         <Button
           type="button"
           onClick={handleDeleteGoal}

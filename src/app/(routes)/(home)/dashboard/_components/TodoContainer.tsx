@@ -15,7 +15,6 @@ import {
 import { useForm } from "react-hook-form";
 import { Form, FormControl, FormField } from "@/components/ui/form";
 import toast from "react-hot-toast";
-import GoalItem from "@/components/goal/goal-item";
 import GoalList from "@/components/goal/goal-list";
 import LoadingSpinner from "@/components/loading/loading-spinner";
 
@@ -137,7 +136,7 @@ const TodoContainer = ({ user }: Props) => {
                   />
                 )}
               </TabsContent>
-              <TabsContent value="COMPLETED" className="mt-4" >
+              <TabsContent value="COMPLETED" className="mt-4">
                 {goalsCompletedListQuery.isLoading &&
                 goalsCompletedListQuery.isFetching ? (
                   <div className="w-full flex justify-center items-center">

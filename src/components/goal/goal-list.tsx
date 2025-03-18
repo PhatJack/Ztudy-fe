@@ -1,3 +1,4 @@
+"use client";
 import { GoalSchema } from "@/lib/schemas/goal/goal.schema";
 import React from "react";
 import GoalItem from "./goal-item";
@@ -9,7 +10,7 @@ interface Props {
 
 const GoalList = ({ tab, goals }: Props) => {
   return (
-    <div className="flex flex-col space-y-2">
+    <div className="flex flex-col space-y-4">
       {tab === "COMPLETED" && (
         <p className="font-bold">Your completed goals! 👏</p>
       )}
@@ -25,7 +26,7 @@ const GoalList = ({ tab, goals }: Props) => {
           </div>
         ) : null}
         {goals?.map((goal, _) => (
-          <GoalItem goal={goal} key={goal.id} tab={tab} />
+          <GoalItem goal={goal} key={goal.id} />
         ))}
       </div>
     </div>

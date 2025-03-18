@@ -15,6 +15,8 @@ export function createListResponseSchema<T>(ItemSchema: z.ZodType<T>) {
   );
 }
 
+export type PaginationResponseSchema<T> = z.infer<typeof paginationResponseSchema>;
+
 export const paginationRequestSchema = z.object({
   page: z.number().int().positive().optional(),
   page_size: z.number().int().positive().optional(),

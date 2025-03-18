@@ -3,20 +3,15 @@ import AvatarCustom from "@/components/avatar/AvatarCustom";
 import LoadingSpinner from "@/components/loading/loading-spinner";
 import { useListUsers } from "@/service/(users)/list-users.api";
 import { checkLastLogin } from "@/util/checkLastLogin";
-import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import React from "react";
 
 const ZtudyCommunity = () => {
   const usersQuery = useSuspenseQuery({...useListUsers(),staleTime: 3 * 60 * 1000});
-  const users = usersQuery.data?.results;
+  const users = usersQuery.data?.results.filter((user) => user.id !== 1);
 
   return (
     <div className="flex flex-col space-y-2 divide-y divide-background dark:divide-input">
-      {/* {usersQuery.isLoading && usersQuery.isFetching ? (
-        <div className="w-full h-[500px] flex justify-center items-center">
-          <LoadingSpinner />
-        </div>
-      ) : null} */}
       {usersQuery.isSuccess &&
         users &&
         users.map((user, index) => (
