@@ -5,6 +5,7 @@ import React from "react";
 import ChangePassword from "./ChangePassword";
 import { Separator } from "@/components/ui/separator";
 import EditProfileDialog from "@/components/profile/edit-profile";
+import { Dialog } from "@/components/ui/dialog";
 
 const ProfilePage = () => {
   return (
@@ -38,7 +39,7 @@ const ProfilePage = () => {
             </div>
             <Separator className="bg-gray-200" />
             <div className="w-full flex 2xl:flex-row flex-col justify-between gap-2">
-              <div className="w-full p-3 rounded-md bg-input flex gap-3">
+              <div className="w-full p-3 rounded-md bg-input flex gap-2">
                 <span className="rounded-md max-w-12 w-full aspect-square bg-secondary flex items-center justify-center">
                   <Trophy className="text-secondary-foreground" />
                 </span>
@@ -50,7 +51,7 @@ const ProfilePage = () => {
                   </span>
                 </div>
               </div>
-              <div className="w-full p-3 rounded-md bg-input flex gap-3">
+              <div className="w-full p-3 rounded-md bg-input flex gap-2">
                 <span className="rounded-md max-w-12 w-full aspect-square bg-secondary flex items-center justify-center">
                   <AlarmClockMinus />
                 </span>
@@ -66,10 +67,10 @@ const ProfilePage = () => {
           <ChangePassword />
         </div>
         <div className="xl:col-span-6">
-          <div className="w-full rounded-xl bg-input p-6"></div>
+          <div className="w-full rounded-xl bg-background p-6"></div>
         </div>
         <div className="xl:col-span-3">
-          <div className="w-full rounded-xl bg-input p-6"></div>
+          <div className="w-full rounded-xl bg-background p-6"></div>
         </div>
       </div>
     </div>
