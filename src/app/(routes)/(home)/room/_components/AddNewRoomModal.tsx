@@ -27,12 +27,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useAuthContext } from "@/hooks/useAuthContext";
-import { useListStudyRoomCategoriesInfinite } from "@/service/(room)/room-categories/list-study-room-categories.api";
+import { useListStudyRoomCategoriesInfinite } from "@/service/(rooms)/room-categories/list-study-room-categories.api";
 import {
-  createStudyGroupBodySchema,
-  CreateStudyGroupBodySchema,
-  useCreateStudyGroupMutation,
-} from "@/service/(study-group)/create-study-group.api";
+  createRoomBodySchema,
+  CreateRoomBodySchema,
+  useCreateRoomMutation,
+} from "@/service/(rooms)/room/create-room.api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { PlusCircle } from "lucide-react";
@@ -55,8 +55,8 @@ const AddNewRoomModal = () => {
   } = useInfiniteQuery({
     ...useListStudyRoomCategoriesInfinite(),
   });
-  const addRoomMutation = useCreateStudyGroupMutation();
-  const addRoomForm = useForm<CreateStudyGroupBodySchema>({
+  const addRoomMutation = useCreateRoomMutation();
+  const addRoomForm = useForm<CreateRoomBodySchema>({
     defaultValues: {
       name: "",
       category: -1,
@@ -64,18 +64,17 @@ const AddNewRoomModal = () => {
       type: "PUBLIC",
       creator_user: 0,
     },
-    resolver: zodResolver(createStudyGroupBodySchema),
+    resolver: zodResolver(createRoomBodySchema),
   });
 
-  const onSubmit = (data: CreateStudyGroupBodySchema) => {
+  const onSubmit = (data: CreateRoomBodySchema) => {
     const newData = {
       ...data,
       creator_user: state?.user?.id ?? 0,
       category: Number(data.category),
     };
     addRoomMutation.mutate(newData, {
-      onSuccess: (data) => {
-        console.log(data);
+      onSuccess: () => {
         toast.success("Room created successfully");
         addRoomForm.reset();
         setOpen(false);

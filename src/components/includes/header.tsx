@@ -18,18 +18,18 @@ import { createGetCurrentUserInformationQueryOptions } from "@/service/(current-
 import toast from "react-hot-toast";
 import { useLogoutMutation } from "@/service/(auth)/logout.api";
 import { useAuthContext } from "@/hooks/useAuthContext";
-import EditProfileDialog from "../profile/edit-profile";
+import HeaderStats from "./components/header-stats";
+import HeaderMobileMenu from "./components/header-mobile-menu";
 
 const Header = () => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const logoutMutation = useLogoutMutation();
   const router = useRouter();
+  const [, dispatch] = useAuthContext();
 
   const currentUserQuery = useQuery(
     createGetCurrentUserInformationQueryOptions()
   );
-
-  const [, dispatch] = useAuthContext();
 
   const currentUser = currentUserQuery.data;
 
@@ -54,7 +54,14 @@ const Header = () => {
   return (
     <header className="w-full p-2 bg-white dark:bg-background max-h-12 h-12 sticky top-0 border-b border-gray-200 shadow-sm">
       <div className="w-full flex justify-between items-center">
-        <div className=""></div>
+        <div className="w-full">
+          <div className="md:block hidden">
+            <HeaderStats />
+          </div>
+          <div className="md:hidden block">
+            <HeaderMobileMenu />
+          </div>
+        </div>
         <div className="w-full flex justify-end items-center gap-4">
           {currentUserQuery.isLoading ? (
             <div className="size-8 rounded-full bg-gray-300 animate-pulse"></div>
@@ -100,14 +107,6 @@ const Header = () => {
                       <span>Profile</span>
                     </span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <EditProfileDialog>
-                      <span className="flex items-center gap-2">
-                        <UserPen size={16} />
-                        <span>Edit Profile</span>
-                      </span>
-                    </EditProfileDialog>
-                  </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
@@ -125,6 +124,7 @@ const Header = () => {
             type="button"
             onClick={() => router.push("/solo")}
             size={"sm"}
+            className="md:inline-flex hidden"
           >
             <Undo2 />
             <span>Return to room</span>

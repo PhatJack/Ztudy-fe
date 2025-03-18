@@ -1,9 +1,6 @@
 "use client";
-import CopyButton from "@/components/button/CopyButton";
 import RoomItem from "@/components/rooms/room-item";
-import TooltipTemplate from "@/components/tooltip/TooltipTemplate";
-import { Badge } from "@/components/ui/badge";
-import { useListRooms } from "@/service/(study-group)/list-study-groups.api";
+import { useListRooms } from "@/service/(rooms)/room/list-rooms.api";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import React from "react";
 
