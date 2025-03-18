@@ -166,7 +166,7 @@ const TodoContainer = ({ user }: Props) => {
                   <div className="grid">
                     <span className="text-xs text-muted-foreground">Open</span>
                     <span className="text-3xl font-bold">
-                      {goalsOpenListQuery.data?.count}
+                      {goalsOpenListQuery.data?.totalItems}
                     </span>
                   </div>
                 </div>
@@ -183,7 +183,7 @@ const TodoContainer = ({ user }: Props) => {
                       Completed
                     </span>
                     <span className="text-3xl font-bold">
-                      {goalsCompletedListQuery.data?.count}
+                      {goalsCompletedListQuery.data?.totalItems}
                     </span>
                   </div>
                 </div>
