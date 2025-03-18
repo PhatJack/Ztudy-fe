@@ -1,8 +1,4 @@
-import axios, {
-  AxiosRequestConfig,
-  AxiosResponse,
-  isAxiosError,
-} from "axios";
+import axios, { AxiosRequestConfig, AxiosResponse, isAxiosError } from "axios";
 import { refreshTokenApi } from "@/service/(auth)/refresh-token.api";
 const client = axios.create({
   baseURL: process.env.NEXT_PUBLIC_DJANGO_SERVER_URL,
@@ -48,6 +44,26 @@ export const apiClient = {
       config
     );
   },
+  patch: <TResponse = unknown, RRequest = unknown>(
+    url: string,
+    data: RRequest,
+    config?: AxiosRequestConfig<RRequest>
+  ): Promise<AxiosResponse<TResponse, RRequest>> => {
+    return client.patch<TResponse, AxiosResponse<TResponse>, RRequest>(
+      url,
+      data,
+      config
+    );
+  },
+  delete: <TResponse = unknown, RRequest = unknown>(
+    url: string,
+    config?: AxiosRequestConfig<RRequest>
+  ): Promise<AxiosResponse<TResponse, RRequest>> => {
+    return client.delete<TResponse, AxiosResponse<TResponse>, RRequest>(
+      url,
+      config
+    );
+  },
 };
 
 client.interceptors.response.use(
@@ -65,7 +81,7 @@ client.interceptors.response.use(
         await refreshTokenApi();
         return client(originalRequest);
       } catch (error) {
-				window.location.href = '/login';
+        window.location.href = "/login";
         return Promise.reject(error);
       }
     }
