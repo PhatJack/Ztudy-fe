@@ -21,18 +21,18 @@ const SoundList = () => {
       dispatchSound({
         type: "SET_SOUNDS",
         payload: sounds.map((sound) => ({
-          sound_file: sound.sound_file,
+          stream_url: sound.stream_url,
           sound_name: sound.name,
           volume: 0,
         })),
       });
 
       sounds.forEach((sound) => {
-        if (!audioMap.current.has(sound.sound_file)) {
-          const audio = new Audio(sound.sound_file);
+        if (!audioMap.current.has(sound.stream_url)) {
+          const audio = new Audio(sound.stream_url);
           audio.volume = 0;
 					audio.play();
-          audioMap.current.set(sound.sound_file, audio);
+          audioMap.current.set(sound.stream_url, audio);
         }
       });
     }
@@ -40,13 +40,13 @@ const SoundList = () => {
 
   // Handle volume change
   const handleVolumeChange = useCallback(
-    (sound_file: string, volume: number) => {
+    (stream_url: string, volume: number) => {
       dispatchSound({
         type: "UPDATE_VOLUME",
-        payload: { sound_file, volume },
+        payload: { stream_url, volume },
       });
 
-      const audio = audioMap.current.get(sound_file);
+      const audio = audioMap.current.get(stream_url);
       if (audio) {
         audio.volume = volume;
       }
@@ -87,11 +87,11 @@ const SoundList = () => {
             minValue={0}
             maxValue={1}
             debouncedSetVolume={(val) =>
-              handleVolumeChange(sound.sound_file, val[0])
+              handleVolumeChange(sound.stream_url, val[0])
             }
             volume={sound.volume}
             handleMute={() =>
-              handleVolumeChange(sound.sound_file, sound.volume > 0 ? 0 : 1)
+              handleVolumeChange(sound.stream_url, sound.volume > 0 ? 0 : 1)
             }
           />
         </div>

@@ -4,7 +4,7 @@ import React, { createContext, useMemo, useReducer, Dispatch } from "react";
 export interface InitialState {
   sounds:
     | {
-        sound_file: string;
+        stream_url: string;
         sound_name: string;
         volume: number;
       }[]
@@ -14,7 +14,7 @@ export interface InitialState {
 // Define action types
 export type Action =
   | { type: "SET_SOUNDS"; payload: InitialState["sounds"] }
-  | { type: "UPDATE_VOLUME"; payload: { sound_file: string; volume: number } };
+  | { type: "UPDATE_VOLUME"; payload: { stream_url: string; volume: number } };
 
 // Create the initial state
 const initialState: InitialState = {
@@ -37,7 +37,7 @@ const reducer = (state: InitialState, action: Action): InitialState => {
         ...state,
         sounds: state.sounds
           ? state.sounds.map((sound) =>
-              sound.sound_file === action.payload.sound_file
+              sound.stream_url === action.payload.stream_url
                 ? { ...sound, volume: action.payload.volume }
                 : sound
             )
