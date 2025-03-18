@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -22,6 +21,7 @@ import {
 } from "@/service/(auth)/forgot-password.api";
 import toast from "react-hot-toast";
 import LoadingSpinner from "@/components/loading/loading-spinner";
+import { useRouter } from "nextjs-toploader/app";
 const ForgotPasswordForm = () => {
   const [step, setStep] = useState(1);
   const [userEmail, setUserEmail] = useState("");

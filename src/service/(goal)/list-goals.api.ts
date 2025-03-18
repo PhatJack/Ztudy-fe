@@ -4,19 +4,19 @@ import {
   createListResponseSchema,
   paginationRequestSchema,
 } from "@/lib/schemas/pagination.schema";
-import { type QueryOptions, queryOptions } from "@tanstack/react-query";
+import { queryOptions } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
 import { z } from "zod";
 
 export const goalQuerySchema = paginationRequestSchema.extend({
   expand: z.string().optional(),
   user: z.number().optional(),
+  status: z.enum(["OPEN", "COMPLETED"]).optional(),
 });
 
 export type GoalQuerySchema = z.infer<typeof goalQuerySchema>;
 
-export const goalResponseBodySchema =
-  createListResponseSchema(goalSchema);
+export const goalResponseBodySchema = createListResponseSchema(goalSchema);
 
 export type GoalResponseBodySchema = z.infer<typeof goalResponseBodySchema>;
 
@@ -31,10 +31,10 @@ export async function listGoalsApi(
 }
 
 export const useListGoals = (query: GoalQuerySchema = {}) => {
-  const queryKey = ["goals"] as const;
+  const queryKey = ["goals", query];
   return queryOptions<GoalResponseBodySchema>({
     queryKey,
-    queryFn: () => listGoalsApi(goalQuerySchema.parse(query)),
+    queryFn: async () => await listGoalsApi(goalQuerySchema.parse(query)),
     throwOnError: isAxiosError,
   });
 };

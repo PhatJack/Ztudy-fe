@@ -7,6 +7,7 @@ import { getQueryClient } from "./get-query-client";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { useEffect, useRef, useState } from "react";
 
 const queryClient = getQueryClient();
 
@@ -23,12 +24,12 @@ export default function Providers({
       disableTransitionOnChange
     >
       <QueryClientProvider client={queryClient}>
-        <NextTopLoader color="hsl(30 100% 70%)" />
+        <NextTopLoader color="hsl(150 30% 45%)" />
         <AuthProvider>
           <TooltipProvider>{children}</TooltipProvider>
         </AuthProvider>
         <Toaster />
-        <ReactQueryDevtools initialIsOpen={true} />
+        <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </ThemeProvider>
   );
