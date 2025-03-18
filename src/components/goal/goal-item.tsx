@@ -9,6 +9,7 @@ import {
 } from "@/service/(goal)/patch-goal.api";
 import toast from "react-hot-toast";
 import { CheckedState } from "@radix-ui/react-checkbox";
+import { useDeleteGoalMutation } from "@/service/(goal)/delete-goal.api";
 
 interface Props {
   goal: GoalSchema;
@@ -17,6 +18,7 @@ interface Props {
 
 const GoalItem = ({ goal, tab }: Props) => {
   const patchGoalMutation = usePatchGoalMutation();
+  const deleteGoalMutation = useDeleteGoalMutation();
 
   const handleGoalStatus = (checked: CheckedState) => {
     if (checked === true) {
@@ -33,6 +35,14 @@ const GoalItem = ({ goal, tab }: Props) => {
     }
   };
 
+  const handleDeleteGoal = () => {
+    deleteGoalMutation.mutate(goal.id, {
+      onSuccess() {
+        toast.success("Goal deleted successfully!");
+      },
+    });
+  };
+
   return (
     <div className="flex justify-between items-center w-full px-3 py-2 rounded-lg bg-background">
       <div className="flex items-center gap-2 flex-1">
@@ -44,6 +54,8 @@ const GoalItem = ({ goal, tab }: Props) => {
       </div>
       {tab === "OPEN" && (
         <Button
+          type="button"
+          onClick={handleDeleteGoal}
           size={"icon"}
           variant={"ghost"}
           className="h-8 w-8 hover:bg-transparent hover:text-rose-500"
