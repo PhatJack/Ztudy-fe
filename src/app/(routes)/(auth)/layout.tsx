@@ -24,7 +24,7 @@ export default function AuthLayout({
           </Link>
         </div>
         <div className="flex flex-1 items-center justify-center">
-          <div className="w-full max-w-xs">{children}</div>
+          <div className="w-full max-w-[350px]">{children}</div>
         </div>
       </div>
       <div className="relative hidden bg-muted lg:block">

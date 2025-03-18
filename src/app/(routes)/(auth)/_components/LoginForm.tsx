@@ -162,6 +162,12 @@ export function LoginForm() {
             Register
           </Link>
         </div>
+				<div className="text-center text-sm">
+          Forgot your password?{" "}
+          <Link href="/forgot-password" className="underline underline-offset-4 text-secondary-foreground">
+            Click here
+          </Link>
+        </div>
       </form>
     </Form>
   );

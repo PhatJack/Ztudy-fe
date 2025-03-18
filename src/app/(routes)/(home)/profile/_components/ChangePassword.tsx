@@ -49,7 +49,7 @@ const ChangePassword = () => {
   };
 
   return (
-    <div className="w-full rounded-xl bg-input flex flex-col items-center space-y-2 p-6">
+    <div className="w-full rounded-xl bg-background flex flex-col items-center space-y-2 p-6">
       <div className="w-full flex justify-between items-center">
         <span className="text-sm font-bold">Change Password</span>
         <TooltipTemplate

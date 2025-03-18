@@ -1,6 +1,6 @@
 import AvatarCustom from "@/components/avatar/AvatarCustom";
 import TooltipTemplate from "@/components/tooltip/TooltipTemplate";
-import { Copy, Edit3, Trophy } from "lucide-react";
+import { AlarmClockMinus, Copy, Edit3, Trophy } from "lucide-react";
 import React from "react";
 import ChangePassword from "./ChangePassword";
 import { Separator } from "@/components/ui/separator";
@@ -11,7 +11,7 @@ const ProfilePage = () => {
     <div className="p-6">
       <div className="w-full grid grid-cols-1 xl:grid-cols-12 gap-6">
         <div className="xl:col-span-3 flex flex-col space-y-6">
-          <div className="w-full rounded-xl bg-input flex flex-col items-center space-y-4 p-6">
+          <div className="w-full rounded-xl bg-background flex flex-col items-center space-y-4 p-6">
             <div className="w-full flex justify-between items-center">
               <span className="text-sm font-bold">Profile</span>
               <div className="flex gap-4">
@@ -38,9 +38,9 @@ const ProfilePage = () => {
             </div>
             <Separator className="bg-gray-200" />
             <div className="w-full flex 2xl:flex-row flex-col justify-between gap-2">
-              <div className="w-full p-3 rounded-md bg-muted/20 flex gap-3">
-                <span className="rounded-md max-w-12 w-full aspect-square bg-primary flex items-center justify-center">
-                  <Trophy className="text-foreground" />
+              <div className="w-full p-3 rounded-md bg-input flex gap-3">
+                <span className="rounded-md max-w-12 w-full aspect-square bg-secondary flex items-center justify-center">
+                  <Trophy className="text-secondary-foreground" />
                 </span>
                 <div className="w-full flex flex-col justify-between gap-1">
                   <span className="text-xs font-medium">Leaderboard rank</span>
@@ -50,15 +50,14 @@ const ProfilePage = () => {
                   </span>
                 </div>
               </div>
-              <div className="w-full p-3 rounded-md bg-muted/20 flex gap-3">
-                <span className="rounded-md max-w-12 w-full aspect-square bg-background flex items-center justify-center">
-                  <Trophy />
+              <div className="w-full p-3 rounded-md bg-input flex gap-3">
+                <span className="rounded-md max-w-12 w-full aspect-square bg-secondary flex items-center justify-center">
+                  <AlarmClockMinus />
                 </span>
                 <div className="w-full flex flex-col justify-between gap-1">
-                  <span className="text-xs font-medium">Leaderboard rank</span>
-                  <span className="text-xl font-extrabold text-yellow-500 inline-flex items-center">
-                    <span>#1</span>
-                    <span className="pb-1">👑</span>
+                  <span className="text-xs font-medium">Time study</span>
+                  <span className="text-xl font-extrabold inline-flex items-center">
+                    <span>1.2h</span>
                   </span>
                 </div>
               </div>
