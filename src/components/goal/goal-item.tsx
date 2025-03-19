@@ -43,7 +43,15 @@ const GoalItem = ({ goal }: Props) => {
   };
 
   return (
-    <div className={`flex justify-between items-center w-full px-3 py-2 rounded-lg bg-background ${goal.status === "COMPLETED" ? "line-through" : ""}`}>
+    <div
+      className={`flex justify-between items-center w-full px-3 py-2 rounded-lg bg-background ${
+        goal.status === "COMPLETED" ? "line-through" : ""
+      } ${
+        patchGoalMutation.isPending || deleteGoalMutation.isPending
+          ? "opacity-50 pointer-event-none"
+          : ""
+      }`}
+    >
       <div className="flex items-center gap-2 flex-1">
         <Checkbox
           className="rounded-full"

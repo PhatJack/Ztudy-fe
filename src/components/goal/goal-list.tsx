@@ -2,13 +2,23 @@
 import { GoalSchema } from "@/lib/schemas/goal/goal.schema";
 import React from "react";
 import GoalItem from "./goal-item";
+import PaginationCustom from "../pagination/PaginationCustom";
 
 interface Props {
   tab: "OPEN" | "COMPLETED" | undefined;
   goals: GoalSchema[] | undefined;
+  currentPage: number;
+  totalPages: number | undefined;
+  handlePageChange: (page: number) => void;
 }
 
-const GoalList = ({ tab, goals }: Props) => {
+const GoalList = ({
+  tab,
+  goals,
+  currentPage,
+  handlePageChange,
+  totalPages,
+}: Props) => {
   return (
     <div className="flex flex-col space-y-4">
       {tab === "COMPLETED" && (
@@ -29,6 +39,11 @@ const GoalList = ({ tab, goals }: Props) => {
           <GoalItem goal={goal} key={goal.id} />
         ))}
       </div>
+      <PaginationCustom
+        currentPage={currentPage}
+        onPageChange={handlePageChange}
+        totalPages={totalPages}
+      />
     </div>
   );
 };

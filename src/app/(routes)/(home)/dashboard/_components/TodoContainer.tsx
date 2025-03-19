@@ -28,9 +28,21 @@ interface Props {
 }
 
 const TodoContainer = ({ user }: Props) => {
+  const [currentPageOpen, setCurrentPageOpen] = useState<number>(1);
+  const [currentPageCompleted, setCurrentPageCompleted] = useState<number>(1);
   const [activeTab, setActiveTab] = useState<"OPEN" | "COMPLETED" | undefined>(
     "OPEN"
   );
+
+  const handlePageChange = ({
+    page,
+    setCurrentPage,
+  }: {
+    page: number;
+    setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
+  }) => {
+    setCurrentPage(page);
+  };
   const onTabChange = (value: string) => {
     setActiveTab(value as "OPEN" | "COMPLETED");
   };
@@ -42,13 +54,19 @@ const TodoContainer = ({ user }: Props) => {
     },
   });
   const goalsOpenListQuery = useQuery({
-    ...useListGoals({ user: user?.id, status: "OPEN" }),
+    ...useListGoals({ user: user?.id, status: "OPEN", page: currentPageOpen }),
     enabled: !!user,
+    staleTime: 1000 * 60 * 2,
   });
 
   const goalsCompletedListQuery = useQuery({
-    ...useListGoals({ user: user?.id, status: "COMPLETED" }),
+    ...useListGoals({
+      user: user?.id,
+      status: "COMPLETED",
+      page: currentPageCompleted,
+    }),
     enabled: !!user,
+    staleTime: 1000 * 60 * 2,
   });
 
   const onSubmit = (data: CreateGoalBodySchema) => {
@@ -57,7 +75,6 @@ const TodoContainer = ({ user }: Props) => {
       onSuccess() {
         toast.success("Goal created successfully!");
         createGoalForm.reset();
-        goalsOpenListQuery.refetch();
       },
       onError(error) {
         console.log(error);
@@ -133,6 +150,14 @@ const TodoContainer = ({ user }: Props) => {
                   <GoalList
                     tab={activeTab}
                     goals={goalsOpenListQuery?.data?.results}
+                    currentPage={currentPageOpen}
+                    totalPages={goalsOpenListQuery?.data?.totalPages}
+                    handlePageChange={(page) =>
+                      handlePageChange({
+                        page,
+                        setCurrentPage: setCurrentPageOpen,
+                      })
+                    }
                   />
                 )}
               </TabsContent>
@@ -146,6 +171,14 @@ const TodoContainer = ({ user }: Props) => {
                   <GoalList
                     tab={activeTab}
                     goals={goalsCompletedListQuery?.data?.results}
+                    currentPage={currentPageCompleted}
+                    totalPages={goalsCompletedListQuery?.data?.totalPages}
+                    handlePageChange={(page) =>
+                      handlePageChange({
+                        page,
+                        setCurrentPage: setCurrentPageCompleted,
+                      })
+                    }
                   />
                 )}
               </TabsContent>

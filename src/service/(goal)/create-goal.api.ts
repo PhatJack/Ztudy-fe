@@ -1,3 +1,4 @@
+import { getQueryClient } from "@/app/get-query-client";
 import { apiClient } from "@/lib/client";
 import { goalSchema } from "@/lib/schemas/goal/goal.schema";
 import { useMutation } from "@tanstack/react-query";
@@ -22,14 +23,18 @@ export async function createGoalApi(
     "/session-goals/",
     body
   );
-  return response.data
+  return response.data;
 }
 
 export function useCreateGoalMutation() {
-  const mutationKey = ["create-goal"] as const;
+  const mutationKey = ["create-goal"];
+	const queryClient = getQueryClient();
   return useMutation<CreateGoalResponseSchema, unknown, CreateGoalBodySchema>({
     mutationKey,
     mutationFn: (body) => createGoalApi(createGoalBodySchema.parse(body)),
+		onSuccess() {
+			queryClient.refetchQueries({queryKey: ["goals"]});
+		},
     throwOnError: isAxiosError,
   });
 }
