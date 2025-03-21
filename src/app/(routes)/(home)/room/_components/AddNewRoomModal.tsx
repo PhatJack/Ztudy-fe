@@ -19,6 +19,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import InputDropzone from "@/components/ui/input-dropzone";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -33,6 +35,7 @@ import {
   CreateRoomBodySchema,
   useCreateRoomMutation,
 } from "@/service/(rooms)/room/create-room.api";
+import { useUploadThumbnailMutation } from "@/service/(rooms)/room/upload-thumbnail.api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { PlusCircle } from "lucide-react";
@@ -42,6 +45,7 @@ import toast from "react-hot-toast";
 import { useInView } from "react-intersection-observer";
 
 const AddNewRoomModal = () => {
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [open, setOpen] = useState<boolean>(false);
   const [state] = useAuthContext();
   const { ref, inView } = useInView();
@@ -56,6 +60,7 @@ const AddNewRoomModal = () => {
     ...useListStudyRoomCategoriesInfinite(),
   });
   const addRoomMutation = useCreateRoomMutation();
+  const uploadThumbnailMutation = useUploadThumbnailMutation();
   const addRoomForm = useForm<CreateRoomBodySchema>({
     defaultValues: {
       name: "",
@@ -67,14 +72,20 @@ const AddNewRoomModal = () => {
     resolver: zodResolver(createRoomBodySchema),
   });
 
-  const onSubmit = (data: CreateRoomBodySchema) => {
+  const onSubmit = async (data: CreateRoomBodySchema) => {
     const newData = {
       ...data,
       creator_user: state?.user?.id ?? 0,
       category: Number(data.category),
     };
-    addRoomMutation.mutate(newData, {
-      onSuccess: () => {
+    await addRoomMutation.mutateAsync(newData, {
+      onSuccess: async (data) => {
+        if (selectedFile) {
+          await uploadThumbnailMutation.mutateAsync({
+            id: data.id as number,
+            body: { thumbnail: selectedFile },
+          });
+        }
         toast.success("Room created successfully");
         addRoomForm.reset();
         setOpen(false);
@@ -113,6 +124,17 @@ const AddNewRoomModal = () => {
           <Form {...addRoomForm}>
             <form onSubmit={addRoomForm.handleSubmit(onSubmit)}>
               <div className="grid gap-4">
+                <div className="flex flex-col gap-2">
+                  <Label>Thumbnail</Label>
+                  <InputDropzone
+                    avatar={null}
+                    selectedFile={selectedFile}
+                    setSelectedFile={setSelectedFile}
+                  />
+                  <p className="text-muted-foreground text-xs">
+                    This is optional.
+                  </p>
+                </div>
                 <FormField
                   control={addRoomForm.control}
                   name="name"
@@ -238,7 +260,7 @@ const AddNewRoomModal = () => {
             </form>
           </Form>
         </div>
-        {addRoomMutation.isPending ? (
+        {addRoomMutation.isPending || uploadThumbnailMutation.isPending ? (
           <div className="absolute inset-0 bg-gray-400 bg-clip-padding backdrop-blur-sm backdrop-filter bg-opacity-0 flex justify-center items-center">
             <LoadingSpinner />
           </div>

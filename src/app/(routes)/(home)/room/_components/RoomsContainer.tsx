@@ -1,6 +1,7 @@
 "use client";
 import RoomItem from "@/components/rooms/room-item";
 import { useListRooms } from "@/service/(rooms)/room/list-rooms.api";
+import { generateSoftHexColor } from "@/util/generateHexColor";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import React from "react";
 
@@ -22,7 +23,7 @@ const RoomsContainer = () => {
             <p className="">No public rooms available.</p>
           ) : null}
           {publicRooms.map((room, index) => (
-            <RoomItem key={index} room={room} />
+            <RoomItem key={index} room={room} color={generateSoftHexColor()} />
           ))}
         </div>
       </div>
@@ -33,7 +34,7 @@ const RoomsContainer = () => {
             <p className="">No private rooms available.</p>
           ) : null}
           {privateRooms.map((room, index) => (
-            <RoomItem key={index} room={room} />
+            <RoomItem key={index} room={room} color={generateSoftHexColor()} />
           ))}
         </div>
       </div>

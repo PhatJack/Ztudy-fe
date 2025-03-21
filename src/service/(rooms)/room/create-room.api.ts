@@ -16,7 +16,7 @@ export const createRoomBodySchema = roomSchema.omit({
 
 export type CreateRoomBodySchema = z.infer<typeof createRoomBodySchema>;
 
-const createRoomResponseSchema = createRoomBodySchema;
+const createRoomResponseSchema = roomSchema;
 
 export type CreateRoomResponseSchema = z.infer<typeof createRoomResponseSchema>;
 
