@@ -28,7 +28,7 @@ const LeaderboardPage = () => {
 
   return (
     <div className="p-6">
-      <div className="w-full p-6 bg-white dark:bg-muted/40 rounded-md flex flex-col space-y-2">
+      <div className="w-full h-full p-6 bg-white dark:bg-muted/40 rounded-md flex flex-col space-y-2">
         <div className="w-full flex justify-between items-center">
           <p className="flex items-center gap-1">
             <span className="font-semibold text-black dark:text-white">
@@ -36,15 +36,6 @@ const LeaderboardPage = () => {
             </span>
             <span className="text-xs">Global board</span>
           </p>
-          {/* <div className="flex gap-2 items-center">
-            <div className="flex items-center space-x-2">
-              <Switch
-                id="friend-only"
-                className="data-[state=unchecked]:bg-gray-500"
-              />
-              <Label htmlFor="friend-only">Friends only</Label>
-            </div>
-          </div> */}
         </div>
         <Separator />
         <div className="w-full flex justify-between items-center text-sm">
@@ -71,7 +62,7 @@ const LeaderboardPage = () => {
             </Button>
           </div>
         </div>
-        <table className="table">
+        <table className="table h-full">
           <thead>
             <tr className="[&_th]:p-4 text-left text-sm border-b border-gray-200">
               <th className="w-[5%] text-left">Rank</th>
@@ -90,13 +81,13 @@ const LeaderboardPage = () => {
             ) : (
               listLeaderboardQuery.data?.leaderboard?.results.map(
                 (user, index) => (
-                  <tr key={index} className="[&_td]:p-4">
+                  <tr key={index} className="[&_td]:py-2.5 [&_td]:px-4">
                     <td>{user.rank}</td>
                     <td>
-                      <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-2">
                         <Avatar>
                           <AvatarImage
-                            src={user.avatar ? user.avatar : "/daddy-chill.gif"}
+                            src={user.avatar ? user.avatar : "/default.png"}
                             alt="avatar"
                           />
                           <AvatarFallback>ZT</AvatarFallback>

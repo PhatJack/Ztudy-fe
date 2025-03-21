@@ -52,7 +52,7 @@ const Header = () => {
   }, [currentUser]);
 
   return (
-    <header className="w-full p-2 bg-white dark:bg-background max-h-12 h-12 sticky top-0 border-b border-gray-200 shadow-sm">
+    <header className="w-full p-2 bg-white dark:bg-background max-h-12 h-12 sticky top-0 border-b border-gray-200 shadow-sm z-[40]">
       <div className="w-full flex justify-between items-center">
         <div className="w-full">
           <div className="md:block hidden">

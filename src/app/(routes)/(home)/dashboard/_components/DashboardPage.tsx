@@ -24,7 +24,7 @@ const DashboardPage = () => {
         <div className="lg:max-w-[1000px] w-full flex flex-col space-y-6">
           <div className="w-full flex lg:flex-row flex-col justify-between items-center lg:gap-0 gap-6">
             <div className="flex lg:flex-row flex-col items-center gap-2">
-              <AvatarCustom src="/daddy-chill.gif" className="w-12 h-12" />
+              <AvatarCustom src={user?.avatar ?? ""} className="w-12 h-12" />
               <div className="lg:text-left text-center">
                 <h1 className="font-medium text-muted-foreground">
                   Hello, {user?.username || "username"}!
@@ -72,7 +72,7 @@ const DashboardPage = () => {
           )}
         </div>
       </div>
-      <div className="max-w-[270px] w-[270px] h-full bg-white dark:bg-background hidden flex-col gap-2 p-4 lg:flex">
+      <div className="max-w-[270px] w-[270px] h-screen bg-white dark:bg-background hidden flex-col gap-2 p-4 lg:flex">
         <h5 className="font-medium p-2 bg-muted/40 border-y border-border text-sm text-muted-foreground">
           Ztudy Community
         </h5>
