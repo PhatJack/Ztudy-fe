@@ -5,8 +5,6 @@ import { userSchema } from "@/lib/schemas/user/user.schema";
 
 export const currentUserResponseSchema = userSchema.omit({
   password: true,
-  is_staff: true,
-  is_superuser: true,
 });
 export type CurrentUserResponseSchema = z.infer<
   typeof currentUserResponseSchema

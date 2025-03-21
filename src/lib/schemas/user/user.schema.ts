@@ -3,20 +3,17 @@ import { baseSchema } from "../base.schema";
 
 export const userSchema = baseSchema.extend({
   id: z.number(),
-  pk: z.number(),
   avatar: z.string().nullable(),
-  email: z.string().email("Invalid email"),
-  password: z.string(),
-  last_login: z.date(),
-  is_superuser: z.boolean(),
-  is_staff: z.boolean(),
-	is_online: z.boolean(),
+  last_login: z.coerce.date(),
   username: z.string(),
   first_name: z.string(),
+  email: z.string().email("Invalid email"),
   last_name: z.string(),
-  date_joined: z.date(),
-	created_at: z.coerce.date(),
-	updated_at: z.coerce.date(),
+  password: z.string(),
+  is_online: z.boolean(),
+  is_active: z.boolean(),
+  date_joined: z.coerce.date(),
 });
+
 
 export type UserSchema = z.infer<typeof userSchema>;
