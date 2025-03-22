@@ -3,9 +3,9 @@ import AddNewRoomModal from "./AddNewRoomModal";
 import LoadingSpinner from "@/components/loading/loading-spinner";
 import RoomsContainer from "./RoomsContainer";
 
-const StudyGroupPage = () => {	
+const RoomPage = () => {	
   return (
-    <div className="p-6">
+    <div className="p-5">
       <div className="bg-white dark:bg-muted/40 size-full p-6 rounded-md flex flex-col space-y-6">
         <AddNewRoomModal />
         <Suspense
@@ -22,4 +22,4 @@ const StudyGroupPage = () => {
   );
 };
 
-export default StudyGroupPage;
+export default RoomPage;

@@ -22,14 +22,15 @@ const RoomsContainer = () => {
   );
 
   const handleJoinRoom = (roomCode: string) => {
-    joinRoomMutation.mutate(roomCode, {
-      onSuccess: (data) => {
-        if (data.status === 202) {
-          dispatch({ type: "SET_IS_PENDING", payload: true });
-        }
-				// dispatch({type: "SET_CURRENT_ROOM", payload: data.room});
-      },
-    });
+		router.push(`/room/${roomCode}`)
+    // joinRoomMutation.mutate(roomCode, {
+    //   onSuccess: (data) => {
+    //     if (data.status === 202) {
+    //       dispatch({ type: "SET_IS_PENDING", payload: true });
+    //     }
+		// 		// dispatch({type: "SET_CURRENT_ROOM", payload: data.room});
+    //   },
+    // });
   };
 
   return (

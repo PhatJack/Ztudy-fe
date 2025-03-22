@@ -13,19 +13,19 @@ const DefaultLayout = ({
   children: React.ReactNode;
 }>) => {
   const location = usePathname();
-  const isSolo = location === "/solo";
+  const isShowHeader = location === "/solo" || location.startsWith("/room/");
 
   return (
     <>
-      <div className={cn(isSolo && "overflow-hidden")}>
+      <div className={cn(isShowHeader && "overflow-hidden")}>
         <Sidebar />
         <main
           className={cn(
             "md:ml-24 h-full flex flex-col relative box-border",
-            isSolo ? "p-5" : "p-0"
+            isShowHeader ? "p-5" : "p-0"
           )}
         >
-          {!isSolo && (
+          {!isShowHeader && (
             <>
               <Header />
             </>
