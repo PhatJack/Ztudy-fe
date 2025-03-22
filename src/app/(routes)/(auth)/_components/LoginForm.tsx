@@ -39,7 +39,7 @@ export function LoginForm() {
   const onSubmit = (data: LoginBodySchema) => {
     loginMutation.mutate(data, {
       onSuccess() {
-				router.push("/dashboard");
+        router.push("/dashboard");
         toast.success("Login successful");
       },
       onError(error: any) {
@@ -55,6 +55,20 @@ export function LoginForm() {
     setIsShowing(!isShowing);
   };
 
+  const handleGoogleLogin = () => {
+    // Tạo Google OAuth URL
+    const googleAuthUrl =
+      `https://accounts.google.com/o/oauth2/v2/auth?` +
+      `client_id=${process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}` +
+      `&response_type=code` +
+      `&scope=email profile` +
+      `&redirect_uri=${process.env.NEXT_PUBLIC_DJANGO_SERVER_URL}/auth/google/callback/` +
+      `&prompt=consent` +
+      `&access_type=offline`;
+
+    // Redirect tới Google OAuth
+    window.location.href = googleAuthUrl;
+  };
   return (
     <Form {...loginForm}>
       <form
@@ -142,6 +156,8 @@ export function LoginForm() {
             <Button
               variant="outline"
               className="w-full bg-[#4285F4] text-white hover:bg-[#4285F4]/90 hover:text-white"
+              onClick={handleGoogleLogin}
+              type="button"
             >
               <svg
                 className="stroke-white fill-white"
@@ -162,9 +178,12 @@ export function LoginForm() {
             Register
           </Link>
         </div>
-				<div className="text-center text-sm">
+        <div className="text-center text-sm">
           Forgot your password?{" "}
-          <Link href="/forgot-password" className="underline underline-offset-4 text-secondary-foreground">
+          <Link
+            href="/forgot-password"
+            className="underline underline-offset-4 text-secondary-foreground"
+          >
             Click here
           </Link>
         </div>
