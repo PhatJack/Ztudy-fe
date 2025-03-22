@@ -8,6 +8,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { useEffect, useRef, useState } from "react";
+import SoloProviders from "./(routes)/(home)/solo/providers";
+import { ChatProvider } from "@/contexts/ChatContext";
+import { WebSocketProvider } from "@/contexts/WebSocketContext";
 
 const queryClient = getQueryClient();
 
@@ -26,7 +29,13 @@ export default function Providers({
       <QueryClientProvider client={queryClient}>
         <NextTopLoader color="hsl(150 30% 45%)" zIndex={9999} />
         <AuthProvider>
-          <TooltipProvider>{children}</TooltipProvider>
+          <SoloProviders>
+            <ChatProvider>
+              <WebSocketProvider>
+                <TooltipProvider>{children}</TooltipProvider>
+              </WebSocketProvider>
+            </ChatProvider>
+          </SoloProviders>
         </AuthProvider>
         <Toaster />
         <ReactQueryDevtools initialIsOpen={false} />

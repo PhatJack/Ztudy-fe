@@ -7,17 +7,17 @@ import { z } from "zod";
 
 export const listRoomsResponseSchema = createListResponseSchema(roomSchema);
 
-export type ListRoomsResponse = z.infer<typeof listRoomsResponseSchema>;
+export type ListRoomsResponseSchema = z.infer<typeof listRoomsResponseSchema>;
 
-export async function listRoomssApi(): Promise<ListRoomsResponse> {
-  const res = await apiClient.get<ListRoomsResponse>("/rooms/");
+export async function listRoomssApi(): Promise<ListRoomsResponseSchema> {
+  const res = await apiClient.get<ListRoomsResponseSchema>("/rooms/");
   return res.data;
 }
 
 export function useListRooms() {
   const queryKey = ["rooms"] as const;
 
-  return queryOptions<ListRoomsResponse>({
+  return queryOptions<ListRoomsResponseSchema>({
     queryKey,
     queryFn: listRoomssApi,
     throwOnError: isAxiosError,

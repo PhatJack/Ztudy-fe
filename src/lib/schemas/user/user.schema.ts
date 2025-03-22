@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { baseSchema } from "../base.schema";
+import { monthlyLevelSchema } from "../monthly-level.schema";
 
 export const userSchema = baseSchema.extend({
   id: z.number(),
@@ -13,6 +14,8 @@ export const userSchema = baseSchema.extend({
   is_online: z.boolean(),
   is_active: z.boolean(),
   date_joined: z.coerce.date(),
+	monthly_study_time: z.number(),
+  monthly_level: monthlyLevelSchema
 });
 
 
