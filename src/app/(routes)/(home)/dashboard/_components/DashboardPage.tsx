@@ -19,7 +19,7 @@ const DashboardPage = () => {
   const user = userQuery.data;
 
   return (
-    <div className="relative flex h-full lg:h-[calc(100vh-3rem)]">
+    <div className="relative flex h-full lg:h-[calc(100vh-3rem)] overflow-hidden">
       <div className="flex-1 flex justify-center lg:py-10 lg:px-6 px-4 py-10 w-full">
         <div className="lg:max-w-[1000px] w-full flex flex-col space-y-6">
           <div className="w-full flex lg:flex-row flex-col justify-between items-center lg:gap-0 gap-6">

@@ -62,53 +62,63 @@ const LeaderboardPage = () => {
             </Button>
           </div>
         </div>
-        <table className="table h-full">
-          <thead>
-            <tr className="[&_th]:p-4 text-left text-sm border-b border-gray-200">
-              <th className="w-[5%] text-left">Rank</th>
-              <th className="w-full text-left">User</th>
-              <th className="w-[20%] text-right">Hour</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            {listLeaderboardQuery.isLoading &&
-            listLeaderboardQuery.isFetching ? (
-              <tr>
-                <td colSpan={3} className="py-4">
-                  <LoadingSpinner />
-                </td>
-              </tr>
-            ) : (
-              listLeaderboardQuery.data?.leaderboard?.results.map(
-                (user, index) => (
-                  <tr key={index} className="[&_td]:py-2.5 [&_td]:px-4">
-                    <td>{user.rank}</td>
-                    <td>
-                      <div className="flex items-center gap-2">
-                        <Avatar>
-                          <AvatarImage
-                            src={user.avatar ? user.avatar : "/default.png"}
-                            alt="avatar"
-                          />
-                          <AvatarFallback>ZT</AvatarFallback>
-                        </Avatar>
-                        <span>
-                          <strong>{user.username}</strong>
-                        </span>
-                      </div>
+        {listLeaderboardQuery.data?.message ? (
+          <p className="text-center !my-6 text-destructive">
+            {listLeaderboardQuery.data.message}
+          </p>
+        ) : (
+          <>
+            <table className="table h-full">
+              <thead>
+                <tr className="[&_th]:p-4 text-left text-sm border-b border-gray-200">
+                  <th className="w-[5%] text-left">Rank</th>
+                  <th className="w-full text-left">User</th>
+                  <th className="w-[20%] text-right">Hour</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {listLeaderboardQuery.isLoading &&
+                listLeaderboardQuery.isFetching ? (
+                  <tr>
+                    <td colSpan={3} className="py-4">
+                      <LoadingSpinner />
                     </td>
-                    <td>{user.total_time}h</td>
                   </tr>
-                )
-              )
-            )}
-          </tbody>
-        </table>
-        <PaginationCustom
-          onPageChange={(page) => handlePageChange({ page, setCurrentPage })}
-          currentPage={currentPage}
-          totalPages={listLeaderboardQuery?.data?.leaderboard?.totalPages}
-        />
+                ) : (
+                  listLeaderboardQuery.data?.leaderboard?.results.map(
+                    (user, index) => (
+                      <tr key={index} className="[&_td]:py-2.5 [&_td]:px-4">
+                        <td>{user.rank}</td>
+                        <td>
+                          <div className="flex items-center gap-2">
+                            <Avatar>
+                              <AvatarImage
+                                src={user.avatar ? user.avatar : "/default.png"}
+                                alt="avatar"
+                              />
+                              <AvatarFallback>ZT</AvatarFallback>
+                            </Avatar>
+                            <span>
+                              <strong>{user.username}</strong>
+                            </span>
+                          </div>
+                        </td>
+                        <td>{user.total_time}h</td>
+                      </tr>
+                    )
+                  )
+                )}
+              </tbody>
+            </table>
+            <PaginationCustom
+              onPageChange={(page) =>
+                handlePageChange({ page, setCurrentPage })
+              }
+              currentPage={currentPage}
+              totalPages={listLeaderboardQuery?.data?.leaderboard?.totalPages}
+            />
+          </>
+        )}
       </div>
     </div>
   );

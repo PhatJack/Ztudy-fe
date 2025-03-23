@@ -9,6 +9,7 @@ import { z } from "zod";
 
 export const listLeaderboardSuccessResponseSchema = z.object({
   leaderboard: createListResponseSchema(leaderboardSchema),
+  message: z.string().optional(),
   next_update_timestamp: z.number(),
   seconds_until_next_update: z.number(),
 });
@@ -26,18 +27,26 @@ export async function listLeaderboardApi(
   period: string,
   query: ListLeaderboardQuerySchema = {}
 ): Promise<ListLeaderboardSuccessResponseSchema> {
-  const response = await apiClient.get(`/stats/leaderboard/${period}/`, query);
-	if(response.status !== 200) {
-    throw new Error(typeof response.data === "string" ? response.data : "An unknown error occurred");
-	}
-  return listLeaderboardSuccessResponseSchema.parse(response.data);
+  try {
+    const response = await apiClient.get<ListLeaderboardSuccessResponseSchema>(
+      `/stats/leaderboard/${period}/`,
+      query
+    );
+    return listLeaderboardSuccessResponseSchema.parse(response.data);
+  } catch (error) {
+    return listLeaderboardSuccessResponseSchema.parse(error);
+  }
 }
 
 export function useListLeaderboardApi(
   period: string,
   query: ListLeaderboardQuerySchema = {}
 ) {
-  return queryOptions<ListLeaderboardSuccessResponseSchema,unknown>({
+  return queryOptions<
+    ListLeaderboardSuccessResponseSchema,
+    unknown,
+    ListLeaderboardSuccessResponseSchema
+  >({
     queryKey: ["leaderboard", period],
     queryFn: () => listLeaderboardApi(period, query),
     throwOnError: true,

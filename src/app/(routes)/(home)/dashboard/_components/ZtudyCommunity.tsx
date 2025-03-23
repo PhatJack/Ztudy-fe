@@ -11,7 +11,7 @@ const ZtudyCommunity = () => {
   const users = usersQuery.data?.results.filter((user) => user.id !== 1);
 
   return (
-    <div className="flex flex-col space-y-2 divide-y divide-background dark:divide-input">
+    <div className="flex flex-col space-y-2 divide-y divide-background dark:divide-input overflow-y-auto">
       {usersQuery.isSuccess &&
         users &&
         users.map((user, index) => (

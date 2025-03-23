@@ -20,11 +20,11 @@ const GoalList = ({
   totalPages,
 }: Props) => {
   return (
-    <div className="flex flex-col space-y-4">
+    <>
       {tab === "COMPLETED" && (
         <p className="font-bold">Your completed goals! 👏</p>
       )}
-      <div className="flex flex-col gap-2">
+      <div className="flex-1 flex space-y-2 flex-col overflow-y-auto pe-2">
         {goals?.length === 0 ? (
           <div className="w-full h-[200px] flex flex-col justify-center items-center">
             <p className="text-lg font-bold">
@@ -44,7 +44,7 @@ const GoalList = ({
         onPageChange={handlePageChange}
         totalPages={totalPages}
       />
-    </div>
+    </>
   );
 };
 

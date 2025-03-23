@@ -44,7 +44,7 @@ const GoalItem = ({ goal }: Props) => {
 
   return (
     <div
-      className={`flex justify-between items-center w-full px-3 py-2 rounded-lg bg-background ${
+      className={`flex justify-between items-center w-full px-3 py-2 rounded-lg bg-background h-fit ${
         goal.status === "COMPLETED" ? "line-through" : ""
       } ${
         patchGoalMutation.isPending || deleteGoalMutation.isPending
