@@ -15,9 +15,9 @@ export const monthlyLevelSchema = z.enum([
   "STUDY_MASTER"
 ]);
 
-type MonthlyLevel = z.infer<typeof monthlyLevelSchema>;
+export type MonthlyLevelSchema = z.infer<typeof monthlyLevelSchema>;
 
-export const MonthlyLevelLabels: Record<MonthlyLevel, string> = {
+export const MonthlyLevelLabels: Record<MonthlyLevelSchema, string> = {
   MEMBER: "Member (0-10m)",
   ENTRY: "Entry (10m-60m)",
   BEGINNER: "Beginner (1-3h)",
@@ -32,6 +32,6 @@ export const MonthlyLevelLabels: Record<MonthlyLevel, string> = {
   STUDY_MASTER: "Study Master (200+h)"
 };
 
-export const getMonthlyLevelLabel = (level: MonthlyLevel): string => {
+export const getMonthlyLevelLabel = (level: MonthlyLevelSchema): string => {
   return MonthlyLevelLabels[level];
 };
