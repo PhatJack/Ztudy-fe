@@ -7,8 +7,11 @@ import {
   ChevronDown,
   ChevronRight,
   ChevronUp,
+  ContactRound,
+  MessageSquareDot,
   MessagesSquare,
   UserRoundPlus,
+  UsersRound,
   X,
 } from "lucide-react";
 import moment from "moment";
@@ -21,17 +24,22 @@ interface Props {
 const tabs: {
   name: string;
   value: string;
-  icon: React.ReactNode;
+  icon: React.ElementType;
 }[] = [
   {
-    name: "Request To Join",
+    name: "Request",
     value: "requestToJoin",
-    icon: <UserRoundPlus size={22} />,
+    icon: ContactRound,
   },
   {
     name: "Room Chat",
     value: "roomChat",
-    icon: <MessagesSquare size={22} />,
+    icon: MessageSquareDot,
+  },
+  {
+    name: "People",
+    value: "people",
+    icon: UsersRound,
   },
 ];
 const RoomDetail = ({ roomCode }: Props) => {
@@ -43,16 +51,22 @@ const RoomDetail = ({ roomCode }: Props) => {
           className="xl:max-h-full xl:min-h-full min-h-[500px] max-h-[500px] relative overflow-y-auto"
           defaultValue="requestToJoin"
         >
-          <TabsList className="grid w-full grid-cols-2 p-4 h-fit bg-white rounded-b-none sticky top-0 border-b shadow-md">
+          <TabsList className="w-full flex-wrap px-4 py-3 h-fit bg-white rounded-b-none sticky top-0 border-b shadow-md gap-2">
             {tabs.map((tab, index) => (
               <TabsTrigger
                 key={index}
-                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground font-bold gap-1"
+                className="flex-1 basis-[125px] py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground font-bold gap-1"
                 value={tab.value}
               >
-                {tab.name}
+                <span>
+                  <tab.icon size={20} />
+                </span>
+                <span>{tab.name}</span>
                 {tab.value === "requestToJoin" && (
-                  <span className="data-[state=active]:text-primary-foreground">{`(3)`}</span>
+                  <span className="size-6 bg-secondary flex justify-center items-center rounded-full">{`3`}</span>
+                )}
+                {tab.value === "people" && (
+                  <span className="size-6 bg-secondary flex justify-center items-center rounded-full">{`2`}</span>
                 )}
               </TabsTrigger>
             ))}
@@ -90,33 +104,63 @@ const RoomDetail = ({ roomCode }: Props) => {
             </div>
           </TabsContent>
           <TabsContent value="roomChat">
-            <div className="">
-              <div className="p-4 h-full">
-                <div className="overflow-y-auto flex flex-col space-y-4 pe-2">
-                  {Array.from({ length: 10 }).map((_, index) => (
-                    <div key={index} className="flex flex-col">
-                      <div className="flex items-center gap-2">
-                        <span className="font-semibold">User {index}</span>
-                        <span className="text-xs">
-                          {moment(new Date()).format("LT")}
-                        </span>
-                      </div>
-                      <div className="w-full h-auto rounded-md">
-                        In ut adipisicing aliqua qui officia.Nulla consectetur
-                        exercitation nisi esse quis cillum adipisicing do mollit
-                        cillum exercitation est.
-                      </div>
+            <div className="p-4 h-full">
+              <div className="overflow-y-auto flex flex-col space-y-4 pe-2">
+                {Array.from({ length: 10 }).map((_, index) => (
+                  <div key={index} className="flex flex-col">
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold">User {index}</span>
+                      <span className="text-xs">
+                        {moment(new Date()).format("LT")}
+                      </span>
                     </div>
-                  ))}
-                </div>
+                    <div className="w-full h-auto rounded-md">
+                      In ut adipisicing aliqua qui officia.Nulla consectetur
+                      exercitation nisi esse quis cillum adipisicing do mollit
+                      cillum exercitation est.
+                    </div>
+                  </div>
+                ))}
               </div>
-              <div className="p-4 border-t sticky bottom-0 bg-white dark:bg-background">
-                <div className="flex items-center gap-2">
-                  <Input type="text" placeholder="Type a message..." />
-                  <Button size={"icon"} className="bg-primary text-white">
-                    <ChevronRight />
-                  </Button>
-                </div>
+            </div>
+            <div className="p-4 border-t sticky bottom-0 bg-white dark:bg-background">
+              <div className="flex items-center gap-2">
+                <Input type="text" placeholder="Type a message..." />
+                <Button size={"icon"} className="bg-primary text-white">
+                  <ChevronRight />
+                </Button>
+              </div>
+            </div>
+          </TabsContent>
+          <TabsContent value="people">
+            <div className="h-full p-4 flex flex-col gap-2">
+              <div className=""></div>
+              <div className="overflow-y-auto flex flex-col space-y-4 pe-2">
+                {Array.from({ length: 20 }).map((_, index) => (
+                  <div
+                    key={index}
+                    className="flex justify-between items-center"
+                  >
+                    <div className="flex items-center gap-2">
+                      <div className="w-10 h-10 rounded-full bg-gray-300"></div>
+                      <span className="font-semibold">User {index}</span>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button
+                        size={"icon"}
+                        className="rounded-full bg-emerald-600 text-white"
+                      >
+                        <Check />
+                      </Button>
+                      <Button
+                        size={"icon"}
+                        className="rounded-full bg-rose-600 text-white"
+                      >
+                        <X />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </TabsContent>
