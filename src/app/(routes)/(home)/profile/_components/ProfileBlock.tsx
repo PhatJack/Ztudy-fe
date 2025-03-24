@@ -28,7 +28,7 @@ const ProfileBlock = () => {
           </TooltipTemplate>
         </div>
       </div>
-      <AvatarCustom src={state.user?.avatar ?? undefined} className="w-24 h-24 border" />
+      <AvatarCustom src={state.user?.avatar} className="w-24 h-24 border" />
       <div className="w-full flex flex-col items-center space-y-1">
         <span className="text-base font-bold">{state.user?.username}</span>
         <span className="text-xs text-gray-500">{state.user?.email}</span>

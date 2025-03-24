@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -25,7 +26,7 @@ const HeaderMobileMenu = () => {
           <Menu />
         </Button>
       </SheetTrigger>
-      <SheetContent side={"left"} className="px-0">
+      <SheetContent side={"left"} className="px-0" aria-describedby={undefined}>
         <SheetHeader>
           <SheetTitle className="px-6 mb-6">
             <Link href={"/dashboard"} className="inline-block size-14">

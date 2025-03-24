@@ -20,6 +20,7 @@ import { useLogoutMutation } from "@/service/(auth)/logout.api";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import HeaderStats from "./components/header-stats";
 import HeaderMobileMenu from "./components/header-mobile-menu";
+import AvatarCustom from "../avatar/AvatarCustom";
 
 const Header = () => {
   const [openModal, setOpenModal] = useState<boolean>(false);
@@ -52,7 +53,7 @@ const Header = () => {
   }, [currentUser]);
 
   return (
-    <header className="w-full p-2 bg-white dark:bg-background max-h-12 h-12 sticky top-0 border-b border-gray-200 shadow-sm z-[40]">
+    <header className="w-full px-4 py-2 bg-white dark:bg-background max-h-14 h-14 sticky top-0 border-b border-gray-200 shadow-sm z-[40]">
       <div className="w-full flex justify-between items-center">
         <div className="w-full">
           <div className="md:block hidden">
@@ -72,11 +73,8 @@ const Header = () => {
               open={openModal}
               onOpenChange={setOpenModal}
             >
-              <DropdownMenuTrigger asChild>
-                <Avatar className="w-8 h-8 cursor-pointer">
-                  <AvatarImage src="/daddy-chill.gif" />
-                  <AvatarFallback>LD</AvatarFallback>
-                </Avatar>
+              <DropdownMenuTrigger>
+                <AvatarCustom src={currentUser?.avatar} className="w-9 h-9 cursor-pointer"/>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56">
                 <DropdownMenuLabel>

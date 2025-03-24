@@ -3,7 +3,7 @@ import { Avatar, AvatarFallback } from "../ui/avatar";
 import { AvatarImage } from "@radix-ui/react-avatar";
 
 interface Props {
-  src?: string;
+  src?: string | null;
   fallback?: string;
   className?: string;
 }
@@ -11,7 +11,7 @@ interface Props {
 const AvatarCustom = ({ src, fallback = "ZT", className }: Props) => {
   return (
     <Avatar className={className}>
-      <AvatarImage src={src} className="object-cover" />
+      <AvatarImage src={src || "/default.png"} className="object-cover" />
       <AvatarFallback>{fallback}</AvatarFallback>
     </Avatar>
   );
