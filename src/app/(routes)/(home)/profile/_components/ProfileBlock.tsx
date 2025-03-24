@@ -6,7 +6,7 @@ import { AlarmClockMinus, Copy, Edit3, Trophy } from "lucide-react";
 import React from "react";
 import EditProfileDialog from "@/components/profile/edit-profile";
 import { useAuthContext } from "@/hooks/useAuthContext";
-import moment from "moment";
+import { format } from "date-fns";
 
 const ProfileBlock = () => {
   const [state, dispatch] = useAuthContext();
@@ -33,7 +33,7 @@ const ProfileBlock = () => {
         <span className="text-base font-bold">{state.user?.username}</span>
         <span className="text-xs text-gray-500">{state.user?.email}</span>
         <span className="text-xs text-gray-800">
-          Joined {moment(state.user?.date_joined).format("MM/DD/YYYY")}
+          Joined {format(state.user?.date_joined ?? new Date(), "MM/dd/yyyy")}
         </span>
       </div>
       <Separator className="bg-gray-200" />

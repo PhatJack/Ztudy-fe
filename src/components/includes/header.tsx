@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
-import { DoorOpen, Undo2, UserPen, UserRound } from "lucide-react";
+import { DoorOpen, Undo2, UserRound } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,

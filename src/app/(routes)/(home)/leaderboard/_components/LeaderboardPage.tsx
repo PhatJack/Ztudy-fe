@@ -5,10 +5,10 @@ import { Separator } from "@/components/ui/separator";
 import { useListLeaderboardApi } from "@/service/(leaderboard)/list-leaderboard.api";
 import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
-import moment from "moment";
 import { Button } from "@/components/ui/button";
 import { RotateCcw } from "lucide-react";
 import LoadingSpinner from "@/components/loading/loading-spinner";
+import { format } from "date-fns";
 
 const LeaderboardPage = () => {
   const [period, setPeriod] = useState<"month" | "day" | "week">("month");
@@ -47,9 +47,9 @@ const LeaderboardPage = () => {
             <p>
               Last Update:{" "}
               <span className="font-bold">
-                {moment(listLeaderboardQuery.dataUpdatedAt).format(
-                  "MMMM Do YYYY, h:mm:ss a"
-                )}
+								{
+									format(listLeaderboardQuery.dataUpdatedAt, "mm-dd-yyyy, h:mm:ss a")
+								}
               </span>
             </p>
             <Button

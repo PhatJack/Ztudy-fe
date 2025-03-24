@@ -2,46 +2,15 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Check,
-  ChevronDown,
-  ChevronRight,
-  ChevronUp,
-  ContactRound,
-  MessageSquareDot,
-  MessagesSquare,
-  UserRoundPlus,
-  UsersRound,
-  X,
-} from "lucide-react";
-import moment from "moment";
+import { tabs } from "@/constants/room-tabs";
+import { format } from "date-fns";
+import { Check, ChevronRight, X } from "lucide-react";
 import React from "react";
 
 interface Props {
   roomCode: string;
 }
 
-const tabs: {
-  name: string;
-  value: string;
-  icon: React.ElementType;
-}[] = [
-  {
-    name: "Request",
-    value: "requestToJoin",
-    icon: ContactRound,
-  },
-  {
-    name: "Room Chat",
-    value: "roomChat",
-    icon: MessageSquareDot,
-  },
-  {
-    name: "People",
-    value: "people",
-    icon: UsersRound,
-  },
-];
 const RoomDetail = ({ roomCode }: Props) => {
   return (
     <div className="size-full flex xl:flex-row flex-col gap-4 xl:h-[calc(100vh-2.5rem)] overflow-hidden">
@@ -72,9 +41,12 @@ const RoomDetail = ({ roomCode }: Props) => {
             ))}
           </TabsList>
 
-          <TabsContent value="requestToJoin">
-            <div className="h-full p-4">
-              <div className="overflow-y-auto flex flex-col space-y-4 pe-2">
+          <TabsContent className="mt-0" value="requestToJoin">
+            <div className="h-full flex flex-col">
+              <div className="sticky top-[65px] border-b bg-white p-4 shadow-lg">
+                <Input type="text" placeholder="Search people" />
+              </div>
+              <div className="overflow-y-auto flex flex-col space-y-4 p-4">
                 {Array.from({ length: 20 }).map((_, index) => (
                   <div
                     key={index}
@@ -103,16 +75,14 @@ const RoomDetail = ({ roomCode }: Props) => {
               </div>
             </div>
           </TabsContent>
-          <TabsContent value="roomChat">
+          <TabsContent className="mt-0" value="roomChat">
             <div className="p-4 h-full">
               <div className="overflow-y-auto flex flex-col space-y-4 pe-2">
                 {Array.from({ length: 10 }).map((_, index) => (
                   <div key={index} className="flex flex-col">
                     <div className="flex items-center gap-2">
                       <span className="font-semibold">User {index}</span>
-                      <span className="text-xs">
-                        {moment(new Date()).format("LT")}
-                      </span>
+                      <span className="text-xs">{format(new Date(), "p")}</span>
                     </div>
                     <div className="w-full h-auto rounded-md">
                       In ut adipisicing aliqua qui officia.Nulla consectetur
@@ -132,10 +102,12 @@ const RoomDetail = ({ roomCode }: Props) => {
               </div>
             </div>
           </TabsContent>
-          <TabsContent value="people">
-            <div className="h-full p-4 flex flex-col gap-2">
-              <div className=""></div>
-              <div className="overflow-y-auto flex flex-col space-y-4 pe-2">
+          <TabsContent className="mt-0" value="people">
+            <div className="h-full flex flex-col">
+              <div className="sticky top-[65px] border-b bg-white p-4 shadow-lg">
+                <Input type="text" placeholder="Search people" />
+              </div>
+              <div className="overflow-y-auto flex flex-col space-y-4 p-4">
                 {Array.from({ length: 20 }).map((_, index) => (
                   <div
                     key={index}

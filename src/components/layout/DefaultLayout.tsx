@@ -1,8 +1,6 @@
 "use client";
 import React from "react";
-import { QueryClient } from "@tanstack/react-query";
 import Sidebar from "../includes/sidebar";
-import { Separator } from "../ui/separator";
 import Header from "../includes/header";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -13,7 +11,8 @@ const DefaultLayout = ({
   children: React.ReactNode;
 }>) => {
   const location = usePathname();
-  const isShowHeader = location === "/solo" || location.startsWith("/room/");
+  const isInRoom = location.startsWith("/room/");
+  const isShowHeader = location === "/solo" || isInRoom;
 
   return (
     <>
@@ -22,7 +21,8 @@ const DefaultLayout = ({
         <main
           className={cn(
             "md:ml-24 h-full flex flex-col relative box-border",
-            isShowHeader ? "p-5" : "p-0"
+            isShowHeader ? "p-5" : "p-0",
+						// !isInRoom ? "md:ml-24" : ""
           )}
         >
           {!isShowHeader && (

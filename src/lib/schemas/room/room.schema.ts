@@ -11,7 +11,7 @@ export const roomSchema = z.object({
   updated_at: z.string(),
   is_active: z.boolean(),
   creator_user: z.number(),
-  category: z.number(),
+  category: z.coerce.number(),
   max_participants: z.number(),
   type: roomType,
   thumbnail: z.string().nullable(),
