@@ -7,6 +7,7 @@ import React from "react";
 import EditProfileDialog from "@/components/profile/edit-profile";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { format } from "date-fns";
+import Image from "next/image";
 
 const ProfileBlock = () => {
   const [state, dispatch] = useAuthContext();
@@ -28,7 +29,10 @@ const ProfileBlock = () => {
           </TooltipTemplate>
         </div>
       </div>
-      <AvatarCustom src={state.user?.avatar} className="w-24 h-24 border" />
+      <div className="relative size-[150px] flex justify-center items-center">
+        <AvatarCustom src={state.user?.avatar} className="w-24 h-24 border" />
+        <Image fill src={"/borders/12.png"} alt="border" className="pointer-events-none" />
+      </div>
       <div className="w-full flex flex-col items-center space-y-1">
         <span className="text-base font-bold">{state.user?.username}</span>
         <span className="text-xs text-gray-500">{state.user?.email}</span>

@@ -1,6 +1,7 @@
 import React from "react";
 import ChangePassword from "./ChangePassword";
 import ProfileBlock from "./ProfileBlock";
+import MonthlyLevel from "./MonthlyLevel";
 
 const ProfilePage = () => {
   return (
@@ -13,8 +14,8 @@ const ProfilePage = () => {
         <div className="xl:col-span-6">
           <div className="w-full rounded-xl bg-background p-6"></div>
         </div>
-        <div className="xl:col-span-3">
-          <div className="w-full rounded-xl bg-background p-6"></div>
+        <div className="xl:col-span-3 flex flex-col space-y-6">
+          <MonthlyLevel />
         </div>
       </div>
     </div>
