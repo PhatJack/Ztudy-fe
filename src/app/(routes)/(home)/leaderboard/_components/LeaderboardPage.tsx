@@ -48,7 +48,7 @@ const LeaderboardPage = () => {
               Last Update:{" "}
               <span className="font-bold">
 								{
-									format(listLeaderboardQuery.dataUpdatedAt, "mm-dd-yyyy, h:mm:ss a")
+									format(listLeaderboardQuery.dataUpdatedAt, "MMM-dd-yyyy, h:mm:ss a")
 								}
               </span>
             </p>
