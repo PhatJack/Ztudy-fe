@@ -21,6 +21,7 @@ import InputDropzone from "../ui/input-dropzone";
 import { useUploadAvatarMutation } from "@/service/(users)/upload-avatar.api";
 import toast from "react-hot-toast";
 import LoadingSpinner from "../loading/loading-spinner";
+import { MonthlyLevelSchema } from "@/lib/schemas/monthly-level.schema";
 
 interface Props {
   children: React.ReactNode;
@@ -52,7 +53,7 @@ const EditProfileDialog = ({ children }: Props) => {
         username: state.user.username,
       });
     }
-  }, [state.user, editProfileForm.reset]);
+  }, [state.user, editProfileForm]);
 
   const onSubmit = async (data: EditUserBodySchema) => {
     if (selectedFile && selectedFile.name !== state.user?.avatar) {
@@ -77,6 +78,8 @@ const EditProfileDialog = ({ children }: Props) => {
                 first_name: state.user?.first_name as string,
                 last_name: state.user?.last_name as string,
                 date_joined: state.user?.date_joined as Date,
+                monthly_level: state.user?.monthly_level as MonthlyLevelSchema,
+                monthly_study_time: state.user?.monthly_study_time as number,
                 created_at: state.user?.created_at as Date,
                 updated_at: state.user?.updated_at as Date,
               },

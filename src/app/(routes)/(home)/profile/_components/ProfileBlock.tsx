@@ -8,9 +8,10 @@ import EditProfileDialog from "@/components/profile/edit-profile";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { format } from "date-fns";
 import Image from "next/image";
+import { getMonthlyLevelBorder } from "@/lib/get-border";
 
 const ProfileBlock = () => {
-  const [state, dispatch] = useAuthContext();
+  const [state] = useAuthContext();
 
   return (
     <div className="w-full rounded-xl bg-background flex flex-col items-center space-y-4 p-6">
@@ -30,8 +31,15 @@ const ProfileBlock = () => {
         </div>
       </div>
       <div className="relative size-[150px] flex justify-center items-center">
-        <AvatarCustom src={state.user?.avatar} className="w-24 h-24 border" />
-        <Image fill src={"/borders/12.png"} alt="border" className="pointer-events-none" />
+        <AvatarCustom src={state.user?.avatar} className="w-[100px] h-[100px] border" />
+        <Image
+          fill
+					priority
+          src={getMonthlyLevelBorder(state.user?.monthly_level ?? "MEMBER")}
+          alt="border"
+          className="pointer-events-none !top-1"
+          sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 10vw"
+        />
       </div>
       <div className="w-full flex flex-col items-center space-y-1">
         <span className="text-base font-bold">{state.user?.username}</span>

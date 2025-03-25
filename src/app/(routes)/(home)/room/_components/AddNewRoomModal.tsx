@@ -123,18 +123,17 @@ const AddNewRoomModal = () => {
         <div className="">
           <Form {...addRoomForm}>
             <form onSubmit={addRoomForm.handleSubmit(onSubmit)}>
+              <div className="flex flex-col gap-2">
+                <Label>Thumbnail {`(optional)`}</Label>
+                <InputDropzone
+                  avatar={null}
+                  selectedFile={selectedFile}
+                  setSelectedFile={setSelectedFile}
+                  widthClass="w-full"
+									heightClass="h-[150px]"
+                />
+              </div>
               <div className="grid gap-4">
-                <div className="flex flex-col gap-2">
-                  <Label>Thumbnail</Label>
-                  <InputDropzone
-                    avatar={null}
-                    selectedFile={selectedFile}
-                    setSelectedFile={setSelectedFile}
-                  />
-                  <p className="text-muted-foreground text-xs">
-                    This is optional.
-                  </p>
-                </div>
                 <FormField
                   control={addRoomForm.control}
                   name="name"
