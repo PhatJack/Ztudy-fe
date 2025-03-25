@@ -66,7 +66,7 @@ interface WebSocketProviderProps {
 export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
   children,
 }) => {
-  const [stateAuth, dispatchAuth] = useAuthContext();
+  const [stateAuth,] = useAuthContext();
   const [stateChat, dispatchChat] = useChatContext();
   const [state, dispatch] = useReducer(webSocketReducer, initialState);
 

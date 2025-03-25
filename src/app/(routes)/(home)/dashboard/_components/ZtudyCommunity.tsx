@@ -1,6 +1,5 @@
 "use client";
 import AvatarCustom from "@/components/avatar/AvatarCustom";
-import LoadingSpinner from "@/components/loading/loading-spinner";
 import { useListUsers } from "@/service/(users)/list-users.api";
 import { checkLastLogin } from "@/util/checkLastLogin";
 import { useSuspenseQuery } from "@tanstack/react-query";

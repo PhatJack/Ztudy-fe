@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useListBackgroundVideoTypes } from "@/service/(solo)/background/list-background-types.api";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
 interface Props {
   activeTab: number;

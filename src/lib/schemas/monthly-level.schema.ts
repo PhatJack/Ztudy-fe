@@ -31,7 +31,3 @@ export const MonthlyLevelLabels: Record<MonthlyLevelSchema, string> = {
   STUDY_MACHINE: "Study-Machine (140-200h)",
   STUDY_MASTER: "Study Master (200+h)"
 };
-
-export const getMonthlyLevelLabel = (level: MonthlyLevelSchema): string => {
-  return MonthlyLevelLabels[level];
-};

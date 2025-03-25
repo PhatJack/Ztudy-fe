@@ -40,7 +40,7 @@ export function RegisterForm({
   const onSubmit = registerForm.handleSubmit((data: RegisterBodySchema) => {
     try {
       registerMutation.mutate(data, {
-        onSuccess: (res) => {
+        onSuccess: () => {
           toast.success("Account created successfully");
           router.push("/login");
         },

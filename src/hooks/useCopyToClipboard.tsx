@@ -1,4 +1,6 @@
-function useCopyToClipboard({
+import React from "react";
+
+export function useCopyToClipboard({
   timeout = 2000,
   onCopy,
 }: {

@@ -1,4 +1,3 @@
-import { getQueryClient } from "@/app/get-query-client";
 import { apiClient } from "@/lib/client";
 import { tokenSchema } from "@/lib/schemas/token.schema";
 import { userSchema } from "@/lib/schemas/user/user.schema";
@@ -21,10 +20,7 @@ export type RegisterBodySchema = z.infer<typeof registerBodySchema>;
 
 const registerUserSchema = userSchema.omit({
   id: true,
-  pk: true,
   last_login: true,
-  is_superuser: true,
-  is_staff: true,
   date_joined: true,
 });
 
@@ -47,7 +43,6 @@ export async function registerApi(
 }
 
 export function useRegisterMutation() {
-  // const queryClient = getQueryClient();
   const mutationKey = ["register"] as const;
 
   return useMutation<RegisterResponseSchema, unknown, RegisterBodySchema>({

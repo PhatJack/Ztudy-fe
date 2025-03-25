@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
 import "./globals.css";
-import { Nunito, Signika_Negative } from "next/font/google";
+import { Nunito } from "next/font/google";
 import Providers from "./providers";
 
 const nunito = Nunito({

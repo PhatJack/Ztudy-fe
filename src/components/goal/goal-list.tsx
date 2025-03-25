@@ -35,7 +35,7 @@ const GoalList = ({
             </p>
           </div>
         ) : null}
-        {goals?.map((goal, _) => (
+        {goals?.map((goal) => (
           <GoalItem goal={goal} key={goal.id} />
         ))}
       </div>

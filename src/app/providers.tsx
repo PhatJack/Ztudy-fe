@@ -2,12 +2,11 @@
 import { ThemeProvider } from "@/components/theme-provider";
 import { QueryClientProvider } from "@tanstack/react-query";
 import NextTopLoader from "nextjs-toploader";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import { getQueryClient } from "./get-query-client";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { AuthProvider } from "@/contexts/AuthContext";
-import { useEffect, useRef, useState } from "react";
 import SoloProviders from "./(routes)/(home)/solo/providers";
 import { ChatProvider } from "@/contexts/ChatContext";
 import { WebSocketProvider } from "@/contexts/WebSocketContext";

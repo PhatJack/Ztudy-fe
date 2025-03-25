@@ -1,7 +1,7 @@
 "use client";
 import { useSoloContext } from "@/hooks/useSoloContext";
 import { UrlToEmbeded } from "@/util/urlToEmbed";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 
 /**
  * YouTube Embed Parameters:

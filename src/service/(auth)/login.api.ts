@@ -1,13 +1,8 @@
 import { getQueryClient } from "@/app/get-query-client";
-import {
-  COOKIE_KEY_ACCESS_TOKEN,
-  COOKIE_KEY_REFRESH_TOKEN,
-} from "@/constants/cookies";
 import { apiClient } from "@/lib/client";
 import { tokenSchema } from "@/lib/schemas/token.schema";
 import { userSchema } from "@/lib/schemas/user/user.schema";
 import { useMutation } from "@tanstack/react-query";
-import { setCookie } from "cookies-next";
 import { z } from "zod";
 
 export const loginBodySchema = z.object({

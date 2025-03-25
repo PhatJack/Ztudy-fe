@@ -15,7 +15,7 @@ export function createListResponseSchema<T>(ItemSchema: z.ZodType<T>) {
   );
 }
 
-export type PaginationResponseSchema<T> = z.infer<
+export type PaginationResponseSchema = z.infer<
   typeof paginationResponseSchema
 >;
 
