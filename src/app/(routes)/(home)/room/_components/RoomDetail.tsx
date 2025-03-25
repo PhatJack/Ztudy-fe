@@ -1,19 +1,55 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import TabChat from "@/components/rooms/tabs/tab-chat";
+import TabPeople from "@/components/rooms/tabs/tab-people";
+import TabRequests from "@/components/rooms/tabs/tab-requests";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { tabs } from "@/constants/room-tabs";
-import { format } from "date-fns";
-import { Check, ChevronRight, X } from "lucide-react";
-import React from "react";
+import { useRoomWebSocket } from "@/contexts/WebSocketContext";
+import { useChatContext } from "@/hooks/useChatContext";
+import { useRouter } from "nextjs-toploader/app";
+import React, { useEffect, useState } from "react";
+import PendingScreen from "./PendingScreen";
 
 interface Props {
   roomCode: string;
 }
 
 const RoomDetail = ({ roomCode }: Props) => {
+  const [cameraEnabled, setCameraEnabled] = useState<boolean>(true);
+  const [micEnabled, setMicEnabled] = useState<boolean>(true);
+  const router = useRouter();
+  const [stateChat, dispatchChat] = useChatContext();
+  const {
+    connectChatSocket,
+    disconnectChatSocket,
+    sendTypingStatus,
+    dispatch,
+    state,
+  } = useRoomWebSocket();
+
+  useEffect(() => {
+    connectChatSocket(roomCode);
+    return () => {
+      disconnectChatSocket();
+    };
+  }, []);
+
+  if (stateChat.isPending) {
+    return (
+      <PendingScreen
+        cameraEnabled={cameraEnabled}
+        micEnabled={micEnabled}
+        setCameraEnabled={setCameraEnabled}
+        setMicEnabled={setMicEnabled}
+        disconnectChatSocket={disconnectChatSocket}
+        dispatchChat={dispatchChat}
+        router={router}
+      />
+    );
+  }
+
   return (
-    <div className="size-full flex xl:flex-row flex-col gap-4 xl:h-[calc(100vh-2.5rem)] overflow-hidden">
+    <div className="size-full flex xl:flex-row flex-col gap-4 xl:h-[calc(100vh-3rem)] overflow-hidden">
       <div className="p-4 xl:w-[75%] flex-1 bg-white dark:bg-background rounded-lg"></div>
       <div className="xl:w-[25%] overflow-y-auto bg-white dark:bg-background h-full rounded-lg flex flex-col gap-4 overflow-hidden">
         <Tabs
@@ -42,99 +78,17 @@ const RoomDetail = ({ roomCode }: Props) => {
           </TabsList>
 
           <TabsContent className="mt-0" value="requestToJoin">
-            <div className="h-full flex flex-col">
-              <div className="sticky top-[65px] border-b bg-white p-4 shadow-lg">
-                <Input type="text" placeholder="Search people" />
-              </div>
-              <div className="overflow-y-auto flex flex-col space-y-4 p-4">
-                {Array.from({ length: 20 }).map((_, index) => (
-                  <div
-                    key={index}
-                    className="flex justify-between items-center"
-                  >
-                    <div className="flex items-center gap-2">
-                      <div className="w-10 h-10 rounded-full bg-gray-300"></div>
-                      <span className="font-semibold">User {index}</span>
-                    </div>
-                    <div className="flex gap-2">
-                      <Button
-                        size={"icon"}
-                        className="rounded-full bg-emerald-600 text-white"
-                      >
-                        <Check />
-                      </Button>
-                      <Button
-                        size={"icon"}
-                        className="rounded-full bg-rose-600 text-white"
-                      >
-                        <X />
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <TabRequests
+            // requests={Array.from({ length: 20 })}
+            // handleApprove={(id: string) => {}}
+            // handleReject={(id: string) => {}}
+            />
           </TabsContent>
           <TabsContent className="mt-0" value="roomChat">
-            <div className="p-4 h-full">
-              <div className="overflow-y-auto flex flex-col space-y-4 pe-2">
-                {Array.from({ length: 10 }).map((_, index) => (
-                  <div key={index} className="flex flex-col">
-                    <div className="flex items-center gap-2">
-                      <span className="font-semibold">User {index}</span>
-                      <span className="text-xs">{format(new Date(), "p")}</span>
-                    </div>
-                    <div className="w-full h-auto rounded-md">
-                      In ut adipisicing aliqua qui officia.Nulla consectetur
-                      exercitation nisi esse quis cillum adipisicing do mollit
-                      cillum exercitation est.
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="p-4 border-t sticky bottom-0 bg-white dark:bg-background">
-              <div className="flex items-center gap-2">
-                <Input type="text" placeholder="Type a message..." />
-                <Button size={"icon"} className="bg-primary text-white">
-                  <ChevronRight />
-                </Button>
-              </div>
-            </div>
+            <TabChat />
           </TabsContent>
           <TabsContent className="mt-0" value="people">
-            <div className="h-full flex flex-col">
-              <div className="sticky top-[65px] border-b bg-white p-4 shadow-lg">
-                <Input type="text" placeholder="Search people" />
-              </div>
-              <div className="overflow-y-auto flex flex-col space-y-4 p-4">
-                {Array.from({ length: 20 }).map((_, index) => (
-                  <div
-                    key={index}
-                    className="flex justify-between items-center"
-                  >
-                    <div className="flex items-center gap-2">
-                      <div className="w-10 h-10 rounded-full bg-gray-300"></div>
-                      <span className="font-semibold">User {index}</span>
-                    </div>
-                    <div className="flex gap-2">
-                      <Button
-                        size={"icon"}
-                        className="rounded-full bg-emerald-600 text-white"
-                      >
-                        <Check />
-                      </Button>
-                      <Button
-                        size={"icon"}
-                        className="rounded-full bg-rose-600 text-white"
-                      >
-                        <X />
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <TabPeople />
           </TabsContent>
         </Tabs>
       </div>

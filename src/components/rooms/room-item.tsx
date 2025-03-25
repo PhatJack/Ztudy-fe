@@ -7,7 +7,7 @@ interface Props {
   handleJoinRoom: (roomCode: number) => void;
 }
 
-const RoomItem = ({ room, color, handleJoinRoom }: Props) => {
+const 	RoomItem = ({ room, color, handleJoinRoom }: Props) => {
   return (
     <div
       onClick={() => handleJoinRoom(room.id)}
@@ -35,6 +35,7 @@ const RoomItem = ({ room, color, handleJoinRoom }: Props) => {
           <span>{room.type}</span>
         </Badge>
       </div>
+			<span>{room.name} {room.id}</span>
     </div>
   );
 };

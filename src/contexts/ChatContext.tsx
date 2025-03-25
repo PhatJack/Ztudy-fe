@@ -1,5 +1,5 @@
 "use client";
-import { RoomSchema } from "@/lib/schemas/room/room.schema";
+import { RoomSchema, RoomWithCategorySchema } from "@/lib/schemas/room/room.schema";
 import { UserSchema } from "@/lib/schemas/user/user.schema";
 import React, {
   createContext,
@@ -35,7 +35,7 @@ export interface InitialChatState {
   messages: Message[];
   participants: Participant[];
   isConnected: boolean;
-  currentRoom: RoomSchema | null;
+  currentRoom: RoomWithCategorySchema | null;
   typingUsers: Set<string>;
   pendingRequests: PendingRequest[];
   isAdmin: boolean;
@@ -48,7 +48,7 @@ export type ChatAction =
   | { type: "ADD_MESSAGE"; payload: Message }
   | { type: "SET_PARTICIPANTS"; payload: Participant[] }
   | { type: "SET_IS_CONNECTED"; payload: boolean }
-  | { type: "SET_CURRENT_ROOM"; payload: null }
+  | { type: "SET_CURRENT_ROOM"; payload: null | RoomWithCategorySchema }
   | { type: "SET_TYPING_USERS"; payload: Set<string> }
   | { type: "ADD_TYPING_USER"; payload: string }
   | { type: "REMOVE_TYPING_USER"; payload: string }

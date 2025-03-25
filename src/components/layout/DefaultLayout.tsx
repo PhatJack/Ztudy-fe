@@ -17,12 +17,12 @@ const DefaultLayout = ({
   return (
     <>
       <div className={cn(isShowHeader && "overflow-hidden")}>
-        <Sidebar />
+        {!isInRoom && <Sidebar />}
         <main
           className={cn(
-            "md:ml-24 h-full flex flex-col relative box-border",
-            isShowHeader ? "p-5" : "p-0",
-						// !isInRoom ? "md:ml-24" : ""
+            "h-full flex flex-col relative box-border",
+            isShowHeader ? "p-6" : "p-0",
+            !isInRoom ? "md:ml-24" : ""
           )}
         >
           {!isShowHeader && (

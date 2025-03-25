@@ -249,10 +249,10 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
 };
 
 // Custom hook to use WebSocketContext
-export const useWebSocket = () => {
+export const useRoomWebSocket = () => {
   const context = useContext(WebSocketContext);
   if (!context) {
-    throw new Error("useWebSocket must be used within a WebSocketProvider");
+    throw new Error("useRoomWebSocket must be used within a WebSocketProvider");
   }
   return context;
 };

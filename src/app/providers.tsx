@@ -28,13 +28,11 @@ export default function Providers({
       <QueryClientProvider client={queryClient}>
         <NextTopLoader color="hsl(150 30% 45%)" zIndex={9999} />
         <AuthProvider>
-          <SoloProviders>
-            <ChatProvider>
-              <WebSocketProvider>
-                <TooltipProvider>{children}</TooltipProvider>
-              </WebSocketProvider>
-            </ChatProvider>
-          </SoloProviders>
+          <ChatProvider>
+            <WebSocketProvider>
+              <TooltipProvider>{children}</TooltipProvider>
+            </WebSocketProvider>
+          </ChatProvider>
         </AuthProvider>
         <Toaster />
         <ReactQueryDevtools initialIsOpen={false} />

@@ -140,7 +140,7 @@ export const SoloPomodoroProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const toggleTimer = useCallback((): void => {
     dispatch({ type: "SET_IS_RUNNING", payload: !state.isRunning });
-		//send message to worker to start or stop timer
+    //send message to worker to start or stop timer
     workerRef.current?.postMessage({
       isRunning: !state.isRunning,
       remainingTime: state.remainingTime,
@@ -206,51 +206,6 @@ export const SoloPomodoroProvider: React.FC<{ children: React.ReactNode }> = ({
           : `${minutes}:${seconds} - Solo | Ztudy`;
     }
   }, [state.remainingTime, state.isRunning]);
-
-  // useEffect(() => {
-  //   let interval: NodeJS.Timeout | undefined;
-
-  //   if (state.isRunning && state.remainingTime > 0) {
-  //     interval = setInterval(() => {
-  //       dispatch({
-  //         type: "SET_REMAINING_TIME",
-  //         payload: state.remainingTime - 1,
-  //       });
-  //     }, 1000);
-  //   } else if (state.remainingTime === 0) {
-  //     try {
-  //       const audio = new Audio("/notification.mp3");
-  //       audio.play().catch((error) => {
-  //         console.warn("Failed to play notification sound:", error);
-  //       });
-  //     } catch (error) {
-  //       console.warn("Error creating Audio object:", error);
-  //     }
-
-  //     if (state.isLoopMode) {
-  //       // If loop is enabled, switch between focus and break
-  //       switchMode();
-  //     } else if (state.isFocusMode) {
-  //       // If no loop and in focus mode, switch to break
-  //       switchMode();
-  //     } else {
-  //       // If no loop and in break mode, stop the timer
-  //       dispatch({ type: "SET_IS_RUNNING", payload: false });
-  //     }
-  //   }
-
-  //   return () => {
-  //     if (interval) {
-  //       clearInterval(interval);
-  //     }
-  //   };
-  // }, [
-  //   state.isRunning,
-  //   state.remainingTime,
-  //   state.isLoopMode,
-  //   state.isFocusMode,
-  //   switchMode,
-  // ]);
 
   const value = {
     ...state,
