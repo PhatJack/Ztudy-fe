@@ -1,5 +1,6 @@
 "use client";
 import { SoloProvider } from "@/contexts/SoloContext";
+import { SoloPomodoroProvider } from "@/contexts/SoloPomodoroContext";
 import { SoloSoundProvider } from "@/contexts/SoloSoundContext";
 
 export default function SoloProviders({
@@ -9,7 +10,9 @@ export default function SoloProviders({
 }>) {
   return (
     <SoloProvider>
-      <SoloSoundProvider>{children}</SoloSoundProvider>
+      <SoloPomodoroProvider>
+        <SoloSoundProvider>{children}</SoloSoundProvider>
+      </SoloPomodoroProvider>
     </SoloProvider>
   );
 }

@@ -3,12 +3,15 @@ import TooltipTemplate from "@/components/tooltip/TooltipTemplate";
 import { Button } from "@/components/ui/button";
 import { menuButton } from "@/constants/solo-button-menu";
 import { PanelType } from "@/contexts/SoloContext";
+import { usePomodoroContext } from "@/contexts/SoloPomodoroContext";
 import { useSoloContext } from "@/hooks/useSoloContext";
 import { cn } from "@/lib/utils";
 import { Clock, Expand, Minimize, Target } from "lucide-react";
 import React, { useCallback } from "react";
 
 const StickyMenu = () => {
+  const { formatTime, remainingTime } = usePomodoroContext();
+  const { hours, minutes, seconds } = formatTime(remainingTime);
   const [state, dispatch] = useSoloContext();
 
   const toggleFullscreen = () => {
@@ -50,8 +53,12 @@ const StickyMenu = () => {
               Personal timer
             </span>
           </div>
-          <p className="text-sm">
-            <strong>50:00:00</strong>
+          <p className="text-sm font-bold">
+            <span>{hours}</span>
+            <span className="mb-1">:</span>
+            <span>{minutes}</span>
+            <span className="mb-1">:</span>
+            <span>{seconds}</span>
           </p>
         </div>
 
