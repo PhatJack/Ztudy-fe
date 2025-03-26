@@ -4,13 +4,13 @@ import { Badge } from "../ui/badge";
 interface Props {
   room: RoomSchema;
   color?: string;
-  handleJoinRoom: (roomCode: number) => void;
+  handleJoinRoom: () => void;
 }
 
-const 	RoomItem = ({ room, color, handleJoinRoom }: Props) => {
+const	RoomItem = ({ room, color, handleJoinRoom }: Props) => {
   return (
     <div
-      onClick={() => handleJoinRoom(room.id)}
+      onClick={handleJoinRoom}
       style={
         room.thumbnail
           ? {
@@ -40,4 +40,4 @@ const 	RoomItem = ({ room, color, handleJoinRoom }: Props) => {
   );
 };
 
-export default RoomItem;
+export default React.memo(RoomItem);

@@ -26,15 +26,11 @@ export async function createRoomApi(
 }
 
 export function useCreateRoomMutation() {
-  const queryClient = getQueryClient();
-  const mutationKey = ["create-study-group"] as const;
+  const mutationKey = ["create-study-group"];
   return useMutation<CreateRoomResponseSchema, unknown, CreateRoomBodySchema>({
     mutationKey,
     mutationFn: (body: CreateRoomBodySchema) =>
       createRoomApi(createRoomBodySchema.parse(body)),
     throwOnError: isAxiosError,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["rooms"] });
-    },
   });
 }

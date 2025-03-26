@@ -93,3 +93,28 @@ The app should now be running at `http://localhost:3000/` 🚀
 ### Make sure to star the repository if you find it helpful!
 
 <a href="https://github.com/PhatJack/zstudy/graphs/contributors"><img src="https://img.shields.io/github/stars/PhatJack/zstudy?color=yellow" alt="Stars Badge"/></a>
+
+## Project Issues & Solutions
+
+This document contains some of the challenging issues encountered during development and their respective solutions.
+
+### 1. WebSocket Double Connection Issue in `StrictMode`
+
+#### **Problem**
+When using `StrictMode` in React, the WebSocket connection is established twice because React mounts, unmounts, and remounts components in development mode. This can lead to multiple connections, causing duplicate messages or unnecessary server load.
+
+#### **Solution**
+Use a **ref** to store the WebSocket instance and ensure that the connection is only established once. Also, avoid opening a new connection if one already exists.
+
+---
+
+### 2. `setInterval` Slows Down When Website is Inactive
+
+#### **Problem**
+When the website is not in focus or inactive (e.g., the user switches to another tab), `setInterval` execution can slow down due to browser throttling. This is especially noticeable in countdown timers.
+
+#### **Solution**
+1. Use the `document.visibilityState` API to detect when the page is visible and switch to `setTimeout` for more control over the execution.
+2. Use `Service Worker (Worker API)` to run on other thread which will not effect the main thread
+---
+
