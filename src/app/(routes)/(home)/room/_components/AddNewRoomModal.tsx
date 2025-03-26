@@ -1,4 +1,5 @@
 "use client";
+import { getQueryClient } from "@/app/get-query-client";
 import LoadingSpinner from "@/components/loading/loading-spinner";
 import { Button } from "@/components/ui/button";
 import {
@@ -45,6 +46,7 @@ import toast from "react-hot-toast";
 import { useInView } from "react-intersection-observer";
 
 const AddNewRoomModal = () => {
+  const queryClient = getQueryClient();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [open, setOpen] = useState<boolean>(false);
   const [state] = useAuthContext();
@@ -88,6 +90,9 @@ const AddNewRoomModal = () => {
         }
         toast.success("Room created successfully");
         addRoomForm.reset();
+        queryClient.invalidateQueries({
+          queryKey: ["rooms"],
+        });
         setOpen(false);
       },
       onError: (error) => {
@@ -130,7 +135,7 @@ const AddNewRoomModal = () => {
                   selectedFile={selectedFile}
                   setSelectedFile={setSelectedFile}
                   widthClass="w-full"
-									heightClass="h-[150px]"
+                  heightClass="h-[150px]"
                 />
               </div>
               <div className="grid gap-4">

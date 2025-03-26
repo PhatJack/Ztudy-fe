@@ -21,11 +21,10 @@ import {
 } from "@/service/(auth)/forgot-password.api";
 import toast from "react-hot-toast";
 import LoadingSpinner from "@/components/loading/loading-spinner";
-import { useRouter } from "nextjs-toploader/app";
+import Link from "next/link";
 const ForgotPasswordForm = () => {
   const [step, setStep] = useState(1);
   const [userEmail, setUserEmail] = useState("");
-  const router = useRouter();
 
   const forgotPwdStepOneMutation = usePostForgotPasswordStep1Mutation();
 
@@ -105,9 +104,11 @@ const ForgotPasswordForm = () => {
           className="hover:bg-transparent hover:underline hover:text-accent gap-1"
           variant={"ghost"}
           type="button"
-          onClick={() => router.push("/login")}
+          asChild
         >
-          <ArrowLeft size={16} /> Back to login
+          <Link href={"/login"}>
+            <ArrowLeft size={16} /> Back to login
+          </Link>
         </Button>
       </div>
     </div>

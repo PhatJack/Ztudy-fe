@@ -7,7 +7,6 @@ import { getQueryClient } from "./get-query-client";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { AuthProvider } from "@/contexts/AuthContext";
-import SoloProviders from "./(routes)/(home)/solo/providers";
 import { ChatProvider } from "@/contexts/ChatContext";
 import { WebSocketProvider } from "@/contexts/WebSocketContext";
 
