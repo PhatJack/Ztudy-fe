@@ -1,43 +1,42 @@
 "use client";
-import LoadingSpinner from "@/components/loading/loading-spinner";
 import RoomItem from "@/components/rooms/room-item";
-import { Button } from "@/components/ui/button";
+import { useChatContext } from "@/contexts/ChatContext";
 import { useRoomWebSocket } from "@/contexts/WebSocketContext";
-import { useChatContext } from "@/hooks/useChatContext";
 import { useJoinRoomMutation } from "@/service/(rooms)/room/join-room.api";
 import { useListRooms } from "@/service/(rooms)/room/list-rooms.api";
-import { generateSoftHexColor } from "@/util/generateHexColor";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useRouter } from "nextjs-toploader/app";
-import React from "react";
+import React, { useMemo } from "react";
 
 const RoomsContainer = () => {
-  const { connectChatSocket, disconnectChatSocket } = useRoomWebSocket();
-  const [state, dispatch] = useChatContext();
+  const { connectChatSocket } = useRoomWebSocket();
+  const { setIsPending, setCurrentRoom, setIsAdmin } = useChatContext();
   const router = useRouter();
   const joinRoomMutation = useJoinRoomMutation();
-  const roomsQuery = useSuspenseQuery(useListRooms());
-  const publicRooms = roomsQuery.data.results.filter(
-    (room) => room.type === "PUBLIC"
-  );
-  const privateRooms = roomsQuery.data.results.filter(
-    (room) => room.type === "PRIVATE"
+  const roomsQuery = useSuspenseQuery(useListRooms({ page_size: 20 }));
+  const { publicRooms, privateRooms } = useMemo(
+    () => ({
+      publicRooms: roomsQuery.data.results.filter(
+        (room) => room.type === "PUBLIC"
+      ),
+      privateRooms: roomsQuery.data.results.filter(
+        (room) => room.type === "PRIVATE"
+      ),
+    }),
+    [roomsQuery.data.results]
   );
 
-  const handleJoinRoom = async (roomCode: string) => {
+  const handleJoinRoom = (roomCode: string) => {
     joinRoomMutation.mutate(roomCode.trim(), {
-      onSuccess: async (data) => {
-				console.log(data)
+      onSuccess: (data) => {
+        console.log(data);
         if (data.status === 202) {
-          dispatch({ type: "SET_IS_PENDING", payload: true });
+          setIsPending(true);
         }
-        dispatch({ type: "SET_CURRENT_ROOM", payload: data.data.room });
-        dispatch({
-          type: "SET_IS_ADMIN",
-          payload: data.data.participant.is_admin,
-        });
-        connectChatSocket(roomCode);
-				router.push(`/room/${roomCode}`)
+        setCurrentRoom(data.data.room);
+        setIsAdmin(data.data.participant.is_admin);
+        connectChatSocket(roomCode.trim());
+        router.push(`/room/${roomCode}`);
       },
     });
   };
@@ -55,7 +54,6 @@ const RoomsContainer = () => {
               <RoomItem
                 key={index}
                 room={room}
-                color={generateSoftHexColor()}
                 handleJoinRoom={() => handleJoinRoom(room.code_invite)}
               />
             ))}
@@ -71,14 +69,12 @@ const RoomsContainer = () => {
               <RoomItem
                 key={index}
                 room={room}
-                color={generateSoftHexColor()}
                 handleJoinRoom={() => handleJoinRoom(room.code_invite)}
               />
             ))}
           </div>
         </div>
       </div>
-
     </>
   );
 };

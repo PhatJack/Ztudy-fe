@@ -1,39 +1,106 @@
+"use client";
+import TypingIndicator from "@/components/indicator/typing-indicator";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Message } from "@/contexts/ChatContext";
 import { format } from "date-fns";
 import { ChevronRight } from "lucide-react";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 
-const TabChat = () => {
+interface Props {
+  messages: Message[];
+  typingUsers: Set<string>;
+  chatSocket: WebSocket | null;
+  sendTypingStatus: (isTyping: boolean) => void;
+}
+
+const TabChat = ({
+  messages,
+  typingUsers,
+  chatSocket,
+  sendTypingStatus,
+}: Props) => {
+  const [message, setMessage] = React.useState<string>("");
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const messagesContainerRef = useRef<HTMLDivElement | null>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const handleInputChange = (value: string) => {
+    sendTypingStatus(true);
+    setMessage(value);
+  };
+
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (message.trim() && chatSocket) {
+      chatSocket.send(
+        JSON.stringify({
+          type: "message",
+          message: message.trim(),
+        })
+      );
+      setMessage("");
+      sendTypingStatus(false);
+    }
+  };
+
   return (
-    <>
-      <div className="p-4 h-full">
-        <div className="overflow-y-auto flex flex-col space-y-4 pe-2">
-          {Array.from({ length: 10 }).map((_, index) => (
-            <div key={index} className="flex flex-col">
-              <div className="flex items-center gap-2">
-                <span className="font-semibold">User {index}</span>
-                <span className="text-xs">{format(new Date(), "p")}</span>
-              </div>
-              <div className="w-full h-auto rounded-md">
-                In ut adipisicing aliqua qui officia.Nulla consectetur
-                exercitation nisi esse quis cillum adipisicing do mollit cillum
-                exercitation est.
-              </div>
+    <div className="flex flex-col h-full max-h-full overflow-hidden">
+      {/* Scrollable messages container */}
+      <div
+        ref={messagesContainerRef}
+        className="flex-1 overflow-y-auto px-4 py-2 space-y-4"
+      >
+        {messages.map((message, index) => (
+          <div key={index} className="flex flex-col gap-1">
+            <div className="flex items-center gap-2">
+              <span className="font-semibold">{message.user.username}</span>
+              <span className="text-xs text-muted-foreground">
+                {format(message.timestamp, "p")}
+              </span>
             </div>
-          ))}
-        </div>
+            <div className="w-full bg-muted p-3 rounded-md">
+              {message.content}
+            </div>
+          </div>
+        ))}
+        <div ref={messagesEndRef} />
       </div>
-      <div className="p-4 border-t sticky bottom-0 bg-white dark:bg-background">
-        <div className="flex items-center gap-2">
-          <Input type="text" placeholder="Type a message..." />
-          <Button size={"icon"} className="bg-primary text-white">
+
+      {/* Sticky input area */}
+      <div className="sticky bottom-0 xl:static border-t p-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <form onSubmit={onSubmit} className="flex items-center gap-2">
+          <Input
+            type="text"
+            placeholder="Type a message..."
+            value={message}
+            onChange={(e) => handleInputChange(e.target.value)}
+            className="flex-1"
+          />
+          <Button
+            type="submit"
+            size="icon"
+            className="bg-primary text-white"
+            disabled={!message.trim()}
+          >
             <ChevronRight />
           </Button>
-        </div>
+        </form>
       </div>
-    </>
+      {typingUsers.size > 0 && (
+        <div className="absolute bottom-16 left-0 right-0 px-4 py-2 bg-gradient-to-t from-emerald-100 to-transparent">
+          <TypingIndicator />
+        </div>
+      )}
+    </div>
   );
 };
 
-export default TabChat;
+export default React.memo(TabChat);

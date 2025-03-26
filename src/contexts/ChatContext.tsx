@@ -1,130 +1,127 @@
 "use client";
-import { RoomSchema, RoomWithCategorySchema } from "@/lib/schemas/room/room.schema";
+import React, { createContext, useState, ReactNode, useContext, useMemo, useCallback } from "react";
+import { RoomWithCategorySchema } from "@/lib/schemas/room/room.schema";
 import { UserSchema } from "@/lib/schemas/user/user.schema";
-import React, {
-  createContext,
-  useReducer,
-  ReactNode,
-  Dispatch,
-  useMemo,
-} from "react";
 
-// Define types based on your existing structure
-type Message = {
+// Check if we're in a browser environment
+const isBrowser = typeof window !== "undefined";
+
+// Define types
+export type Message = {
   content: string;
   user: UserSchema;
   timestamp: string;
-  // Add other message properties as needed
 };
 
-type Participant = {
-  id: string;
-  name: string;
-  // Add other participant properties as needed
+export type Participant = {
+  is_admin: boolean;
+  is_approved: boolean;
+  is_out: boolean;
+  user: UserSchema;
 };
 
-type PendingRequest = {
-  id: string;
-  userId: string;
-  userName: string;
-  // Add other request properties as needed
-};
-
-// Define the state structure
-export interface InitialChatState {
-  messages: Message[];
-  participants: Participant[];
-  isConnected: boolean;
-  currentRoom: RoomWithCategorySchema | null;
-  typingUsers: Set<string>;
-  pendingRequests: PendingRequest[];
-  isAdmin: boolean;
-  isPending: boolean;
-}
-
-// Define action types
-export type ChatAction =
-  | { type: "SET_MESSAGES"; payload: Message[] }
-  | { type: "ADD_MESSAGE"; payload: Message }
-  | { type: "SET_PARTICIPANTS"; payload: Participant[] }
-  | { type: "SET_IS_CONNECTED"; payload: boolean }
-  | { type: "SET_CURRENT_ROOM"; payload: null | RoomWithCategorySchema }
-  | { type: "SET_TYPING_USERS"; payload: Set<string> }
-  | { type: "ADD_TYPING_USER"; payload: string }
-  | { type: "REMOVE_TYPING_USER"; payload: string }
-  | { type: "SET_PENDING_REQUESTS"; payload: PendingRequest[] }
-  | { type: "SET_IS_ADMIN"; payload: boolean }
-  | { type: "SET_IS_PENDING"; payload: boolean };
-
-// Create the initial state
-const initialState: InitialChatState = {
-  messages: [],
-  participants: [],
-  isConnected: false,
-  currentRoom: null,
-  typingUsers: new Set<string>(),
-  pendingRequests: [],
-  isAdmin: false,
-  isPending: false,
-};
-
-function chatReducer(
-  state: InitialChatState,
-  action: ChatAction
-): InitialChatState {
-  switch (action.type) {
-    case "SET_MESSAGES":
-      return { ...state, messages: action.payload };
-    case "ADD_MESSAGE":
-      return { ...state, messages: [...state.messages, action.payload] };
-    case "SET_PARTICIPANTS":
-      return { ...state, participants: action.payload };
-    case "SET_IS_CONNECTED":
-      return { ...state, isConnected: action.payload };
-    case "SET_CURRENT_ROOM":
-      return { ...state, currentRoom: action.payload };
-    case "SET_TYPING_USERS":
-      return { ...state, typingUsers: action.payload };
-    case "ADD_TYPING_USER": {
-      const newTypingUsers = new Set(state.typingUsers);
-      newTypingUsers.add(action.payload);
-      return { ...state, typingUsers: newTypingUsers };
-    }
-    case "REMOVE_TYPING_USER": {
-      const newTypingUsers = new Set(state.typingUsers);
-      newTypingUsers.delete(action.payload);
-      return { ...state, typingUsers: newTypingUsers };
-    }
-    case "SET_PENDING_REQUESTS":
-      return { ...state, pendingRequests: action.payload };
-    case "SET_IS_ADMIN":
-      return { ...state, isAdmin: action.payload };
-    case "SET_IS_PENDING":
-      return { ...state, isPending: action.payload };
-    default:
-      return state;
-  }
-}
-
-// Create the context with initial values
+// Define the ChatContext type
 interface ChatContextType {
-  state: InitialChatState;
-  dispatch: Dispatch<ChatAction>;
+  messages: Message[];
+  setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
+  participants: Participant[];
+  setParticipants: React.Dispatch<React.SetStateAction<Participant[]>>;
+  currentRoom: RoomWithCategorySchema | null;
+  setCurrentRoom: React.Dispatch<React.SetStateAction<RoomWithCategorySchema | null>>;
+  typingUsers: Set<string>;
+  addTypingUser: (userId: string) => void;
+  removeTypingUser: (userId: string) => void;
+  pendingRequests: Participant[];
+  setPendingRequests: React.Dispatch<React.SetStateAction<Participant[]>>;
+  isAdmin: boolean;
+  setIsAdmin: React.Dispatch<React.SetStateAction<boolean>>;
+  isPending: boolean;
+  setIsPending: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const ChatContext = createContext<ChatContextType>({
-  state: initialState,
-  dispatch: () => null,
-});
+// Create context with default values
+export const ChatContext = createContext<ChatContextType | undefined>(undefined);
 
-// Create the provider component
 interface ChatProviderProps {
   children: ReactNode;
 }
 
 export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
-  const [state, dispatch] = useReducer(chatReducer, initialState);
-  const value = useMemo(() => ({ state, dispatch }), [state]);
+  // Only initialize state if in browser environment
+  if (!isBrowser) {
+    return <>{children}</>;
+  }
+
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [participants, setParticipants] = useState<Participant[]>([]);
+  const [currentRoom, setCurrentRoom] = useState<RoomWithCategorySchema | null>(null);
+  const [typingUsers, setTypingUsers] = useState<Set<string>>(new Set());
+  const [pendingRequests, setPendingRequests] = useState<Participant[]>([]);
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [isPending, setIsPending] = useState<boolean>(false);
+
+  // Memoize the add/remove typing user functions to prevent re-renders
+  const addTypingUser = useCallback((userId: string) => {
+    setTypingUsers(prev => {
+      // Only update if the user is not already in the set
+      if (!prev.has(userId)) {
+        const newSet = new Set(prev);
+        newSet.add(userId);
+        return newSet;
+      }
+      return prev;
+    });
+  }, []);
+
+  const removeTypingUser = useCallback((userId: string) => {
+    setTypingUsers(prev => {
+      // Only update if the user is in the set
+      if (prev.has(userId)) {
+        const newSet = new Set(prev);
+        newSet.delete(userId);
+        return newSet;
+      }
+      return prev;
+    });
+  }, []);
+
+  // Memoize the context value to prevent unnecessary re-renders
+  const value = useMemo<ChatContextType>(() => ({
+    messages,
+    setMessages,
+    participants,
+    setParticipants,
+    currentRoom,
+    setCurrentRoom,
+    typingUsers,
+    addTypingUser,
+    removeTypingUser,
+    pendingRequests,
+    setPendingRequests,
+    isAdmin,
+    setIsAdmin,
+    isPending,
+    setIsPending,
+  }), [
+    messages, 
+    participants, 
+    currentRoom, 
+    typingUsers, 
+    pendingRequests, 
+    isAdmin, 
+    isPending,
+    addTypingUser,
+    removeTypingUser
+  ]);
 
   return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>;
+};
+
+// Create a custom hook to use the ChatContext
+export const useChatContext = () => {
+  const context = useContext(ChatContext);
+  if (!context) {
+    throw new Error("useChatContext must be used within a ChatProvider");
+  }
+  return context;
 };

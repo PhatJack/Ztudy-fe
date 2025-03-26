@@ -4,26 +4,20 @@ import TooltipTemplate from "@/components/tooltip/TooltipTemplate";
 import { Button } from "@/components/ui/button";
 import { Camera, CameraOff, Mic, MicOff } from "lucide-react";
 import React from "react";
-import { useRouter } from "nextjs-toploader/app";
-import toast from "react-hot-toast";
 
 interface PendingScreenProps {
-  cameraEnabled: boolean;
-  micEnabled: boolean;
+  cameraEnabled?: boolean;
+  micEnabled?: boolean;
   setCameraEnabled: (enabled: boolean) => void;
   setMicEnabled: (enabled: boolean) => void;
-  disconnectChatSocket: () => void;
-  dispatchChat: (action: any) => void;
-  router: ReturnType<typeof useRouter>;
+	handleCancelRequest: () => void
 }
 const PendingScreen = ({
-  cameraEnabled,
-  micEnabled,
+  cameraEnabled = false,
+  micEnabled = false,
   setCameraEnabled,
   setMicEnabled,
-  disconnectChatSocket,
-  dispatchChat,
-  router,
+  handleCancelRequest
 }: PendingScreenProps) => {
   return (
     <div className="size-full flex xl:flex-row flex-col gap-4 xl:h-[calc(100vh-3rem)] overflow-hidden ">
@@ -67,12 +61,7 @@ const PendingScreen = ({
           <Button
             type="button"
             variant={"destructive"}
-            onClick={() => {
-              disconnectChatSocket();
-              dispatchChat({ type: "SET_IS_PENDING", payload: false });
-              toast.success("Request cancelled");
-              router.push("/room");
-            }}
+            onClick={handleCancelRequest}
           >
             Cancel Request
           </Button>
@@ -82,4 +71,4 @@ const PendingScreen = ({
   );
 };
 
-export default PendingScreen;
+export default React.memo(PendingScreen);

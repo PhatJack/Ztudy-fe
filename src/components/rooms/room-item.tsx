@@ -3,11 +3,10 @@ import React from "react";
 import { Badge } from "../ui/badge";
 interface Props {
   room: RoomSchema;
-  color?: string;
   handleJoinRoom: () => void;
 }
 
-const	RoomItem = ({ room, color, handleJoinRoom }: Props) => {
+const	RoomItem = ({ room, handleJoinRoom }: Props) => {
   return (
     <div
       onClick={handleJoinRoom}
@@ -19,7 +18,7 @@ const	RoomItem = ({ room, color, handleJoinRoom }: Props) => {
               backgroundPosition: "center",
             }
           : {
-              backgroundColor: color,
+              backgroundColor: "#92BFB1",
             }
       }
       className="w-full h-[200px] rounded-md relative p-3 overflow-hidden flex flex-col cursor-pointer border border-gray-200"

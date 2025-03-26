@@ -2,6 +2,7 @@ import Link from "next/link";
 import React, { memo } from "react";
 import SidebarMenu from "./components/sidebar-menu";
 import { ModeToggle } from "../mode-toggle";
+import { Separator } from "../ui/separator";
 
 function Sidebar() {
   return (
@@ -25,6 +26,7 @@ function Sidebar() {
             </span>
           </Link>
         </div>
+				<Separator />
         <SidebarMenu />
       </div>
       <ModeToggle />
