@@ -1,4 +1,4 @@
-import React, { createContext, useMemo, useReducer, Dispatch } from "react";
+import React, { createContext, useMemo, useReducer, Dispatch, useEffect, useRef } from "react";
 
 // Define the type for the state
 export interface InitialState {
@@ -9,16 +9,19 @@ export interface InitialState {
         volume: number;
       }[]
     | null;
+  isInitialized: boolean;
 }
 
-// Define action types
+// Define the action type
 export type Action =
-  | { type: "SET_SOUNDS"; payload: InitialState["sounds"] }
-  | { type: "UPDATE_VOLUME"; payload: { stream_url: string; volume: number } };
+  | { type: "SET_SOUNDS"; payload: { stream_url: string; sound_name: string; volume: number }[] }
+  | { type: "UPDATE_VOLUME"; payload: { stream_url: string; volume: number } }
+  | { type: "SET_INITIALIZED"; payload: boolean };
 
 // Create the initial state
 const initialState: InitialState = {
   sounds: null,
+  isInitialized: false
 };
 
 // Create the context with an initial value of `null`
@@ -43,7 +46,8 @@ const reducer = (state: InitialState, action: Action): InitialState => {
             )
           : null,
       };
-
+    case "SET_INITIALIZED":
+      return { ...state, isInitialized: action.payload };
     default:
       return state;
   }
@@ -56,6 +60,56 @@ export const SoloSoundProvider = ({
   children: React.ReactNode;
 }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  
+  // Define audio management refs inside the component
+  const audioMapRef = useRef(new Map<string, HTMLAudioElement>());
+  const playingAudiosRef = useRef(new Set<string>());
+
+  // Handle volume changes across components
+  useEffect(() => {
+    if (state.sounds) {
+      state.sounds.forEach((sound) => {
+        handleAudioPlayback(sound.stream_url, sound.volume);
+      });
+    }
+  }, [state.sounds]);
+
+  // Clean up on provider unmount
+  useEffect(() => {
+    return () => {
+      // Cleanup all audio elements
+      audioMapRef.current.forEach((audio) => {
+        audio.pause();
+        audio.currentTime = 0;
+      });
+      playingAudiosRef.current.clear();
+    };
+  }, []);
+
+  // Handle audio playback based on volume
+  const handleAudioPlayback = (stream_url: string, volume: number) => {
+    if (!audioMapRef.current.has(stream_url)) {
+      const audio = new Audio(stream_url);
+      audio.volume = volume;
+      audio.loop = true;
+      audioMapRef.current.set(stream_url, audio);
+    }
+
+    const audio = audioMapRef.current.get(stream_url);
+    if (audio) {
+      audio.volume = volume;
+      
+      if (volume > 0) {
+        if (audio.paused) {
+          audio.play().catch(error => console.log('Error playing audio:', error));
+        }
+        playingAudiosRef.current.add(stream_url);
+      } else {
+        audio.pause();
+        playingAudiosRef.current.delete(stream_url);
+      }
+    }
+  };
 
   const value = useMemo(() => ({ state, dispatch }), [state]);
 

@@ -5,7 +5,7 @@ import { useSoloContext } from "@/hooks/useSoloContext";
 import { useSoloSoundContext } from "@/hooks/useSoloSoundContext";
 import { useListSounds } from "@/service/(solo)/list-sounds.api";
 import { useQuery } from "@tanstack/react-query";
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect } from "react";
 
 const SoundList = () => {
   const [state, dispatch] = useSoloContext();
@@ -13,11 +13,19 @@ const SoundList = () => {
   const soundsQuery = useQuery(useListSounds());
 
   const sounds = soundsQuery.data?.results;
-  const audioMap = useRef(new Map<string, HTMLAudioElement>()); // Persist audio instances
 
   // Initialize sounds
   useEffect(() => {
-    if (sounds) {
+    if (!sounds || stateSound.isInitialized) return;
+    
+    if (state.activeSounds && state.activeSounds.length > 0) {
+      // Use saved sounds from SoloContext
+      dispatchSound({
+        type: "SET_SOUNDS",
+        payload: state.activeSounds,
+      });
+    } else if (sounds) {
+      // Initialize with default values
       dispatchSound({
         type: "SET_SOUNDS",
         payload: sounds.map((sound) => ({
@@ -26,16 +34,21 @@ const SoundList = () => {
           volume: 0,
         })),
       });
+    }
+    
+    // Mark as initialized
+    dispatchSound({ type: "SET_INITIALIZED", payload: true });
+  }, [sounds, dispatchSound, state.activeSounds, stateSound.isInitialized]);
 
-      sounds.forEach((sound) => {
-        if (!audioMap.current.has(sound.stream_url)) {
-          const audio = new Audio(sound.stream_url);
-          audio.volume = 0;
-          audioMap.current.set(sound.stream_url, audio);
-        }
+  // Save sounds to SoloContext whenever they change
+  useEffect(() => {
+    if (stateSound.sounds && stateSound.sounds.length > 0) {
+      dispatch({
+        type: "SAVE_ACTIVE_SOUNDS",
+        payload: stateSound.sounds
       });
     }
-  }, [sounds, dispatchSound]);
+  }, [stateSound.sounds, dispatch]);
 
   // Handle volume change
   const handleVolumeChange = useCallback(
@@ -44,16 +57,6 @@ const SoundList = () => {
         type: "UPDATE_VOLUME",
         payload: { stream_url, volume },
       });
-
-      const audio = audioMap.current.get(stream_url);
-      if (audio) {
-        audio.volume = volume;
-        if (volume > 0) {
-          audio.play().catch(error => console.log('Error playing audio:', error));
-        } else {
-          audio.pause();
-        }
-      }
     },
     [dispatchSound]
   );
