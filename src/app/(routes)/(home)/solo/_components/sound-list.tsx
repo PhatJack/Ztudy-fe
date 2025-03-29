@@ -31,7 +31,6 @@ const SoundList = () => {
         if (!audioMap.current.has(sound.stream_url)) {
           const audio = new Audio(sound.stream_url);
           audio.volume = 0;
-					audio.play();
           audioMap.current.set(sound.stream_url, audio);
         }
       });
@@ -49,6 +48,11 @@ const SoundList = () => {
       const audio = audioMap.current.get(stream_url);
       if (audio) {
         audio.volume = volume;
+        if (volume > 0) {
+          audio.play().catch(error => console.log('Error playing audio:', error));
+        } else {
+          audio.pause();
+        }
       }
     },
     [dispatchSound]
