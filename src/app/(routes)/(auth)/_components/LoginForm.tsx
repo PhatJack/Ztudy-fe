@@ -26,7 +26,7 @@ import { Eye, EyeOff } from "lucide-react";
 import LoadingSpinner from "@/components/loading/loading-spinner";
 
 export function LoginForm() {
-  const [isShowing, setIsShowing] = useState<boolean>(false);
+  const [isShowingPassword, setIsShowingPassword] = useState<boolean>(false);
   const loginForm = useForm<LoginBodySchema>({
     defaultValues: {
       email: "",
@@ -52,7 +52,7 @@ export function LoginForm() {
   };
 
   const handleShowPassword = () => {
-    setIsShowing(!isShowing);
+    setIsShowingPassword(!isShowingPassword);
   };
 
   const handleGoogleLogin = () => {
@@ -109,7 +109,7 @@ export function LoginForm() {
                   <div className="relative">
                     <Input
                       placeholder="Enter your email"
-                      type={isShowing ? "text" : "password"}
+                      type={isShowingPassword ? "text" : "password"}
                       {...field}
                       disabled={loginMutation.isPending}
                     />
@@ -117,7 +117,7 @@ export function LoginForm() {
                       className="absolute inset-y-0 right-0 flex items-center px-2"
                       onClick={handleShowPassword}
                     >
-                      {isShowing ? <EyeOff size={20} /> : <Eye size={20} />}
+                      {isShowingPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                     </span>
                   </div>
                 </FormControl>

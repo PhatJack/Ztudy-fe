@@ -34,7 +34,7 @@ export default function Providers({
           </ChatProvider>
         </AuthProvider>
         <Toaster />
-        <ReactQueryDevtools initialIsOpen={false} />
+        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       </QueryClientProvider>
     </ThemeProvider>
   );

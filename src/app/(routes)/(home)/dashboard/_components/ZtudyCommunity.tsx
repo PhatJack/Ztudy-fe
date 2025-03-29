@@ -17,11 +17,11 @@ const ZtudyCommunity = () => {
           <div key={index} className="flex space-x-2 items-center pt-2 px-2">
             <div className="relative">
               <AvatarCustom
-                className="rounded-lg w-9 h-9"
-                src="/daddy-chill.gif"
+                className="rounded-full w-9 h-9"
+                src={user.avatar || "/default.png"}
               />
               {checkLastLogin(user.last_login) && (
-                <span className="size-2 rounded-full bg-emerald-400 absolute -right-0.5 -bottom-0.5"></span>
+                <span className="size-3 rounded-full bg-emerald-400 absolute right-0 bottom-0 border-2 border-white"></span>
               )}
             </div>
             <span className="text-sm">{user.username}</span>

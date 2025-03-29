@@ -11,10 +11,13 @@ export function middleware(request: NextRequest) {
     "/solo",
     "/study-goal",
     "/leaderboard",
-    "/rooms",
+    "/room",
+    "/room/:roomCode",
   ];
   const currentPath = request.nextUrl.pathname;
-  const isProtected = protectedRoutes.includes(currentPath);
+  const isProtected = protectedRoutes.some(
+    (route) => currentPath === route || currentPath.startsWith(`${route}/`)
+  );
   if (isProtected) {
     const token = cookies().get(COOKIE_KEY_ACCESS_TOKEN)?.value;
     if (!token) {
@@ -27,5 +30,19 @@ export function middleware(request: NextRequest) {
 
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher: ["/:path*"],
+  matcher: [
+    "/dashboard",
+    "/profile",
+    "/solo",
+    "/study-goal",
+    "/leaderboard",
+    "/room",
+    "/room/:path*",
+    "/login",
+    "/register",
+    "/forgot-password",
+    "/reset-password",
+    "/privacy-policy",
+    "/terms-and-conditions",
+  ],
 };

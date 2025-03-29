@@ -8,49 +8,94 @@ import { useRoomWebSocket } from "@/contexts/WebSocketContext";
 import { useRouter } from "nextjs-toploader/app";
 import React, { useEffect, useState } from "react";
 import PendingScreen from "./PendingScreen";
-import {
-  useAssignAdminMutation,
-} from "@/service/(rooms)/request/request.api";
-import { useChatContext } from "@/contexts/ChatContext";
 import toast from "react-hot-toast";
+import { useChatContext } from "@/hooks/useChatContext";
+import { Button } from "@/components/ui/button";
+import { joinRoomApi } from "@/service/(rooms)/room/join-room.api";
+import LoadingSpinner from "@/components/loading/loading-spinner";
+import LeaveRoomButton from "./LeaveRoomButton";
 
 interface Props {
   roomCode: string;
 }
 
 const RoomDetail = ({ roomCode }: Props) => {
+  const [loading, setLoading] = useState<boolean>(true);
   const [cameraEnabled, setCameraEnabled] = useState<boolean>(true);
   const [micEnabled, setMicEnabled] = useState<boolean>(true);
   const router = useRouter();
-  const { isPending, pendingRequests, participants, setIsPending,messages,typingUsers } =
-    useChatContext();
+  const {
+    isPending,
+    pendingRequests,
+    participants,
+    setIsPending,
+    messages,
+    typingUsers,
+    setMessages,
+    currentRoom,
+    setIsAdmin,
+    setCurrentRoom,
+  } = useChatContext();
   const {
     connectChatSocket,
     disconnectChatSocket,
     sendTypingStatus,
-		chatSocketRef
+    chatSocketRef,
   } = useRoomWebSocket();
 
+  const handleCancelRequest = () => {
+    disconnectChatSocket();
+    setIsPending(false);
+    router.push("/room");
+  };
 
-	const handleCancelRequest = () => {
-		disconnectChatSocket()
-		setIsPending(false)
-		router.push("/room")
-	}
-
-	const handleLeaveRoom = () => {
-		disconnectChatSocket()
-		toast.success("You have left the room.")
-		router.push("/room")
-	}
+  const handleLeaveRoom = () => {
+    disconnectChatSocket();
+    toast.success("You have left the room.");
+    router.push("/room");
+  };
 
   useEffect(() => {
     connectChatSocket(roomCode);
     return () => {
+      setMessages([]);
       disconnectChatSocket();
     };
   }, []);
 
+  useEffect(() => {
+    const joinRoom = async () => {
+      try {
+        const res = await joinRoomApi(roomCode);
+        if (res.status === 202) {
+          setIsPending(true);
+        }
+        setLoading(false);
+        setCurrentRoom(res.data.room);
+        setIsAdmin(res.data.participant.is_admin);
+        connectChatSocket(roomCode.trim());
+      } catch (error) {
+        toast.error("Failed to join room.");
+        router.push("/room");
+      } finally {
+        setLoading(false); // Stop loading after API call
+      }
+    };
+
+    if (!currentRoom) {
+      joinRoom();
+    } else {
+      setLoading(false); // Ensure loading stops if currentRoom already exists
+    }
+  }, [roomCode]); // Add dependencies to prevent unnecessary calls
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <LoadingSpinner />
+      </div>
+    );
+  }
   if (isPending) {
     return (
       <PendingScreen
@@ -59,17 +104,19 @@ const RoomDetail = ({ roomCode }: Props) => {
         setCameraEnabled={setCameraEnabled}
         setMicEnabled={setMicEnabled}
         handleCancelRequest={() => handleCancelRequest()}
+				roomCode={roomCode}
       />
     );
   }
 
-
-
   return (
     <div className="size-full flex xl:flex-row flex-col gap-4 xl:h-[calc(100vh-3rem)] overflow-hidden">
       <div className="p-4 xl:w-[75%] flex-1 bg-white dark:bg-background rounded-lg">
-
-			</div>
+        <LeaveRoomButton
+          handleLeaveRoom={handleLeaveRoom}
+          roomCode={roomCode}
+        />
+      </div>
       <div className="xl:w-[25%] bg-white dark:bg-background h-full rounded-lg flex flex-col gap-4 overflow-hidden">
         <Tabs
           className="xl:h-full h-[500px] relative overflow-hidden flex flex-col"
@@ -98,19 +145,13 @@ const RoomDetail = ({ roomCode }: Props) => {
           </TabsList>
 
           <TabsContent className="mt-0" value="requestToJoin">
-            <TabRequests
-              requests={pendingRequests}
-              roomCode={roomCode}
-            />
+            <TabRequests requests={pendingRequests} roomCode={roomCode} />
           </TabsContent>
           <TabsContent className="mt-0 h-full overflow-hidden" value="roomChat">
-            <TabChat messages={messages} typingUsers={typingUsers} chatSocket={chatSocketRef.current} sendTypingStatus={sendTypingStatus}/>
+            <TabChat messages={messages} typingUsers={typingUsers} />
           </TabsContent>
           <TabsContent className="mt-0" value="people">
-            <TabPeople
-              participants={participants}
-              roomCode={roomCode}
-            />
+            <TabPeople participants={participants} roomCode={roomCode} />
           </TabsContent>
         </Tabs>
       </div>

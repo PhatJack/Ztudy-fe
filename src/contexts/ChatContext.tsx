@@ -28,9 +28,9 @@ interface ChatContextType {
   setParticipants: React.Dispatch<React.SetStateAction<Participant[]>>;
   currentRoom: RoomWithCategorySchema | null;
   setCurrentRoom: React.Dispatch<React.SetStateAction<RoomWithCategorySchema | null>>;
-  typingUsers: Set<string>;
-  addTypingUser: (userId: string) => void;
-  removeTypingUser: (userId: string) => void;
+  typingUsers: Set<number>;
+  addTypingUser: (userId: number) => void;
+  removeTypingUser: (userId: number) => void;
   pendingRequests: Participant[];
   setPendingRequests: React.Dispatch<React.SetStateAction<Participant[]>>;
   isAdmin: boolean;
@@ -47,21 +47,16 @@ interface ChatProviderProps {
 }
 
 export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
-  // Only initialize state if in browser environment
-  if (!isBrowser) {
-    return <>{children}</>;
-  }
-
   const [messages, setMessages] = useState<Message[]>([]);
   const [participants, setParticipants] = useState<Participant[]>([]);
   const [currentRoom, setCurrentRoom] = useState<RoomWithCategorySchema | null>(null);
-  const [typingUsers, setTypingUsers] = useState<Set<string>>(new Set());
+  const [typingUsers, setTypingUsers] = useState<Set<number>>(new Set());
   const [pendingRequests, setPendingRequests] = useState<Participant[]>([]);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [isPending, setIsPending] = useState<boolean>(false);
 
   // Memoize the add/remove typing user functions to prevent re-renders
-  const addTypingUser = useCallback((userId: string) => {
+  const addTypingUser = useCallback((userId: number) => {
     setTypingUsers(prev => {
       // Only update if the user is not already in the set
       if (!prev.has(userId)) {
@@ -73,7 +68,7 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
     });
   }, []);
 
-  const removeTypingUser = useCallback((userId: string) => {
+  const removeTypingUser = useCallback((userId: number) => {
     setTypingUsers(prev => {
       // Only update if the user is in the set
       if (prev.has(userId)) {
@@ -111,17 +106,8 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
     isAdmin, 
     isPending,
     addTypingUser,
-    removeTypingUser
+    removeTypingUser,
   ]);
 
   return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>;
-};
-
-// Create a custom hook to use the ChatContext
-export const useChatContext = () => {
-  const context = useContext(ChatContext);
-  if (!context) {
-    throw new Error("useChatContext must be used within a ChatProvider");
-  }
-  return context;
 };

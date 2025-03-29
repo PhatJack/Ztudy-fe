@@ -3,26 +3,23 @@ import TypingIndicator from "@/components/indicator/typing-indicator";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Message } from "@/contexts/ChatContext";
+import { useRoomWebSocket } from "@/contexts/WebSocketContext";
+import { useAuthContext } from "@/hooks/useAuthContext";
 import { format } from "date-fns";
 import { ChevronRight } from "lucide-react";
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useMemo } from "react";
 
 interface Props {
   messages: Message[];
-  typingUsers: Set<string>;
-  chatSocket: WebSocket | null;
-  sendTypingStatus: (isTyping: boolean) => void;
+  typingUsers: Set<number>;
 }
 
-const TabChat = ({
-  messages,
-  typingUsers,
-  chatSocket,
-  sendTypingStatus,
-}: Props) => {
+const TabChat = ({ messages, typingUsers }: Props) => {
+  const { chatSocketRef, sendTypingStatus } = useRoomWebSocket();
   const [message, setMessage] = React.useState<string>("");
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const messagesContainerRef = useRef<HTMLDivElement | null>(null);
+  const [state, dispatch] = useAuthContext();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -39,8 +36,9 @@ const TabChat = ({
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (message.trim() && chatSocket) {
-      chatSocket.send(
+    console.log(chatSocketRef.current);
+    if (message.trim() && chatSocketRef.current) {
+      chatSocketRef.current.send(
         JSON.stringify({
           type: "message",
           message: message.trim(),
@@ -94,11 +92,14 @@ const TabChat = ({
           </Button>
         </form>
       </div>
-      {typingUsers.size > 0 && (
-        <div className="absolute bottom-16 left-0 right-0 px-4 py-2 bg-gradient-to-t from-emerald-100 to-transparent">
-          <TypingIndicator />
-        </div>
-      )}
+      {/* Show typing indicator only if others are typing */}
+      {state.user &&
+        typingUsers.size > 0 &&
+        !typingUsers.has(state.user.id) && (
+          <div className="absolute bottom-16 left-0 right-0 px-4 py-2 bg-gradient-to-t from-emerald-100 to-transparent">
+            <TypingIndicator />
+          </div>
+        )}
     </div>
   );
 };

@@ -1,7 +1,7 @@
 "use client";
 import RoomItem from "@/components/rooms/room-item";
-import { useChatContext } from "@/contexts/ChatContext";
 import { useRoomWebSocket } from "@/contexts/WebSocketContext";
+import { useChatContext } from "@/hooks/useChatContext";
 import { useJoinRoomMutation } from "@/service/(rooms)/room/join-room.api";
 import { useListRooms } from "@/service/(rooms)/room/list-rooms.api";
 import { useSuspenseQuery } from "@tanstack/react-query";

@@ -2,6 +2,7 @@ import LoadingSpinner from "@/components/loading/loading-spinner";
 import CameraDisplay from "@/components/rooms/camera/CameraDisplay";
 import TooltipTemplate from "@/components/tooltip/TooltipTemplate";
 import { Button } from "@/components/ui/button";
+import { useleaveRoomMutation } from "@/service/(rooms)/room/leave-room.api";
 import { Camera, CameraOff, Mic, MicOff } from "lucide-react";
 import React from "react";
 
@@ -10,15 +11,27 @@ interface PendingScreenProps {
   micEnabled?: boolean;
   setCameraEnabled: (enabled: boolean) => void;
   setMicEnabled: (enabled: boolean) => void;
-	handleCancelRequest: () => void
+  handleCancelRequest: () => void;
+  roomCode: string;
 }
 const PendingScreen = ({
   cameraEnabled = false,
   micEnabled = false,
   setCameraEnabled,
   setMicEnabled,
-  handleCancelRequest
+  handleCancelRequest,
+  roomCode,
 }: PendingScreenProps) => {
+  const leaveRoomMutation = useleaveRoomMutation();
+
+  const onClick = () => {
+    leaveRoomMutation.mutate(roomCode, {
+      onSuccess: () => {
+        handleCancelRequest();
+      },
+    });
+  };
+
   return (
     <div className="size-full flex xl:flex-row flex-col gap-4 xl:h-[calc(100vh-3rem)] overflow-hidden ">
       <div className="p-6 w-full bg-white rounded-lg flex justify-center items-center space-x-6">
@@ -58,11 +71,7 @@ const PendingScreen = ({
           <p>
             Your request to join this room is pending approval from an admin.
           </p>
-          <Button
-            type="button"
-            variant={"destructive"}
-            onClick={handleCancelRequest}
-          >
+          <Button type="button" variant={"destructive"} onClick={onClick}>
             Cancel Request
           </Button>
         </div>

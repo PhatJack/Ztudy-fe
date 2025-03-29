@@ -1,5 +1,6 @@
 "use client";
 import { useAuthContext } from "@/hooks/useAuthContext";
+import { useChatContext } from "@/hooks/useChatContext";
 import React, {
   createContext,
   useContext,
@@ -9,7 +10,6 @@ import React, {
   useCallback,
 } from "react";
 import toast from "react-hot-toast";
-import { useChatContext } from "./ChatContext";
 
 // WebSocket context type
 interface WebSocketContextProps {
@@ -17,7 +17,7 @@ interface WebSocketContextProps {
   connectChatSocket: (roomCode: string) => void;
   disconnectChatSocket: () => void;
   sendTypingStatus: (isTyping: boolean) => void;
-	chatSocketRef: React.MutableRefObject<WebSocket | null>;
+  chatSocketRef: React.MutableRefObject<WebSocket | null>;
 }
 
 // Create context
@@ -43,6 +43,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
     setPendingRequests,
     setIsAdmin,
     setIsPending,
+    pendingRequests,
   } = useChatContext();
 
   // Use refs for WebSockets to prevent re-renders
@@ -77,6 +78,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
   const handleMessage = useCallback(
     (event: any) => {
       const data = JSON.parse(event.data);
+      console.log(data);
       switch (data.type) {
         case "chat_message":
           setMessages((prev) => [
@@ -103,15 +105,23 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
           break;
 
         case "user_left":
+          console.log("User Left:", data);
+          const isPending = pendingRequests.find(
+            (user) => user.user.id == data.user.id
+          );
+          if (isPending) {
+            setPendingRequests((prev) =>
+              prev.filter((user) => user.user.id !== data.user.id)
+            );
+          }
           setParticipants((prev) =>
-            prev.filter((user) => user?.user?.id !== data.user.id)
+            prev.filter((user) => user.user.id !== data.user.id)
           );
           break;
 
         case "typing_status":
-					console.log("Websocket Typing Status:", data)
-          // Only process typing events from other users
-          if (data.user.id !== stateAuth.user?.id) {
+          console.log("Websocket Typing Status:", data);
+          if (data.user.id != stateAuth.user?.id) {
             if (data.is_typing) {
               addTypingUser(data.user.id);
               // Automatically remove typing status after 3 seconds
@@ -160,7 +170,18 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
           break;
       }
     },
-    [chatSocketRef.current]
+    [
+      chatSocketRef.current,
+      stateAuth.user?.id,
+      addTypingUser,
+      removeTypingUser,
+      setMessages,
+      setParticipants,
+      setCurrentRoom,
+      setPendingRequests,
+      setIsAdmin,
+      setIsPending,
+    ]
   );
 
   // Handle Error
@@ -175,34 +196,29 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
   // Connect chat WebSocket using ref
   const connectChatSocket = useCallback(
     (roomCode: string) => {
+      console.log("before connect", chatSocketRef.current);
       if (!roomCode) return;
-
-      // Close existing connection if any
-      if (chatSocketRef.current) {
-        chatSocketRef.current.close();
-        chatSocketRef.current = null;
-      }
 
       const ws = new WebSocket(
         `${process.env.NEXT_PUBLIC_WEBSOCKET_URL}/chat/${roomCode}/`
       );
-
       chatSocketRef.current = ws;
+      console.log("after connect", chatSocketRef.current);
 
-      ws.onopen = () => {
+      chatSocketRef.current.onopen = () => {
         console.log("Chat WebSocket Connected");
       };
-
-      ws.onclose = () => {
+      // Handle close event
+      chatSocketRef.current.onclose = () => {
         console.log("Chat WebSocket Disconnected");
         chatSocketRef.current = null;
       };
 
-      ws.onmessage = handleMessage;
+      chatSocketRef.current.onmessage = handleMessage;
 
-      ws.onerror = handleError;
+      chatSocketRef.current.onerror = handleError;
     },
-    [chatSocketRef.current]
+    [chatSocketRef.current, stateAuth.user?.id]
   );
 
   // Disconnect chat WebSocket
@@ -244,14 +260,14 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
       connectChatSocket,
       disconnectChatSocket,
       sendTypingStatus,
-			chatSocketRef
+      chatSocketRef,
     }),
     [
       connectOnlineSocket,
       connectChatSocket,
       disconnectChatSocket,
       sendTypingStatus,
-			chatSocketRef
+      chatSocketRef,
     ]
   );
 

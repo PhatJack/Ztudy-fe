@@ -181,7 +181,7 @@ const TodoContainer = ({ user }: Props) => {
         <div className="w-full flex justify-end">
           <div className="w-full flex gap-2 md:flex-row flex-col">
             <div className="flex-1 flex flex-col gap-4">
-              <p className="text-xl font-bold">Goal Stats</p>
+              <p className="text-xl font-bold">🎯Goal Stats</p>
               <div className="flex-1 flex gap-2">
                 <div className="w-full p-4 bg-background rounded-lg flex items-center gap-4">
                   <div className="size-9 rounded-full bg-accent/10 p-2">

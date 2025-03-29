@@ -1,6 +1,9 @@
 "use client";
-import { CurrentUserResponseSchema } from "@/service/(current-user)/get-current-user-information.api";
-import { createContext, Dispatch, useMemo, useReducer } from "react";
+import {
+  CurrentUserResponseSchema,
+  getCurrentUserInformationApi,
+} from "@/service/(current-user)/get-current-user-information.api";
+import { createContext, Dispatch, useEffect, useMemo, useReducer } from "react";
 
 export interface InitialAuthState {
   user: CurrentUserResponseSchema | null;
@@ -10,7 +13,10 @@ const initialState: InitialAuthState = {
   user: null,
 };
 
-export type AuthAction = { type: "SET_USER"; payload: CurrentUserResponseSchema | null };
+export type AuthAction = {
+  type: "SET_USER";
+  payload: CurrentUserResponseSchema | null;
+};
 
 export const AuthContext = createContext<{
   state: InitialAuthState;
@@ -31,6 +37,16 @@ export const soloReducer = (
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [state, dispatch] = useReducer(soloReducer, initialState);
+
+  useEffect(() => {
+    const getUser = async () => {
+      const res = await getCurrentUserInformationApi();
+      if (res) {
+        dispatch({ type: "SET_USER", payload: res });
+      }
+    };
+    getUser();
+  }, []);
 
   const value = useMemo(() => ({ state, dispatch }), [state]);
 

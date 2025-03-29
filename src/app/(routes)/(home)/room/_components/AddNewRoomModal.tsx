@@ -36,6 +36,7 @@ import {
   CreateRoomBodySchema,
   useCreateRoomMutation,
 } from "@/service/(rooms)/room/create-room.api";
+import { useJoinRoomMutation } from "@/service/(rooms)/room/join-room.api";
 import { useUploadThumbnailMutation } from "@/service/(rooms)/room/upload-thumbnail.api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useInfiniteQuery } from "@tanstack/react-query";
