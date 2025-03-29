@@ -73,7 +73,6 @@ const RoomDetail = ({ roomCode }: Props) => {
         setLoading(false);
         setCurrentRoom(res.data.room);
         setIsAdmin(res.data.participant.is_admin);
-        connectChatSocket(roomCode.trim());
       } catch (error) {
         toast.error("Failed to join room.");
         router.push("/room");

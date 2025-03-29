@@ -7,7 +7,8 @@ import { useRoomWebSocket } from "@/contexts/WebSocketContext";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { format } from "date-fns";
 import { ChevronRight } from "lucide-react";
-import React, { useCallback, useEffect, useRef, useMemo } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
+import debounce from "lodash.debounce";
 
 interface Props {
   messages: Message[];
@@ -16,37 +17,42 @@ interface Props {
 
 const TabChat = ({ messages, typingUsers }: Props) => {
   const { chatSocketRef, sendTypingStatus } = useRoomWebSocket();
-  const [message, setMessage] = React.useState<string>("");
+  const [message, setMessage] = useState<string>("");
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const messagesContainerRef = useRef<HTMLDivElement | null>(null);
   const [state, dispatch] = useAuthContext();
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
+  // Scroll to bottom when messages update
   useEffect(() => {
-    scrollToBottom();
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // Debounced typing indicator (to prevent excessive WebSocket calls)
+  const debouncedTypingStatus = useCallback(
+    debounce((status: boolean) => sendTypingStatus(status), 300),
+    []
+  );
+
   const handleInputChange = (value: string) => {
-    sendTypingStatus(true);
     setMessage(value);
+    debouncedTypingStatus(true);
   };
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(chatSocketRef.current);
-    if (message.trim() && chatSocketRef.current) {
-      chatSocketRef.current.send(
-        JSON.stringify({
-          type: "message",
-          message: message.trim(),
-        })
-      );
-      setMessage("");
-      sendTypingStatus(false);
-    }
+
+    const trimmedMessage = message.trim();
+    if (!trimmedMessage || !chatSocketRef.current) return;
+
+    chatSocketRef.current.send(
+      JSON.stringify({
+        type: "message",
+        message: trimmedMessage,
+      })
+    );
+    setMessage("");
+    debouncedTypingStatus.cancel(); // Cancel typing indicator when message is sent
+    sendTypingStatus(false);
   };
 
   return (
@@ -92,6 +98,7 @@ const TabChat = ({ messages, typingUsers }: Props) => {
           </Button>
         </form>
       </div>
+
       {/* Show typing indicator only if others are typing */}
       {state.user &&
         typingUsers.size > 0 &&

@@ -120,7 +120,6 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
           break;
 
         case "typing_status":
-          console.log("Websocket Typing Status:", data);
           if (data.user.id != stateAuth.user?.id) {
             if (data.is_typing) {
               addTypingUser(data.user.id);
