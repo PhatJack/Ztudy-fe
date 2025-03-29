@@ -77,16 +77,16 @@ const RoomDetail = ({ roomCode }: Props) => {
         toast.error("Failed to join room.");
         router.push("/room");
       } finally {
-        setLoading(false); // Stop loading after API call
+        setLoading(false);
       }
     };
 
     if (!currentRoom) {
       joinRoom();
     } else {
-      setLoading(false); // Ensure loading stops if currentRoom already exists
+      setLoading(false);
     }
-  }, [roomCode]); // Add dependencies to prevent unnecessary calls
+  }, [roomCode]);
 
   if (loading) {
     return (

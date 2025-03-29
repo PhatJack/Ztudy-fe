@@ -13,7 +13,7 @@ const RoomsContainer = () => {
   const { setIsPending, setCurrentRoom, setIsAdmin } = useChatContext();
   const router = useRouter();
   const joinRoomMutation = useJoinRoomMutation();
-  const roomsQuery = useSuspenseQuery(useListRooms({ page_size: 20 }));
+  const roomsQuery = useSuspenseQuery(useListRooms({ page_size: 50 }));
   const { publicRooms, privateRooms } = useMemo(
     () => ({
       publicRooms: roomsQuery.data.results.filter(

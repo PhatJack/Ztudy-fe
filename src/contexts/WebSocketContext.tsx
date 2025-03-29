@@ -105,7 +105,6 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
           break;
 
         case "user_left":
-          console.log("User Left:", data);
           const isPending = pendingRequests.find(
             (user) => user.user.id == data.user.id
           );
@@ -195,14 +194,24 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
   // Connect chat WebSocket using ref
   const connectChatSocket = useCallback(
     (roomCode: string) => {
-      console.log("before connect", chatSocketRef.current);
       if (!roomCode) return;
+      if (
+        chatSocketRef.current &&
+        chatSocketRef.current.readyState === WebSocket.OPEN
+      ) {
+        return;
+      }
 
-      const ws = new WebSocket(
+      if (
+        chatSocketRef.current &&
+        chatSocketRef.current.readyState !== WebSocket.CLOSED
+      ) {
+        chatSocketRef.current.close();
+        chatSocketRef.current = null;
+      }
+      chatSocketRef.current = new WebSocket(
         `${process.env.NEXT_PUBLIC_WEBSOCKET_URL}/chat/${roomCode}/`
       );
-      chatSocketRef.current = ws;
-      console.log("after connect", chatSocketRef.current);
 
       chatSocketRef.current.onopen = () => {
         console.log("Chat WebSocket Connected");
@@ -217,7 +226,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
 
       chatSocketRef.current.onerror = handleError;
     },
-    [chatSocketRef.current, stateAuth.user?.id]
+    [handleMessage, handleError]
   );
 
   // Disconnect chat WebSocket
