@@ -16,14 +16,15 @@ export const listRoomsQuerySchema = paginationRequestSchema.extend({
   code_invite: z.string().optional(),
   creator_user: z.coerce.number().optional(),
   type: z.enum(["PUBLIC", "PRIVATE"]).optional(),
+  expand: z.string().optional(),
 });
 
 export type ListRoomsQuerySchema = z.infer<typeof listRoomsQuerySchema>;
 
-export async function listRoomssApi(
+export async function listRoomsApi(
   query: ListRoomsQuerySchema
 ): Promise<ListRoomsResponseSchema> {
-  const res = await apiClient.get<ListRoomsResponseSchema>("/rooms/",query);
+  const res = await apiClient.get<ListRoomsResponseSchema>("/rooms/", query);
   return res.data;
 }
 
@@ -32,7 +33,7 @@ export function useListRooms(query: ListRoomsQuerySchema = {}) {
 
   return queryOptions<ListRoomsResponseSchema>({
     queryKey,
-    queryFn: () =>  listRoomssApi(query),
+    queryFn: () => listRoomsApi(query),
     throwOnError: isAxiosError,
   });
 }

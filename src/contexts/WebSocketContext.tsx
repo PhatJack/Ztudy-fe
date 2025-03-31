@@ -206,6 +206,10 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
         chatSocketRef.current &&
         chatSocketRef.current.readyState !== WebSocket.CLOSED
       ) {
+        chatSocketRef.current.onopen = null;
+        chatSocketRef.current.onmessage = null;
+        chatSocketRef.current.onerror = null;
+        chatSocketRef.current.onclose = null;
         chatSocketRef.current.close();
         chatSocketRef.current = null;
       }

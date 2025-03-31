@@ -39,8 +39,6 @@ const RoomDetail = ({ roomCode }: Props) => {
   const {
     connectChatSocket,
     disconnectChatSocket,
-    sendTypingStatus,
-    chatSocketRef,
   } = useRoomWebSocket();
 
   const handleCancelRequest = () => {
@@ -51,6 +49,8 @@ const RoomDetail = ({ roomCode }: Props) => {
 
   const handleLeaveRoom = () => {
     disconnectChatSocket();
+		setCurrentRoom(null);
+		setIsAdmin(false);
     toast.success("You have left the room.");
     router.push("/room");
   };

@@ -26,10 +26,13 @@ function Sidebar() {
             </span>
           </Link>
         </div>
-				<Separator />
+        <Separator />
         <SidebarMenu />
       </div>
-      <ModeToggle />
+      <div className="grid gap-2 ">
+        <Separator />
+        <ModeToggle />
+      </div>
     </div>
   );
 }

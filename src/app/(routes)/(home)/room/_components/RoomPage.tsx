@@ -1,22 +1,11 @@
-import React, { Suspense } from "react";
-import AddNewRoomModal from "./AddNewRoomModal";
-import LoadingSpinner from "@/components/loading/loading-spinner";
+import React from "react";
 import RoomsContainer from "./RoomsContainer";
 
-const RoomPage = () => {	
+const RoomPage = () => {
   return (
     <div className="p-6">
       <div className="bg-white dark:bg-muted/40 size-full p-6 rounded-md flex flex-col space-y-6">
-        <AddNewRoomModal />
-        <Suspense
-          fallback={
-            <div className="w-full h-[300px] flex justify-center items-center">
-              <LoadingSpinner />
-            </div>
-          }
-        >
-          <RoomsContainer />
-        </Suspense>
+        <RoomsContainer />
       </div>
     </div>
   );
