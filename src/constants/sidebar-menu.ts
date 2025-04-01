@@ -25,7 +25,7 @@ export const menu: {
   {
     icon: UsersRound,
     label: "Study Group",
-    href: "/study-group",
+    href: "/room",
   },
   {
     icon: Target,

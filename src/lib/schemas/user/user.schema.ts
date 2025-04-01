@@ -1,24 +1,22 @@
 import { z } from "zod";
 import { baseSchema } from "../base.schema";
+import { monthlyLevelSchema } from "../monthly-level.schema";
 
 export const userSchema = baseSchema.extend({
   id: z.number(),
-  pk: z.number(),
   avatar: z.string().nullable(),
-  email: z.string().email("Invalid email"),
-  password: z.string(),
-  last_login: z.date(),
-  is_superuser: z.boolean(),
-  is_staff: z.boolean(),
-	is_online: z.boolean(),
+  last_login: z.coerce.date(),
   username: z.string(),
   first_name: z.string(),
+  email: z.string().email("Invalid email"),
   last_name: z.string(),
-  date_joined: z.date(),
-  restored_at: z.date().nullable(),
-  transaction_id: z.string().nullable(),
-	created_at: z.coerce.date(),
-	updated_at: z.coerce.date(),
+  password: z.string(),
+  is_online: z.boolean(),
+  is_active: z.boolean(),
+  date_joined: z.coerce.date(),
+	monthly_study_time: z.number(),
+  monthly_level: monthlyLevelSchema
 });
+
 
 export type UserSchema = z.infer<typeof userSchema>;

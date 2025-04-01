@@ -1,75 +1,124 @@
 "use client";
 import PaginationCustom from "@/components/pagination/PaginationCustom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Switch } from "@/components/ui/switch";
-import React from "react";
+import { useListLeaderboardApi } from "@/service/(leaderboard)/list-leaderboard.api";
+import { useQuery } from "@tanstack/react-query";
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { RotateCcw } from "lucide-react";
+import LoadingSpinner from "@/components/loading/loading-spinner";
+import { format } from "date-fns";
 
 const LeaderboardPage = () => {
+  const [period, setPeriod] = useState<"month" | "day" | "week">("month");
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const listLeaderboardQuery = useQuery(
+    useListLeaderboardApi(period, { page: currentPage })
+  );
+  const handlePageChange = ({
+    page,
+    setCurrentPage,
+  }: {
+    page: number;
+    setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
+  }) => {
+    setCurrentPage(page);
+  };
+
   return (
     <div className="p-6">
-      <div className="w-full p-6 bg-white dark:bg-muted/40 rounded-md flex flex-col space-y-2">
+      <div className="w-full h-full p-6 bg-white dark:bg-muted/40 rounded-md flex flex-col space-y-2">
         <div className="w-full flex justify-between items-center">
           <p className="flex items-center gap-1">
-            <span className="font-semibold text-black dark:text-white">Leaderboard</span>
+            <span className="font-semibold text-black dark:text-white">
+              Leaderboard
+            </span>
             <span className="text-xs">Global board</span>
           </p>
-          <div className="flex gap-2 items-center">
-            <div className="flex items-center space-x-2">
-              <Switch
-                id="friend-only"
-                className="data-[state=unchecked]:bg-gray-500"
-              />
-              <Label htmlFor="friend-only">Friends only</Label>
-            </div>
-          </div>
         </div>
         <Separator />
-        <div className="">
-          <p className="text-sm">
-            The monthly leaderboard will be reset in{" "}
-            <span className="font-semibold underline">29 days</span>
+        <div className="w-full flex justify-between items-center text-sm">
+          <p className="h-fit">
+            The monthly leaderboard will be reset every{" "}
+            <span className="font-semibold underline">30 minutes</span>
           </p>
+          <div className="flex items-center gap-2">
+            <p>
+              Last Update:{" "}
+              <span className="font-bold">
+								{
+									format(listLeaderboardQuery.dataUpdatedAt, "MMM-dd-yyyy, h:mm:ss a")
+								}
+              </span>
+            </p>
+            <Button
+              type="button"
+              size={"icon"}
+              onClick={() => listLeaderboardQuery.refetch()}
+              className="peer"
+            >
+              <RotateCcw className="peer-active:animate-spin" />
+            </Button>
+          </div>
         </div>
-        <Input
-          className="border-2 border-muted h-10 py-2"
-          placeholder="Search for a user"
-        />
-        <table className="table">
-          <thead>
-            <tr className="[&_th]:p-4 text-left text-sm border-b border-gray-200">
-              <th className="w-[5%] text-left">Rank</th>
-              <th className="w-full text-left">User</th>
-              <th className="w-[20%] text-right">Hour</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            {Array.from({ length: 10 }).map((_, index) => (
-              <tr key={index} className="[&_td]:p-4">
-                <td>{index + 1}</td>
-                <td>
-                  <div className="flex items-center gap-4">
-                    <Avatar>
-                      <AvatarImage src="/daddy-chill.gif" alt="avatar" />
-                      <AvatarFallback>ZT</AvatarFallback>
-                    </Avatar>
-                    <span>
-                      <strong>John Doe</strong>
-                    </span>
-                  </div>
-                </td>
-                <td>100</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <PaginationCustom
-          onPageChange={() => {}}
-          currentPage={1}
-          totalPages={5}
-        />
+        {listLeaderboardQuery.data?.message ? (
+          <p className="text-center !my-6 text-destructive">
+            {listLeaderboardQuery.data.message}
+          </p>
+        ) : (
+          <>
+            <table className="table h-full">
+              <thead>
+                <tr className="[&_th]:p-4 text-left text-sm border-b border-gray-200">
+                  <th className="w-[5%] text-left">Rank</th>
+                  <th className="w-full text-left">User</th>
+                  <th className="w-[20%] text-right">Hour</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {listLeaderboardQuery.isLoading &&
+                listLeaderboardQuery.isFetching ? (
+                  <tr>
+                    <td colSpan={3} className="py-4">
+                      <LoadingSpinner />
+                    </td>
+                  </tr>
+                ) : (
+                  listLeaderboardQuery.data?.leaderboard?.results.map(
+                    (user, index) => (
+                      <tr key={index} className="[&_td]:py-2.5 [&_td]:px-4">
+                        <td>{user.rank}</td>
+                        <td>
+                          <div className="flex items-center gap-2">
+                            <Avatar>
+                              <AvatarImage
+                                src={user.avatar ? user.avatar : "/default.png"}
+                                alt="avatar"
+                              />
+                              <AvatarFallback>ZT</AvatarFallback>
+                            </Avatar>
+                            <span>
+                              <strong>{user.username}</strong>
+                            </span>
+                          </div>
+                        </td>
+                        <td>{user.total_time}h</td>
+                      </tr>
+                    )
+                  )
+                )}
+              </tbody>
+            </table>
+            <PaginationCustom
+              onPageChange={(page) =>
+                handlePageChange({ page, setCurrentPage })
+              }
+              currentPage={currentPage}
+              totalPages={listLeaderboardQuery?.data?.leaderboard?.totalPages}
+            />
+          </>
+        )}
       </div>
     </div>
   );

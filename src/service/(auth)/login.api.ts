@@ -1,13 +1,8 @@
 import { getQueryClient } from "@/app/get-query-client";
-import {
-  COOKIE_KEY_ACCESS_TOKEN,
-  COOKIE_KEY_REFRESH_TOKEN,
-} from "@/constants/cookies";
 import { apiClient } from "@/lib/client";
 import { tokenSchema } from "@/lib/schemas/token.schema";
 import { userSchema } from "@/lib/schemas/user/user.schema";
 import { useMutation } from "@tanstack/react-query";
-import { setCookie } from "cookies-next";
 import { z } from "zod";
 
 export const loginBodySchema = z.object({
@@ -17,18 +12,21 @@ export const loginBodySchema = z.object({
 
 export type LoginBodySchema = z.infer<typeof loginBodySchema>;
 
-const loginUserSchema = userSchema.omit({
+const loginUserSchema = userSchema.pick({
   id: true,
-  last_login: true,
-  is_superuser: true,
-  is_staff: true,
+  avatar: true,
+	last_login: true,
+  username: true,
+  first_name: true,
+  last_name: true,
+  is_active: true,
   date_joined: true,
-  restored_at: true,
-  transaction_id: true,
-  created_at: true,
-  updated_at: true,
-  deleted_at: true,
-  password: true,
+  email: true,
+  is_online: true,
+	created_at: true,
+	updated_at: true,
+  monthly_study_time: true,
+  monthly_level: true,
 });
 
 export const loginResponseSchema = z.object({

@@ -3,6 +3,12 @@ import React, { createContext, useMemo, useReducer, Dispatch } from "react";
 // Define the type for the state
 export type PanelType = "quote" | "studyStats" | "backgroundIframe" | "sound";
 
+export interface SoundState {
+  stream_url: string;
+  sound_name: string;
+  volume: number;
+}
+
 export interface InitialState {
   isOpenPomodoro: boolean;
   isOpenSessionGoal: boolean;
@@ -13,6 +19,7 @@ export interface InitialState {
   volume: number;
   backgroundURL: string;
   isAddYtbScript: boolean;
+  activeSounds: SoundState[];
 }
 
 // Define the action type
@@ -44,6 +51,10 @@ export type Action =
   | {
       type: "SET_ADD_YTB_SCRIPT";
       payload: boolean;
+    }
+  | {
+      type: "SAVE_ACTIVE_SOUNDS";
+      payload: SoundState[];
     };
 
 // Create the initial state
@@ -60,6 +71,7 @@ const initialState: InitialState = {
   volume: 0,
   backgroundURL: "https://www.youtube.com/watch?v=MqTXAubXVls",
   isAddYtbScript: false,
+  activeSounds: [],
 };
 
 // Create the context with an initial value of `null`
@@ -91,6 +103,8 @@ const reducer = (state: InitialState, action: Action): InitialState => {
       return { ...state, backgroundURL: action.payload };
     case "SET_ADD_YTB_SCRIPT":
       return { ...state, isAddYtbScript: action.payload };
+    case "SAVE_ACTIVE_SOUNDS":
+      return { ...state, activeSounds: action.payload };
     default:
       return state;
   }

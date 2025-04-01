@@ -1,11 +1,10 @@
 "use client";
-import React from "react";
-import { QueryClient } from "@tanstack/react-query";
+import React, { useEffect } from "react";
 import Sidebar from "../includes/sidebar";
-import { Separator } from "../ui/separator";
 import Header from "../includes/header";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import PreferencesScreen from "../check-preference/preferences-screen";
 
 const DefaultLayout = ({
   children,
@@ -13,25 +12,28 @@ const DefaultLayout = ({
   children: React.ReactNode;
 }>) => {
   const location = usePathname();
-  const isSolo = location === "/solo";
+  const isInRoom = location.startsWith("/room/");
+  const isShowHeader = location === "/solo" || isInRoom;
 
   return (
     <>
-      <div className={cn(isSolo && "overflow-hidden")}>
-        <Sidebar />
+      <div className={cn(isShowHeader && "overflow-hidden")}>
+        {!isInRoom && <Sidebar />}
         <main
           className={cn(
-            "md:ml-24 h-full flex flex-col relative box-border",
-            isSolo ? "p-5" : "p-0"
+            "h-full flex flex-col relative box-border",
+            isShowHeader ? "p-6" : "p-0",
+            !isInRoom ? "md:ml-24" : ""
           )}
         >
-          {!isSolo && (
+          {!isShowHeader && (
             <>
               <Header />
             </>
           )}
           {children}
         </main>
+        <PreferencesScreen />
       </div>
     </>
   );

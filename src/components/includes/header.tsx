@@ -1,7 +1,7 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
-import { DoorOpen, Undo2, UserPen, UserRound } from "lucide-react";
+import { DoorOpen, Undo2, UserRound } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,14 +14,19 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useRouter } from "nextjs-toploader/app";
 import { useQuery } from "@tanstack/react-query";
-import { createGetCurrentUserInformationQueryOptions } from "@/service/(current-user)/get-current-user-information";
+import { createGetCurrentUserInformationQueryOptions } from "@/service/(current-user)/get-current-user-information.api";
 import toast from "react-hot-toast";
 import { useLogoutMutation } from "@/service/(auth)/logout.api";
+import { useAuthContext } from "@/hooks/useAuthContext";
+import HeaderStats from "./components/header-stats";
+import HeaderMobileMenu from "./components/header-mobile-menu";
+import AvatarCustom from "../avatar/AvatarCustom";
 
 const Header = () => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const logoutMutation = useLogoutMutation();
   const router = useRouter();
+  const [, dispatch] = useAuthContext();
 
   const currentUserQuery = useQuery(
     createGetCurrentUserInformationQueryOptions()
@@ -41,10 +46,23 @@ const Header = () => {
     );
   };
 
+  useEffect(() => {
+    if (currentUser) {
+      dispatch({ type: "SET_USER", payload: currentUser });
+    }
+  }, [currentUser]);
+
   return (
-    <header className="w-full p-2 bg-white dark:bg-background max-h-12 h-12 sticky top-0 border-b border-gray-200 shadow-sm">
+    <header className="w-full px-4 py-2 bg-white dark:bg-background max-h-14 h-14 sticky top-0 border-b border-gray-200 shadow-sm z-[40]">
       <div className="w-full flex justify-between items-center">
-        <div className=""></div>
+        <div className="w-full">
+          <div className="md:block hidden">
+            <HeaderStats />
+          </div>
+          <div className="md:hidden block">
+            <HeaderMobileMenu />
+          </div>
+        </div>
         <div className="w-full flex justify-end items-center gap-4">
           {currentUserQuery.isLoading ? (
             <div className="size-8 rounded-full bg-gray-300 animate-pulse"></div>
@@ -55,11 +73,8 @@ const Header = () => {
               open={openModal}
               onOpenChange={setOpenModal}
             >
-              <DropdownMenuTrigger asChild>
-                <Avatar className="w-8 h-8 cursor-pointer">
-                  <AvatarImage src="/daddy-chill.gif" />
-                  <AvatarFallback>LD</AvatarFallback>
-                </Avatar>
+              <DropdownMenuTrigger>
+                <AvatarCustom src={currentUser?.avatar} className="w-9 h-9 cursor-pointer"/>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56">
                 <DropdownMenuLabel>
@@ -69,7 +84,7 @@ const Header = () => {
                         src={
                           currentUser?.avatar
                             ? currentUser?.avatar
-                            : "/daddy-chill.gif"
+                            : "/default.png"
                         }
                       />
                       <AvatarFallback>LD</AvatarFallback>
@@ -90,12 +105,6 @@ const Header = () => {
                       <span>Profile</span>
                     </span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <span className="flex items-center gap-2">
-                      <UserPen size={16} />
-                      <span>Edit Profile</span>
-                    </span>
-                  </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
@@ -113,6 +122,7 @@ const Header = () => {
             type="button"
             onClick={() => router.push("/solo")}
             size={"sm"}
+            className="md:inline-flex hidden"
           >
             <Undo2 />
             <span>Return to room</span>

@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useListBackgroundVideoTypes } from "@/service/(solo)/background/list-background-types.api";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import React, { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import React, { useEffect } from "react";
 
 interface Props {
   activeTab: number;
@@ -9,11 +10,9 @@ interface Props {
 }
 
 const BackgroundTypesList = ({ activeTab, setActiveTab }: Props) => {
-  const backgroundVideoTypesQuery = useSuspenseQuery(
-    useListBackgroundVideoTypes()
-  );
+  const backgroundVideoTypesQuery = useQuery(useListBackgroundVideoTypes());
 
-  const backgroundVideoTypes = backgroundVideoTypesQuery.data.results;
+  const backgroundVideoTypes = backgroundVideoTypesQuery.data?.results;
 
   useEffect(() => {
     if (backgroundVideoTypesQuery.isSuccess) {
@@ -23,8 +22,15 @@ const BackgroundTypesList = ({ activeTab, setActiveTab }: Props) => {
 
   return (
     <div className="flex flex-wrap gap-1">
+      {backgroundVideoTypesQuery.isLoading && (
+        <div className="flex flex-wrap gap-1">
+          {Array.from({ length: 10 }).map((_, i) => (
+            <Skeleton key={i} className="w-12 h-5 rounded-full" />
+          ))}
+        </div>
+      )}
       {backgroundVideoTypesQuery.isSuccess &&
-        backgroundVideoTypes.map((backgroundType) => (
+        backgroundVideoTypes?.map((backgroundType) => (
           <Button
             type="button"
             size={"sm"}

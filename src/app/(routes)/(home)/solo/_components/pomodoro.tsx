@@ -2,12 +2,26 @@ import TooltipTemplate from "@/components/tooltip/TooltipTemplate";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { useSoloContext } from "@/hooks/useSoloContext";
-import { Clock, Minus, OctagonAlert, Plus, X } from "lucide-react";
+import { usePomodoroContext } from "@/contexts/SoloPomodoroContext";
+import { Clock, Minus, OctagonAlert, Plus } from "lucide-react";
 import React from "react";
 
-const Pomodoro = () => {
-  const [, dispatch] = useSoloContext();
+const Pomodoro: React.FC = () => {
+  const {
+    focusTime,
+    breakTime,
+    isRunning,
+    isFocusMode,
+    remainingTime,
+    isLoopMode,
+    formatTime,
+    handleTimeChange,
+    toggleTimer,
+    resetTimer,
+    setIsLoopMode,
+  } = usePomodoroContext();
+
+  const { hours, minutes, seconds } = formatTime(remainingTime);
 
   return (
     <div className="w-[267px] min-w-[267px] p-5 rounded-md bg-background flex flex-col space-y-2 shadow-lg">
@@ -21,13 +35,9 @@ const Pomodoro = () => {
             variant={"accent"}
             content={
               <p>
-                Boost <strong>productivity</strong> and stay on track with this
-                simple trick: set a personal timer for focused work (try 25
-                minutes!), followed by a 5-minute break. Known as the Pomodoro
-                Technique, this method helps you tackle tasks without burnout.
-                Customize your timer to fit your rhythm—whether it’s 15 minutes
-                for quick wins or 90 minutes for deep focus. Time’s
-                ticking—start small, win big!
+                Boost <strong>productivity</strong> with a focus session
+                followed by a break. Toggle Loop automatically to repeat the
+                cycle, or run a single focus-break session.
               </p>
             }
           >
@@ -35,74 +45,109 @@ const Pomodoro = () => {
               <OctagonAlert size={16} />
             </span>
           </TooltipTemplate>
-          <span
-            onClick={() =>
-              dispatch({ type: "TOGGLE_BUTTON", payload: "isOpenPomodoro" })
-            }
-          >
-            <X size={16} />
-          </span>
         </div>
       </div>
-      <div className="">
-        <p className="text-xs mb-1 text-center">
-          <strong>Focus time(min)</strong>
-        </p>
-        <div className="w-full flex items-center gap-2">
-          <Button
-            size={"icon"}
-            variant={"ghost"}
-            className="hover:bg-transparent hover:text-primary aspect-square"
-          >
-            <Minus size={26} />
-          </Button>
-          <div className="w-full px-2 py-1 rounded-full flex space-x-1 justify-center items-center bg-secondary text-secondary-foreground font-semibold antialiased text-2xl">
-            <span>00</span>
-            <span className="mb-1 ">:</span>
-            <span>25</span>
-            <span className="mb-1">:</span>
-            <span>00</span>
+      {!isRunning ? (
+        <div className="">
+          <p className="text-xs mb-1 text-center">
+            <strong>Focus time(min)</strong>
+          </p>
+          <div className="w-full flex items-center gap-2">
+            <Button
+              size={"icon"}
+              variant={"ghost"}
+              className="hover:bg-transparent hover:text-primary aspect-square"
+              onClick={() =>
+                handleTimeChange({ type: "focus", operation: "subtract" })
+              }
+              disabled={isRunning}
+            >
+              <Minus size={26} />
+            </Button>
+            <div className="w-full px-2 py-1 rounded-full flex space-x-1 justify-center items-center bg-secondary text-secondary-foreground font-semibold antialiased text-2xl">
+              <span>{formatTime(focusTime).hours}</span>
+              <span className="mb-1">:</span>
+              <span>{formatTime(focusTime).minutes}</span>
+              <span className="mb-1">:</span>
+              <span>{formatTime(focusTime).seconds}</span>
+            </div>
+            <Button
+              size={"icon"}
+              variant={"ghost"}
+              className="hover:bg-transparent hover:text-primary aspect-square"
+              onClick={() =>
+                handleTimeChange({ type: "focus", operation: "add" })
+              }
+              disabled={isRunning}
+            >
+              <Plus size={26} />
+            </Button>
           </div>
-          <Button
-            size={"icon"}
-            variant={"ghost"}
-            className="hover:bg-transparent hover:text-primary aspect-square"
-          >
-            <Plus size={26} />
-          </Button>
-        </div>
-        <p className="text-xs mb-1 mt-3 text-center">
-          <strong>Break time(min)</strong>
-        </p>
-        <div className="w-full flex items-center gap-2">
-          <Button
-            size={"icon"}
-            variant={"ghost"}
-            className="hover:bg-transparent hover:text-primary aspect-square"
-          >
-            <Minus size={26} />
-          </Button>
-          <div className="w-full px-2 py-1 rounded-full flex space-x-1 justify-center items-center bg-secondary text-secondary-foreground font-semibold antialiased text-2xl">
-            <span>00</span>
-            <span className="mb-1 ">:</span>
-            <span>25</span>
-            <span className="mb-1">:</span>
-            <span>00</span>
+          <p className="text-xs mb-1 mt-3 text-center">
+            <strong>Break time(min)</strong>
+          </p>
+          <div className="w-full flex items-center gap-2">
+            <Button
+              size={"icon"}
+              variant={"ghost"}
+              className="hover:bg-transparent hover:text-primary aspect-square"
+              onClick={() =>
+                handleTimeChange({ type: "break", operation: "subtract" })
+              }
+              disabled={isRunning}
+            >
+              <Minus size={26} />
+            </Button>
+            <div className="w-full px-2 py-1 rounded-full flex space-x-1 justify-center items-center bg-secondary text-secondary-foreground font-semibold antialiased text-2xl">
+              <span>{formatTime(breakTime).hours}</span>
+              <span className="mb-1">:</span>
+              <span>{formatTime(breakTime).minutes}</span>
+              <span className="mb-1">:</span>
+              <span>{formatTime(breakTime).seconds}</span>
+            </div>
+            <Button
+              size={"icon"}
+              variant={"ghost"}
+              className="hover:bg-transparent hover:text-primary aspect-square"
+              onClick={() =>
+                handleTimeChange({ type: "break", operation: "add" })
+              }
+              disabled={isRunning}
+            >
+              <Plus size={26} />
+            </Button>
           </div>
-          <Button
-            size={"icon"}
-            variant={"ghost"}
-            className="hover:bg-transparent hover:text-primary aspect-square"
-          >
-            <Plus size={26} />
-          </Button>
         </div>
-      </div>
+      ) : null}
       <div className="flex items-center space-x-2 !mt-4">
-        <Switch id="loop-mode" className="data-[state=unchecked]:bg-gray-500"/>
+        <Switch
+          id="loop-mode"
+          className="data-[state=unchecked]:bg-gray-500"
+          checked={isLoopMode}
+          onCheckedChange={setIsLoopMode}
+        />
         <Label htmlFor="loop-mode">Loop automatically</Label>
       </div>
-      <Button className="!mt-4 font-semibold">Start timer</Button>
+      <div className="!mt-2 flex flex-col gap-2">
+        <div className="text-center font-bold">
+          {isFocusMode ? "Focus Time" : "Break Time"}
+        </div>
+        <div className="text-center text-3xl font-bold">
+          {hours}:{minutes}:{seconds}
+        </div>
+        <Button className="font-semibold" onClick={toggleTimer}>
+          {isRunning ? "Pause" : "Start"} timer
+        </Button>
+        {isRunning && (
+          <Button
+            variant="outline"
+            className="font-semibold"
+            onClick={resetTimer}
+          >
+            Reset timer
+          </Button>
+        )}
+      </div>
     </div>
   );
 };

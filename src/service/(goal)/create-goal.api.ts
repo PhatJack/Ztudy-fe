@@ -7,7 +7,6 @@ import { z } from "zod";
 
 export const createGoalBodySchema = goalSchema.omit({
   id: true,
-  created_at: true,
   updated_at: true,
 });
 
@@ -24,20 +23,18 @@ export async function createGoalApi(
     "/session-goals/",
     body
   );
-  return response.data
+  return response.data;
 }
 
 export function useCreateGoalMutation() {
-  const mutationKey = ["create-goal"] as const;
-  const queryClient = getQueryClient();
+  const mutationKey = ["create-goal"];
+	const queryClient = getQueryClient();
   return useMutation<CreateGoalResponseSchema, unknown, CreateGoalBodySchema>({
     mutationKey,
     mutationFn: (body) => createGoalApi(createGoalBodySchema.parse(body)),
-    onSuccess() {
-      queryClient.invalidateQueries({
-        queryKey: ["goals"],
-      });
-    },
+		onSuccess() {
+			queryClient.refetchQueries({queryKey: ["goals"]});
+		},
     throwOnError: isAxiosError,
   });
 }

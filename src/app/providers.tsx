@@ -2,10 +2,13 @@
 import { ThemeProvider } from "@/components/theme-provider";
 import { QueryClientProvider } from "@tanstack/react-query";
 import NextTopLoader from "nextjs-toploader";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import { getQueryClient } from "./get-query-client";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { AuthProvider } from "@/contexts/AuthContext";
+import { ChatProvider } from "@/contexts/ChatContext";
+import { WebSocketProvider } from "@/contexts/WebSocketContext";
 
 const queryClient = getQueryClient();
 
@@ -22,10 +25,16 @@ export default function Providers({
       disableTransitionOnChange
     >
       <QueryClientProvider client={queryClient}>
-        <NextTopLoader color="hsl(30 100% 70%)" />
-        <TooltipProvider>{children}</TooltipProvider>
+        <NextTopLoader color="hsl(150 30% 45%)" zIndex={9999} />
+        <AuthProvider>
+          <ChatProvider>
+            <WebSocketProvider>
+              <TooltipProvider>{children}</TooltipProvider>
+            </WebSocketProvider>
+          </ChatProvider>
+        </AuthProvider>
         <Toaster />
-				<ReactQueryDevtools initialIsOpen={true} />
+        <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </ThemeProvider>
   );

@@ -3,7 +3,7 @@ import SoloPage from "./_components/soloPage";
 import SoloProviders from "./providers";
 
 export const metadata: Metadata = {
-  title: "Solo session",
+  title: "Solo",
 };
 
 export default function Solo() {

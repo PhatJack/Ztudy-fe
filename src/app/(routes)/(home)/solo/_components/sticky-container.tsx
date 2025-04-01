@@ -9,7 +9,7 @@ import Quote from "./quote";
 import SoundList from "./sound-list";
 
 const StickyContainer = () => {
-  const [state, _] = useSoloContext();
+  const [state,] = useSoloContext();
 
   return (
     <>

@@ -9,7 +9,7 @@ export async function getDetailYoutubeApi(
   id: string | undefined
 ): Promise<YouTubeResponse> {
   const response = await axios.get<YouTubeResponse>(
-    `https://www.googleapis.com/youtube/v3/videos?id=${id}&key=AIzaSyCb2du9j7phApcRIiOHrwFGrWIsqvruVBw&part=snippet,statistics`
+    `https://www.googleapis.com/youtube/v3/videos?id=${id}&key=${process.env.NEXT_PUBLIC_YOUTUBE_DATA_API_V3}&part=snippet,statistics`
   );
   return response.data;
 }

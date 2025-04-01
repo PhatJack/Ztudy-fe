@@ -8,7 +8,7 @@ import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useSoloContext } from "@/hooks/useSoloContext";
-import { createGetCurrentUserInformationQueryOptions } from "@/service/(current-user)/get-current-user-information";
+import { createGetCurrentUserInformationQueryOptions } from "@/service/(current-user)/get-current-user-information.api";
 import {
   CreateGoalBodySchema,
   useCreateGoalMutation,
@@ -35,7 +35,7 @@ const SessionGoal = () => {
 
   const goalForm = useForm<CreateGoalBodySchema>({
     defaultValues: {
-      title: "",
+      goal: "",
       status: "OPEN",
     },
   });
@@ -88,7 +88,7 @@ const SessionGoal = () => {
         <form onSubmit={onGoalSubmit} className="flex gap-2">
           <FormField
             control={goalForm.control}
-            name="title"
+            name="goal"
             render={({ field }) => (
               <FormItem>
                 <FormControl>

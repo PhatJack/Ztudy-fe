@@ -17,7 +17,7 @@ const Quote = () => {
 
   const randomQuote = useCallback(async () => {
     await quotesQuery.refetch();
-  }, [dispatch, quotesQuery.refetch]);
+  }, [dispatch, quotesQuery]);
 
   const toggleDisplay = useCallback(() => {
     dispatch({ type: "TOGGLE_QUOTE" });
@@ -30,7 +30,7 @@ const Quote = () => {
         payload: { content: quote.quote ?? "", author: quote.author ?? "" },
       });
     }
-  }, [quotesQuery.data]);
+  }, [quotesQuery.data, dispatch]);
 
   return (
     <div className="w-[267px] min-w-[267px] p-5 rounded-md bg-background shadow-lg">

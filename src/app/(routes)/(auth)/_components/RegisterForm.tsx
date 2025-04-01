@@ -40,14 +40,21 @@ export function RegisterForm({
   const onSubmit = registerForm.handleSubmit((data: RegisterBodySchema) => {
     try {
       registerMutation.mutate(data, {
-        onSuccess: (res) => {
+        onSuccess: () => {
           toast.success("Account created successfully");
           router.push("/login");
         },
         onError: (error: any) => {
-          toast.error(
-            error?.non_field_errors?.[0] || "Invalid email or password"
-          );
+          if (error?.non_field_errors?.[0]) {
+            toast.error(
+              error?.non_field_errors?.[0] || "Invalid email or password"
+            );
+          }
+          if (error?.email?.[0]) {
+            toast.error(
+              error?.email?.[0] || "Email has been registered before"
+            );
+          }
         },
       });
     } catch (error) {

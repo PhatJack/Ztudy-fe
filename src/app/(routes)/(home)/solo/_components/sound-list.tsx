@@ -5,7 +5,7 @@ import { useSoloContext } from "@/hooks/useSoloContext";
 import { useSoloSoundContext } from "@/hooks/useSoloSoundContext";
 import { useListSounds } from "@/service/(solo)/list-sounds.api";
 import { useQuery } from "@tanstack/react-query";
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect } from "react";
 
 const SoundList = () => {
   const [state, dispatch] = useSoloContext();
@@ -13,43 +13,50 @@ const SoundList = () => {
   const soundsQuery = useQuery(useListSounds());
 
   const sounds = soundsQuery.data?.results;
-  const audioMap = useRef(new Map<string, HTMLAudioElement>()); // Persist audio instances
 
   // Initialize sounds
   useEffect(() => {
-    if (sounds) {
+    if (!sounds || stateSound.isInitialized) return;
+    
+    if (state.activeSounds && state.activeSounds.length > 0) {
+      // Use saved sounds from SoloContext
+      dispatchSound({
+        type: "SET_SOUNDS",
+        payload: state.activeSounds,
+      });
+    } else if (sounds) {
+      // Initialize with default values
       dispatchSound({
         type: "SET_SOUNDS",
         payload: sounds.map((sound) => ({
-          sound_file: sound.sound_file,
+          stream_url: sound.stream_url,
           sound_name: sound.name,
           volume: 0,
         })),
       });
+    }
+    
+    // Mark as initialized
+    dispatchSound({ type: "SET_INITIALIZED", payload: true });
+  }, [sounds, dispatchSound, state.activeSounds, stateSound.isInitialized]);
 
-      sounds.forEach((sound) => {
-        if (!audioMap.current.has(sound.sound_file)) {
-          const audio = new Audio(sound.sound_file);
-          audio.volume = 0;
-					audio.play();
-          audioMap.current.set(sound.sound_file, audio);
-        }
+  // Save sounds to SoloContext whenever they change
+  useEffect(() => {
+    if (stateSound.sounds && stateSound.sounds.length > 0) {
+      dispatch({
+        type: "SAVE_ACTIVE_SOUNDS",
+        payload: stateSound.sounds
       });
     }
-  }, [sounds, dispatchSound]);
+  }, [stateSound.sounds, dispatch]);
 
   // Handle volume change
   const handleVolumeChange = useCallback(
-    (sound_file: string, volume: number) => {
+    (stream_url: string, volume: number) => {
       dispatchSound({
         type: "UPDATE_VOLUME",
-        payload: { sound_file, volume },
+        payload: { stream_url, volume },
       });
-
-      const audio = audioMap.current.get(sound_file);
-      if (audio) {
-        audio.volume = volume;
-      }
     },
     [dispatchSound]
   );
@@ -87,11 +94,11 @@ const SoundList = () => {
             minValue={0}
             maxValue={1}
             debouncedSetVolume={(val) =>
-              handleVolumeChange(sound.sound_file, val[0])
+              handleVolumeChange(sound.stream_url, val[0])
             }
             volume={sound.volume}
             handleMute={() =>
-              handleVolumeChange(sound.sound_file, sound.volume > 0 ? 0 : 1)
+              handleVolumeChange(sound.stream_url, sound.volume > 0 ? 0 : 1)
             }
           />
         </div>

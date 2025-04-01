@@ -22,8 +22,6 @@ const BackgroundOptionsList = ({ activeTab }: Props) => {
     dispatch({ type: "SET_BACKGROUND", payload: youtubeCode });
   };
 
-	console.log(backgroundVideos)
-
   return (
     <div className="grid grid-cols-4 gap-1">
       {backgroundVideosQuery.isLoading

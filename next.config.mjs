@@ -17,7 +17,8 @@ const nextConfig = {
 				hostname: "study-together-static-prod.st-static.com"
 			}
 		]
-	}
+	},
+	reactStrictMode: false
 };
 
 export default nextConfig;
