@@ -96,6 +96,11 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
           break;
 
         case "user_joined":
+          // Play door bell sound when user joins
+          const audio = new Audio("/door-bell.mp3");
+          audio
+            .play()
+            .catch((error) => console.log("Error playing sound:", error));
           setParticipants((prev) => {
             if (!prev.find((p) => p?.user?.id === data.user.id)) {
               return [...prev, data.user];
@@ -179,17 +184,15 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
       setPendingRequests,
       setIsAdmin,
       setIsPending,
+      pendingRequests,
     ]
   );
 
   // Handle Error
-  const handleError = useCallback(
-    (error: any) => {
-      console.error("Chat WebSocket Error:", error);
-      chatSocketRef.current = null;
-    },
-    [chatSocketRef.current]
-  );
+  const handleError = useCallback((error: any) => {
+    console.error("Chat WebSocket Error:", error);
+    chatSocketRef.current = null;
+  }, []);
 
   // Connect chat WebSocket using ref
   const connectChatSocket = useCallback(

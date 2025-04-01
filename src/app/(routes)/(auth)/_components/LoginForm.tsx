@@ -28,7 +28,7 @@ import { checkPreferencesApi } from "@/service/(users)/check-preferences.api";
 import { useAuthContext } from "@/hooks/useAuthContext";
 
 export function LoginForm() {
-  const [state, dispatch] = useAuthContext();
+  const [, dispatch] = useAuthContext();
   const [isShowingPassword, setIsShowingPassword] = useState<boolean>(false);
   const loginForm = useForm<LoginBodySchema>({
     defaultValues: {

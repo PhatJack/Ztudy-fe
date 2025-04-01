@@ -16,7 +16,6 @@ const DashboardPage = () => {
     setOpenCommunity((prev) => !prev);
   };
   const userQuery = useQuery(createGetCurrentUserInformationQueryOptions());
-  const user = userQuery.data;
 
   return (
     <div className="relative flex h-full xl:h-[calc(100vh-3rem)] overflow-hidden">
@@ -24,10 +23,13 @@ const DashboardPage = () => {
         <div className="xl:max-w-[1000px] w-full flex flex-col space-y-6">
           <div className="w-full flex xl:flex-row flex-col justify-between items-center xl:gap-0 gap-6">
             <div className="flex xl:flex-row flex-col items-center gap-2">
-              <AvatarCustom src={user?.avatar} className="w-12 h-12" />
+              <AvatarCustom
+                src={userQuery.data?.avatar}
+                className="w-12 h-12"
+              />
               <div className="xl:text-left text-center">
                 <h1 className="font-medium text-muted-foreground">
-                  Hello, {user?.username || "username"}!
+                  Hello, {userQuery.data?.username || "username"}!
                 </h1>
                 <p className="font-bold text-3xl xl:text-2xl leading-6 font-sans">
                   Welcome back to Ztudy!
@@ -53,7 +55,7 @@ const DashboardPage = () => {
               </div>
             </div>
           </div>
-          <TodoContainer user={user} />
+          <TodoContainer user={userQuery.data} />
           <div>
             {openCommunity && (
               <div className="w-full h-full rounded-xl bg-white dark:bg-background flex-col gap-2 p-4 xl:hidden flex">
@@ -78,15 +80,7 @@ const DashboardPage = () => {
         <h5 className="font-medium p-2 bg-muted/40 border-y border-border text-sm text-muted-foreground">
           Ztudy Community
         </h5>
-        <Suspense
-          fallback={
-            <div className="h-full w-full flex justify-center items-center">
-              <LoadingSpinner />
-            </div>
-          }
-        >
-          <ZtudyCommunity />
-        </Suspense>
+        <ZtudyCommunity />
       </div>
     </div>
   );

@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { joinRoomApi } from "@/service/(rooms)/room/join-room.api";
 import LoadingSpinner from "@/components/loading/loading-spinner";
 import LeaveRoomButton from "./LeaveRoomButton";
+import MainScreen from "./MainScreen";
 
 interface Props {
   roomCode: string;
@@ -36,10 +37,7 @@ const RoomDetail = ({ roomCode }: Props) => {
     setIsAdmin,
     setCurrentRoom,
   } = useChatContext();
-  const {
-    connectChatSocket,
-    disconnectChatSocket,
-  } = useRoomWebSocket();
+  const { connectChatSocket, disconnectChatSocket } = useRoomWebSocket();
 
   const handleCancelRequest = () => {
     disconnectChatSocket();
@@ -49,8 +47,8 @@ const RoomDetail = ({ roomCode }: Props) => {
 
   const handleLeaveRoom = () => {
     disconnectChatSocket();
-		setCurrentRoom(null);
-		setIsAdmin(false);
+    setCurrentRoom(null);
+    setIsAdmin(false);
     toast.success("You have left the room.");
     router.push("/room");
   };
@@ -103,14 +101,15 @@ const RoomDetail = ({ roomCode }: Props) => {
         setCameraEnabled={setCameraEnabled}
         setMicEnabled={setMicEnabled}
         handleCancelRequest={() => handleCancelRequest()}
-				roomCode={roomCode}
+        roomCode={roomCode}
       />
     );
   }
 
   return (
     <div className="size-full flex xl:flex-row flex-col gap-4 xl:h-[calc(100vh-3rem)] overflow-hidden">
-      <div className="p-4 xl:w-[75%] flex-1 bg-white dark:bg-background rounded-lg">
+      <div className="xl:w-[75%] flex flex-col gap-6">
+        <MainScreen />
         <LeaveRoomButton
           handleLeaveRoom={handleLeaveRoom}
           roomCode={roomCode}

@@ -84,7 +84,7 @@ const Header = () => {
                         src={
                           currentUser?.avatar
                             ? currentUser?.avatar
-                            : "/daddy-chill.gif"
+                            : "/default.png"
                         }
                       />
                       <AvatarFallback>LD</AvatarFallback>

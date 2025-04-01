@@ -37,7 +37,7 @@ const StickyMenu = () => {
   );
   return (
     <>
-      <div className="flex gap-4">
+      <div className="flex gap-6">
         {/* Pomodoro  */}
         <div
           onClick={() => {
@@ -85,7 +85,7 @@ const StickyMenu = () => {
           </p>
         </div>
       </div>
-      <div className="flex gap-4">
+      <div className="flex gap-6">
         {/* Menu Buttons */}
         {menuButton.map((item, index) => (
           <TooltipTemplate content={item.label} key={index}>

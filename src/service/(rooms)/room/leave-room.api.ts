@@ -28,7 +28,7 @@ export async function leaveRoomApi(roomCode: string) {
   return res;
 }
 
-export const useleaveRoomMutation = () => {
+export const useLeaveRoomMutation = () => {
 	return useMutation({
 		mutationKey: ["leave-room"],
 		mutationFn: (roomCode : string) => leaveRoomApi(roomCode),

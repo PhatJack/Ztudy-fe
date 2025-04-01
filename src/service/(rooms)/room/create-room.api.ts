@@ -1,4 +1,3 @@
-import { getQueryClient } from "@/app/get-query-client";
 import { apiClient } from "@/lib/client";
 import { roomSchema } from "@/lib/schemas/room/room.schema";
 import { useMutation } from "@tanstack/react-query";

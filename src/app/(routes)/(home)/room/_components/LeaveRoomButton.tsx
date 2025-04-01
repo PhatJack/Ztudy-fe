@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { useleaveRoomMutation } from "@/service/(rooms)/room/leave-room.api";
+import { useLeaveRoomMutation } from "@/service/(rooms)/room/leave-room.api";
 import React from "react";
 
 interface Props {
@@ -8,7 +8,7 @@ interface Props {
 }
 
 const LeaveRoomButton = ({ handleLeaveRoom, roomCode }: Props) => {
-  const leaveRoomMutation = useleaveRoomMutation();
+  const leaveRoomMutation = useLeaveRoomMutation();
 
   const onClick = () => {
     leaveRoomMutation.mutate(roomCode, {
