@@ -10,12 +10,17 @@ import { useQueries } from "@tanstack/react-query";
 import { useRouter } from "nextjs-toploader/app";
 import React, { useMemo } from "react";
 import AddNewRoomModal from "./AddNewRoomModal";
+import JoinRoomWithCode from "./JoinRoomWithCode";
+import { useJoinRandomRoomMutation } from "@/service/(rooms)/room/join-random-room.api";
+import JoinRandomRoomButton from "./JoinRandomRoomButton";
 
 const RoomsContainer = () => {
   const { connectChatSocket } = useRoomWebSocket();
   const { setIsPending, setCurrentRoom, setIsAdmin } = useChatContext();
   const router = useRouter();
   const joinRoomMutation = useJoinRoomMutation();
+  const joinRandomRoomMutation = useJoinRandomRoomMutation();
+
   const [suggestedRoomsQuery, trendingRoomsQuery] = useQueries({
     queries: [
       useListSuggestedRooms({ expand: "category" }),
@@ -45,14 +50,36 @@ const RoomsContainer = () => {
     });
   };
 
+  const handleJoinRandomRoom = () => {
+    joinRandomRoomMutation.mutate(undefined, {
+      onSuccess: (data) => {
+        console.log(data);
+        if (data.status === 202) {
+          setIsPending(true);
+        }
+        setCurrentRoom(data.data.room);
+        setIsAdmin(data.data.participant.is_admin);
+        connectChatSocket(data.data.room.code_invite);
+        router.push(`/room/${data.data.room.code_invite}`);
+      },
+    });
+  };
+
   const isLoadingSuggested = suggestedRoomsQuery.isLoading;
   const isLoadingTrending = trendingRoomsQuery.isLoading;
 
   return (
     <>
       <div className="flex flex-col space-y-6">
+        <div className="w-full flex justify-between items-center">
+          <div className=""></div>
+          <div className="flex items-center gap-2">
+            <JoinRandomRoomButton handleJoinRandomRoom={handleJoinRandomRoom} />
+            <JoinRoomWithCode handleJoinRoom={handleJoinRoom} />
+          </div>
+        </div>
         <div className="space-y-2">
-          <h2 className="text-lg font-semibold">Suggested Rooms</h2>
+          <h2 className="text-xl font-bold uppercase">Suggested Rooms</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 gap-4">
             {isLoadingSuggested ? (
               <LoadingSpinner className="col-span-5" />
@@ -73,7 +100,7 @@ const RoomsContainer = () => {
           </div>
         </div>
         <div className="space-y-2">
-          <h2 className="text-lg font-semibold">Trending Rooms</h2>
+          <h2 className="text-xl font-bold uppercase">Trending Rooms</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 gap-4">
             {isLoadingTrending ? (
               <LoadingSpinner className="col-span-5" />

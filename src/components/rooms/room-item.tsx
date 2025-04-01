@@ -27,29 +27,20 @@ const RoomItem = ({ room, handleJoinRoom }: Props) => {
                   backgroundColor: "#92BFB1",
                 }
           }
-        >
-          <div className="w-full flex justify-between">
-            <Badge variant={room.type === "PRIVATE" ? "danger" : "warning"}>
-              <span>{room.type}</span>
-            </Badge>
-            <div className="">
-              <Badge className="gap-1" variant={"secondary"}>
-                <User2 size={12} />
-                <span>{room.max_participants}</span>
-              </Badge>
-            </div>
-          </div>
-        </div>
+        ></div>
         <div className="flex justify-between gap-3">
           <div className="w-full flex-1 flex flex-wrap items-center gap-3">
             <Badge variant={"warning"}>
               <span>{(room.category as any)?.name}</span>
             </Badge>
           </div>
+          <div className="">
+            <Badge className="gap-1" variant={"secondary"}>
+              <User2 size={12} />
+              <span>{room.max_participants}</span>
+            </Badge>
+          </div>
         </div>
-        {/* <span>
-          {room.name} {room.id}
-        </span> */}
       </div>
     </div>
   );
