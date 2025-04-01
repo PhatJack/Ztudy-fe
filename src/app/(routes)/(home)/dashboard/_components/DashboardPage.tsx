@@ -18,7 +18,7 @@ const DashboardPage = () => {
   const userQuery = useQuery(createGetCurrentUserInformationQueryOptions());
 
   return (
-    <div className="relative flex h-full xl:h-[calc(100vh-3rem)] overflow-hidden">
+    <div className="relative flex h-full xl:h-[calc(100vh-3rem-0.5rem)] overflow-hidden">
       <div className="flex-1 flex justify-center lg:py-10 lg:px-6 px-4 py-10 w-full">
         <div className="xl:max-w-[1000px] w-full flex flex-col space-y-6">
           <div className="w-full flex xl:flex-row flex-col justify-between items-center xl:gap-0 gap-6">
