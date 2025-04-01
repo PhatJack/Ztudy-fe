@@ -1,9 +1,10 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import Sidebar from "../includes/sidebar";
 import Header from "../includes/header";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import PreferencesScreen from "../check-preference/preferences-screen";
 
 const DefaultLayout = ({
   children,
@@ -32,6 +33,7 @@ const DefaultLayout = ({
           )}
           {children}
         </main>
+        <PreferencesScreen />
       </div>
     </>
   );

@@ -24,8 +24,11 @@ import { useRouter } from "nextjs-toploader/app";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import LoadingSpinner from "@/components/loading/loading-spinner";
+import { checkPreferencesApi } from "@/service/(users)/check-preferences.api";
+import { useAuthContext } from "@/hooks/useAuthContext";
 
 export function LoginForm() {
+  const [state, dispatch] = useAuthContext();
   const [isShowingPassword, setIsShowingPassword] = useState<boolean>(false);
   const loginForm = useForm<LoginBodySchema>({
     defaultValues: {
@@ -38,12 +41,22 @@ export function LoginForm() {
   const loginMutation = useLoginMutation();
   const onSubmit = (data: LoginBodySchema) => {
     loginMutation.mutate(data, {
-      onSuccess() {
+      onSuccess: async (data) => {
+        try {
+          const res = await checkPreferencesApi(data.user.id);
+          if (res.status == 400) {
+            dispatch({ type: "CHECK_PREFERENCES", payload: false });
+          } else {
+            dispatch({ type: "CHECK_PREFERENCES", payload: true });
+          }
+        } catch (error) {
+          console.error("Error checking preferences:", error);
+        }
         router.push("/dashboard");
         toast.success("Login successful");
       },
       onError(error: any) {
-        console.log(error);
+        console.log("error", error);
         toast.error(
           error?.non_field_errors?.[0] || "Invalid email or password"
         );
@@ -117,7 +130,11 @@ export function LoginForm() {
                       className="absolute inset-y-0 right-0 flex items-center px-2"
                       onClick={handleShowPassword}
                     >
-                      {isShowingPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                      {isShowingPassword ? (
+                        <EyeOff size={20} />
+                      ) : (
+                        <Eye size={20} />
+                      )}
                     </span>
                   </div>
                 </FormControl>

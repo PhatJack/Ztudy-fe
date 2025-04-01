@@ -12,12 +12,14 @@ interface PaginationCustomProps {
   currentPage?: number;
   totalPages?: number;
   onPageChange: (page: number) => void;
+  isDisplayNumber?: boolean;
 }
 
 const PaginationCustom = ({
   currentPage = 1,
   totalPages = 1,
   onPageChange,
+  isDisplayNumber = true,
 }: PaginationCustomProps) => {
   // Function to handle page click
   const handlePageClick = useCallback(
@@ -45,22 +47,24 @@ const PaginationCustom = ({
             />
           </PaginationItem>
         )}
+        {isDisplayNumber
+          ? [...Array(totalPages)].map((_, index) => {
+              const page = index + 1;
+              return (
+                <PaginationItem
+                  key={page}
+                  className={`cursor-pointer ${
+                    page === currentPage ? "bg-primary rounded-md" : ""
+                  }`}
+                >
+                  <PaginationLink onClick={() => handlePageClick(page)}>
+                    {page}
+                  </PaginationLink>
+                </PaginationItem>
+              );
+            })
+          : null}
 
-        {[...Array(totalPages)].map((_, index) => {
-          const page = index + 1;
-          return (
-            <PaginationItem
-              key={page}
-              className={`cursor-pointer ${
-                page === currentPage ? "bg-primary rounded-md" : ""
-              }`}
-            >
-              <PaginationLink onClick={() => handlePageClick(page)}>
-                {page}
-              </PaginationLink>
-            </PaginationItem>
-          );
-        })}
         {totalPages > 0 && (
           <PaginationItem>
             <PaginationNext

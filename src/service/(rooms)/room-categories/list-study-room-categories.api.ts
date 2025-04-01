@@ -38,7 +38,7 @@ export async function listRoomCategoriesApi(
 export const useStudyListRoomCategories = (
   query: ListRoomCategoriesQuerySchema = {}
 ) => {
-  const queryKey = ["room-categories"];
+  const queryKey = ["room-categories", query];
 
   return queryOptions<ListRoomCategoriesResponseSchema>({
     queryKey,
@@ -63,14 +63,14 @@ export const useListStudyRoomCategoriesInfinite = () => {
     // getNextPageParam
     getNextPageParam: (lastPage) => {
       const nextPage = lastPage.page + 1;
-			return nextPage > lastPage.totalPages ? undefined : nextPage;
+      return nextPage > lastPage.totalPages ? undefined : nextPage;
     },
-		// getPreviousPageParam
-		getPreviousPageParam: (firstPage) => {
-			const previousPage = firstPage.page - 1;
-			return previousPage < 1 ? undefined : previousPage;
-		},
-		// select
+    // getPreviousPageParam
+    getPreviousPageParam: (firstPage) => {
+      const previousPage = firstPage.page - 1;
+      return previousPage < 1 ? undefined : previousPage;
+    },
+    // select
     select: (data) => ({
       totalItems: data.pages[0]?.totalItems || 0,
       totalPages: data.pages[0]?.totalPages || 0,
