@@ -72,7 +72,7 @@ const PreferencesScreen = () => {
     return selectedPreferences.includes(id);
   };
 
-  return !state.isCheckPreferences && open ? (
+  return state.isCheckPreferences && open ? (
     <div className="fixed inset-0 z-50 bg-black/20 flex justify-center items-center">
       <div className="md:max-w-3xl rounded-lg w-full p-6 bg-background shadow-lg flex flex-col space-y-6">
         <div className="flex justify-between items-center">

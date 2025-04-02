@@ -21,8 +21,10 @@ import { useAuthContext } from "@/hooks/useAuthContext";
 import HeaderStats from "./components/header-stats";
 import HeaderMobileMenu from "./components/header-mobile-menu";
 import AvatarCustom from "../avatar/AvatarCustom";
+import { useOnlineWebSocket } from "@/contexts/OnlineWebSocketContext";
 
 const Header = () => {
+  const { disconnectOnlineSocket } = useOnlineWebSocket();
   const [openModal, setOpenModal] = useState<boolean>(false);
   const logoutMutation = useLogoutMutation();
   const router = useRouter();
@@ -39,18 +41,14 @@ const Header = () => {
       {},
       {
         onSuccess: () => {
+          disconnectOnlineSocket();
+          dispatch({ type: "SET_USER", payload: null });
           router.push("/login");
           toast.success("Logged out successfully");
         },
       }
     );
   };
-
-  useEffect(() => {
-    if (currentUser) {
-      dispatch({ type: "SET_USER", payload: currentUser });
-    }
-  }, [currentUser]);
 
   return (
     <header className="w-full px-4 py-2 bg-white dark:bg-background max-h-14 h-14 sticky top-0 border-b border-gray-200 shadow-sm z-[40]">
@@ -74,7 +72,10 @@ const Header = () => {
               onOpenChange={setOpenModal}
             >
               <DropdownMenuTrigger>
-                <AvatarCustom src={currentUser?.avatar} className="w-9 h-9 cursor-pointer"/>
+                <AvatarCustom
+                  src={currentUser?.avatar}
+                  className="w-9 h-9 cursor-pointer"
+                />
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56">
                 <DropdownMenuLabel>

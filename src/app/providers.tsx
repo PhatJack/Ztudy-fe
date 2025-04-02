@@ -9,6 +9,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ChatProvider } from "@/contexts/ChatContext";
 import { WebSocketProvider } from "@/contexts/WebSocketContext";
+import { OnlineWebSocketProvider } from "@/contexts/OnlineWebSocketContext";
 
 const queryClient = getQueryClient();
 
@@ -26,13 +27,15 @@ export default function Providers({
     >
       <QueryClientProvider client={queryClient}>
         <NextTopLoader color="hsl(150 30% 45%)" zIndex={9999} />
-        <AuthProvider>
-          <ChatProvider>
-            <WebSocketProvider>
-              <TooltipProvider>{children}</TooltipProvider>
-            </WebSocketProvider>
-          </ChatProvider>
-        </AuthProvider>
+        <OnlineWebSocketProvider>
+          <AuthProvider>
+            <ChatProvider>
+              <WebSocketProvider>
+                <TooltipProvider>{children}</TooltipProvider>
+              </WebSocketProvider>
+            </ChatProvider>
+          </AuthProvider>
+        </OnlineWebSocketProvider>
         <Toaster />
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>

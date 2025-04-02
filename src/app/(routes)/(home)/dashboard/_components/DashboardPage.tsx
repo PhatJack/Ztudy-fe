@@ -8,8 +8,10 @@ import { createGetCurrentUserInformationQueryOptions } from "@/service/(current-
 import TodoContainer from "./TodoContainer";
 import { Button } from "@/components/ui/button";
 import { Users } from "lucide-react";
+import { useOnlineWebSocket } from "@/contexts/OnlineWebSocketContext";
 
 const DashboardPage = () => {
+  const { onlineCount } = useOnlineWebSocket();
   const [openCommunity, setOpenCommunity] = useState(false);
 
   const handleOpenCommunity = () => {
@@ -37,10 +39,11 @@ const DashboardPage = () => {
               </div>
             </div>
             <div className="w-full xl:w-fit flex justify-between items-center">
-              <div className="flex items-center space-x-1 w-fit px-2 py-1 rounded-full bg-white text-sm">
+              <div className="flex items-center space-x-1 w-fit px-2 py-1 rounded-full bg-background text-sm">
                 <span className="size-2 bg-emerald-400 animate-pulse-custom rounded-full"></span>
                 <span>
-                  <strong>22472</strong> online
+                  <strong>{onlineCount}</strong>
+                  <span> online</span>
                 </span>
               </div>
               <div className="xl:hidden block">

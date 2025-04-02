@@ -13,7 +13,6 @@ import toast from "react-hot-toast";
 
 // WebSocket context type
 interface WebSocketContextProps {
-  connectOnlineSocket: () => void;
   connectChatSocket: (roomCode: string) => void;
   disconnectChatSocket: () => void;
   sendTypingStatus: (isTyping: boolean) => void;
@@ -47,32 +46,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
   } = useChatContext();
 
   // Use refs for WebSockets to prevent re-renders
-  const onlineSocketRef = useRef<WebSocket | null>(null);
   const chatSocketRef = useRef<WebSocket | null>(null);
-
-  // Connect online status socket
-  const connectOnlineSocket = useCallback(() => {
-    if (!onlineSocketRef.current) {
-      const ws = new WebSocket(
-        `${process.env.NEXT_PUBLIC_WEBSOCKET_URL}/online/`
-      );
-      onlineSocketRef.current = ws;
-
-      ws.onopen = () => {
-        console.log("Online WebSocket Connected");
-      };
-
-      ws.onclose = () => {
-        console.log("Online WebSocket Disconnected");
-        onlineSocketRef.current = null;
-      };
-
-      ws.onerror = (error) => {
-        console.error("Online WebSocket Error:", error);
-        onlineSocketRef.current = null;
-      };
-    }
-  }, []);
 
   // Handle message
   const handleMessage = useCallback(
@@ -256,11 +230,6 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
   // Cleanup WebSockets on unmount
   useEffect(() => {
     return () => {
-      if (onlineSocketRef.current) {
-        onlineSocketRef.current.close();
-        onlineSocketRef.current = null;
-      }
-
       if (chatSocketRef.current) {
         chatSocketRef.current.close();
         chatSocketRef.current = null;
@@ -271,19 +240,12 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
   // Memoize context value to prevent unnecessary re-renders
   const value = useMemo(
     () => ({
-      connectOnlineSocket,
       connectChatSocket,
       disconnectChatSocket,
       sendTypingStatus,
       chatSocketRef,
     }),
-    [
-      connectOnlineSocket,
-      connectChatSocket,
-      disconnectChatSocket,
-      sendTypingStatus,
-      chatSocketRef,
-    ]
+    [connectChatSocket, disconnectChatSocket, sendTypingStatus, chatSocketRef]
   );
 
   return (

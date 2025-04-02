@@ -4,7 +4,7 @@ import {
   getCurrentUserInformationApi,
 } from "@/service/(current-user)/get-current-user-information.api";
 import { createContext, Dispatch, useEffect, useMemo, useReducer } from "react";
-import { getCookie } from "cookies-next";
+import { useOnlineWebSocket } from "./OnlineWebSocketContext";
 
 export interface InitialAuthState {
   user: CurrentUserResponseSchema | null;
@@ -46,6 +46,7 @@ export const soloReducer = (
 };
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  const { connectOnlineSocket } = useOnlineWebSocket();
   const [state, dispatch] = useReducer(soloReducer, initialState);
 
   useEffect(() => {
@@ -53,9 +54,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const res = await getCurrentUserInformationApi();
       if (res) {
         dispatch({ type: "SET_USER", payload: res });
+				connectOnlineSocket();
       }
     };
-    if (getCookie("access_token")) getUser();
+    getUser();
   }, []);
 
   const value = useMemo(() => ({ state, dispatch }), [state]);

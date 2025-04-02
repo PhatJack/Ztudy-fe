@@ -26,8 +26,10 @@ import { Eye, EyeOff } from "lucide-react";
 import LoadingSpinner from "@/components/loading/loading-spinner";
 import { checkPreferencesApi } from "@/service/(users)/check-preferences.api";
 import { useAuthContext } from "@/hooks/useAuthContext";
+import { useOnlineWebSocket } from "@/contexts/OnlineWebSocketContext";
 
 export function LoginForm() {
+  const { connectOnlineSocket } = useOnlineWebSocket();
   const [state, dispatch] = useAuthContext();
   const [isShowingPassword, setIsShowingPassword] = useState<boolean>(false);
   const loginForm = useForm<LoginBodySchema>({
@@ -45,14 +47,13 @@ export function LoginForm() {
         try {
           const res = await checkPreferencesApi(data.user.id);
           if (res.status == 200) {
-            dispatch({ type: "CHECK_PREFERENCES", payload: true });
+            dispatch({ type: "CHECK_PREFERENCES", payload: false });
           }
           console.log(state.isCheckPreferences);
         } catch (error) {
-          dispatch({ type: "CHECK_PREFERENCES", payload: false });
-        } finally {
-          dispatch({ type: "CHECK_PREFERENCES", payload: false });
+          dispatch({ type: "CHECK_PREFERENCES", payload: true });
         }
+        connectOnlineSocket();
         router.push("/dashboard");
         toast.success("Login successful");
       },
