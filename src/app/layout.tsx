@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./theme-toggle.css";
 import { Nunito } from "next/font/google";
 import Providers from "./providers";
 

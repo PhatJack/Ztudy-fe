@@ -22,7 +22,7 @@ export default function Providers({
       attribute="class"
       defaultTheme="system"
       enableSystem
-      disableTransitionOnChange
+      // disableTransitionOnChange
     >
       <QueryClientProvider client={queryClient}>
         <NextTopLoader color="hsl(150 30% 45%)" zIndex={9999} />
