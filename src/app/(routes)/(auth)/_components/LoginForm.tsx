@@ -28,7 +28,7 @@ import { checkPreferencesApi } from "@/service/(users)/check-preferences.api";
 import { useAuthContext } from "@/hooks/useAuthContext";
 
 export function LoginForm() {
-  const [, dispatch] = useAuthContext();
+  const [state, dispatch] = useAuthContext();
   const [isShowingPassword, setIsShowingPassword] = useState<boolean>(false);
   const loginForm = useForm<LoginBodySchema>({
     defaultValues: {
@@ -44,13 +44,14 @@ export function LoginForm() {
       onSuccess: async (data) => {
         try {
           const res = await checkPreferencesApi(data.user.id);
-          if (res.status == 400) {
-            dispatch({ type: "CHECK_PREFERENCES", payload: false });
-          } else {
+          if (res.status == 200) {
             dispatch({ type: "CHECK_PREFERENCES", payload: true });
           }
+          console.log(state.isCheckPreferences);
         } catch (error) {
-          console.error("Error checking preferences:", error);
+          dispatch({ type: "CHECK_PREFERENCES", payload: false });
+        } finally {
+          dispatch({ type: "CHECK_PREFERENCES", payload: false });
         }
         router.push("/dashboard");
         toast.success("Login successful");

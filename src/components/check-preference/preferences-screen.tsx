@@ -1,13 +1,11 @@
 "use client";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import {
-  useListStudyRoomCategoriesInfinite,
   useStudyListRoomCategories,
 } from "@/service/(rooms)/room-categories/list-study-room-categories.api";
-import { checkPreferencesApi } from "@/service/(users)/check-preferences.api";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import LoadingSpinner from "../loading/loading-spinner";
 import { useForm } from "react-hook-form";
 import { AddInterestsBodySchema } from "@/service/(users)/add-interests.api";
@@ -74,9 +72,9 @@ const PreferencesScreen = () => {
     return selectedPreferences.includes(id);
   };
 
-  return state.isCheckPreferences && open ? (
+  return !state.isCheckPreferences && open ? (
     <div className="fixed inset-0 z-50 bg-black/20 flex justify-center items-center">
-      <div className="md:max-w-3xl rounded-lg w-full p-6 bg-white shadow-lg flex flex-col space-y-6">
+      <div className="md:max-w-3xl rounded-lg w-full p-6 bg-background shadow-lg flex flex-col space-y-6">
         <div className="flex justify-between items-center">
           <Link
             href="#"
