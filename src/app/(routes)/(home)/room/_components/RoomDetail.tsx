@@ -15,10 +15,16 @@ import { joinRoomApi } from "@/service/(rooms)/room/join-room.api";
 import LoadingSpinner from "@/components/loading/loading-spinner";
 import LeaveRoomButton from "./LeaveRoomButton";
 import MainScreen from "./MainScreen";
+import dynamic from "next/dynamic";
 
 interface Props {
   roomCode: string;
 }
+
+const PendingScreenDynamic = dynamic(
+  () => import("./PendingScreen").then((mod) => mod.default),
+  { ssr: false }
+);
 
 const RoomDetail = ({ roomCode }: Props) => {
   const [loading, setLoading] = useState<boolean>(true);
@@ -95,7 +101,7 @@ const RoomDetail = ({ roomCode }: Props) => {
   }
   if (isPending) {
     return (
-      <PendingScreen
+      <PendingScreenDynamic
         cameraEnabled={cameraEnabled}
         micEnabled={micEnabled}
         setCameraEnabled={setCameraEnabled}

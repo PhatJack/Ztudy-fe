@@ -1,7 +1,8 @@
-import React from "react";
-import ChangePassword from "./ChangePassword";
-import ProfileBlock from "./ProfileBlock";
-import MonthlyLevel from "./MonthlyLevel";
+import dynamic from "next/dynamic";
+
+const ProfileBlock = dynamic(() => import("./ProfileBlock"));
+const ChangePassword = dynamic(() => import("./ChangePassword"));
+const MonthlyLevel = dynamic(() => import("./MonthlyLevel"));
 
 const ProfilePage = () => {
   return (

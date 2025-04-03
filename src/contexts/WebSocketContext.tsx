@@ -1,6 +1,7 @@
 "use client";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { useChatContext } from "@/hooks/useChatContext";
+import { useRouter } from "nextjs-toploader/app";
 import React, {
   createContext,
   useContext,
@@ -32,6 +33,7 @@ interface WebSocketProviderProps {
 export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
   children,
 }) => {
+  const router = useRouter();
   const [stateAuth] = useAuthContext();
   const {
     setMessages,
@@ -119,7 +121,9 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
           break;
 
         case "user_rejected":
+          setIsPending(false);
           setCurrentRoom(null);
+          router.push("/room");
           if (chatSocketRef.current) {
             chatSocketRef.current.close();
             chatSocketRef.current = null;

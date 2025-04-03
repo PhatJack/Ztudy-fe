@@ -1,24 +1,27 @@
 /** @type {import('next').NextConfig} */
+import bundleAnalyzer  from '@next/bundle-analyzer'
 const nextConfig = {
 	images: {
 		remotePatterns: [
-			// https://res.cloudinary.com/study-together/image/upload/v1633660000/ztudy/1-1.png
 			{
 				protocol: "https",
 				port: "",
 				pathname: "/**",
-				hostname: "res.cloudinary.com"
+				hostname: "res.cloudinary.com",
 			},
-			// https://study-together-static-prod.st-static.com/solo-thumbnails/1-1.png
 			{
 				protocol: "https",
 				port: "",
 				pathname: "/**",
-				hostname: "study-together-static-prod.st-static.com"
-			}
-		]
+				hostname: "study-together-static-prod.st-static.com",
+			},
+		],
 	},
-	reactStrictMode: false
+	reactStrictMode: false,
 };
 
-export default nextConfig;
+const withBundleAnalyzer = bundleAnalyzer({
+	enabled: process.env.ANALYZE === 'true',
+});
+
+export default withBundleAnalyzer(nextConfig);

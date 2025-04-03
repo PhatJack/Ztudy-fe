@@ -13,13 +13,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  loginBodySchema,
-  LoginBodySchema,
-  useLoginMutation,
-} from "@/service/(auth)/login.api";
+import { LoginBodySchema, useLoginMutation } from "@/service/(auth)/login.api";
 import toast from "react-hot-toast";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "nextjs-toploader/app";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
@@ -37,7 +32,6 @@ export function LoginForm() {
       email: "",
       password: "",
     },
-    resolver: zodResolver(loginBodySchema),
   });
   const router = useRouter();
   const loginMutation = useLoginMutation();
@@ -105,6 +99,7 @@ export function LoginForm() {
                 <FormLabel>Email</FormLabel>
                 <FormControl>
                   <Input
+                    type="email"
                     placeholder="Enter your email"
                     {...field}
                     disabled={loginMutation.isPending}

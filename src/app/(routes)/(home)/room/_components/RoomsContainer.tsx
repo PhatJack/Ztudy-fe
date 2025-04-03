@@ -38,7 +38,6 @@ const RoomsContainer = () => {
   const handleJoinRoom = (roomCode: string) => {
     joinRoomMutation.mutate(roomCode.trim(), {
       onSuccess: (data) => {
-        console.log(data);
         if (data.status === 202) {
           setIsPending(true);
         }
@@ -53,7 +52,6 @@ const RoomsContainer = () => {
   const handleJoinRandomRoom = () => {
     joinRandomRoomMutation.mutate(undefined, {
       onSuccess: (data) => {
-        console.log(data);
         if (data.status === 202) {
           setIsPending(true);
         }
