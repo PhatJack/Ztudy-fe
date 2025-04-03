@@ -84,14 +84,6 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
           break;
 
         case "user_left":
-          const isPending = pendingRequests.find(
-            (user) => user.user.id == data.user.id
-          );
-          if (isPending) {
-            setPendingRequests((prev) =>
-              prev.filter((user) => user.user.id !== data.user.id)
-            );
-          }
           setParticipants((prev) =>
             prev.filter((user) => user.user.id !== data.user.id)
           );
