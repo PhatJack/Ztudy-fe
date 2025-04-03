@@ -69,7 +69,7 @@ const initialState: InitialState = {
     author: "Will Rogers",
   },
   volume: 0,
-  backgroundURL: "https://www.youtube.com/watch?v=MqTXAubXVls",
+  backgroundURL: "https://www.youtube.com/watch?v=oIK0XHuMh64&list=RDoIK0XHuMh64",
   isAddYtbScript: false,
   activeSounds: [],
 };

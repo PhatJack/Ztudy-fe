@@ -119,22 +119,28 @@ const Pomodoro: React.FC = () => {
           </div>
         </div>
       ) : null}
-      <div className="flex items-center space-x-2 !mt-4">
-        <Switch
-          id="loop-mode"
-          className="data-[state=unchecked]:bg-gray-500"
-          checked={isLoopMode}
-          onCheckedChange={setIsLoopMode}
-        />
-        <Label htmlFor="loop-mode">Loop automatically</Label>
-      </div>
+      {!isRunning ? (
+        <div className="flex items-center space-x-2 !mt-4">
+          <Switch
+            id="loop-mode"
+            className="data-[state=unchecked]:bg-gray-500"
+            checked={isLoopMode}
+            onCheckedChange={setIsLoopMode}
+          />
+          <Label htmlFor="loop-mode">Loop automatically</Label>
+        </div>
+      ) : null}
       <div className="!mt-2 flex flex-col gap-2">
-        <div className="text-center font-bold">
-          {isFocusMode ? "Focus Time" : "Break Time"}
-        </div>
-        <div className="text-center text-3xl font-bold">
-          {hours}:{minutes}:{seconds}
-        </div>
+        {isRunning ? (
+          <div className="mt-4">
+            <div className="text-center text-sm font-bold">
+              {isFocusMode ? "Focus Time" : "Break Time"}
+            </div>
+            <div className="text-center text-3xl font-bold">
+              {hours}:{minutes}:{seconds}
+            </div>
+          </div>
+        ) : null}
         <Button className="font-semibold" onClick={toggleTimer}>
           {isRunning ? "Pause" : "Start"} timer
         </Button>

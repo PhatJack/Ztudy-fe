@@ -8,7 +8,7 @@ import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useSoloContext } from "@/hooks/useSoloContext";
-import { createGetCurrentUserInformationQueryOptions } from "@/service/(current-user)/get-current-user-information.api";
+import { createGetCurrentUserInformationQuery } from "@/service/(current-user)/get-current-user-information.api";
 import {
   CreateGoalBodySchema,
   useCreateGoalMutation,
@@ -22,7 +22,7 @@ import toast from "react-hot-toast";
 
 const SessionGoal = () => {
   const currentUserQuery = useQuery(
-    createGetCurrentUserInformationQueryOptions()
+    createGetCurrentUserInformationQuery()
   );
   const userId = currentUserQuery.data?.id;
   const createGoalMutation = useCreateGoalMutation();

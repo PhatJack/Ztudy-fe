@@ -18,7 +18,7 @@
 
 
 /* circle-blur-top-left */
-/* ::view-transition-group(root) {
+::view-transition-group(root) {
 	animation-timing-function: var(--expo-out);
 }
 
@@ -40,8 +40,8 @@
 	to {
 		mask-size: 350vmax;
 	}
-} */
-
+}
+/* 
 ::view-transition-group(root) {
   animation-timing-function: var(--expo-in);
 }
@@ -69,4 +69,4 @@
   100% {
     mask-size: 2000vmax;
   }
-}
+} */

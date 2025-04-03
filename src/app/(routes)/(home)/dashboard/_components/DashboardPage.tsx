@@ -1,10 +1,9 @@
 "use client";
-import React, { Suspense, useState } from "react";
+import React, { useState } from "react";
 import ZtudyCommunity from "./ZtudyCommunity";
-import LoadingSpinner from "@/components/loading/loading-spinner";
 import AvatarCustom from "@/components/avatar/AvatarCustom";
 import { useQuery } from "@tanstack/react-query";
-import { createGetCurrentUserInformationQueryOptions } from "@/service/(current-user)/get-current-user-information.api";
+import { createGetCurrentUserInformationQuery } from "@/service/(current-user)/get-current-user-information.api";
 import TodoContainer from "./TodoContainer";
 import { Button } from "@/components/ui/button";
 import { Users } from "lucide-react";
@@ -17,7 +16,7 @@ const DashboardPage = () => {
   const handleOpenCommunity = () => {
     setOpenCommunity((prev) => !prev);
   };
-  const userQuery = useQuery(createGetCurrentUserInformationQueryOptions());
+  const userQuery = useQuery(createGetCurrentUserInformationQuery());
 
   return (
     <div className="relative flex h-full xl:h-[calc(100vh-3rem-0.5rem)] overflow-hidden">
@@ -65,15 +64,7 @@ const DashboardPage = () => {
                 <h5 className="font-medium p-2 bg-muted/40 border-y border-border text-sm text-muted-foreground">
                   Ztudy Community
                 </h5>
-                <Suspense
-                  fallback={
-                    <div className="h-full w-full flex justify-center items-center">
-                      <LoadingSpinner />
-                    </div>
-                  }
-                >
-                  <ZtudyCommunity />
-                </Suspense>
+                <ZtudyCommunity />
               </div>
             )}
           </div>

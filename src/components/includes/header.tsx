@@ -14,7 +14,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useRouter } from "nextjs-toploader/app";
 import { useQuery } from "@tanstack/react-query";
-import { createGetCurrentUserInformationQueryOptions } from "@/service/(current-user)/get-current-user-information.api";
+import { createGetCurrentUserInformationQuery } from "@/service/(current-user)/get-current-user-information.api";
 import toast from "react-hot-toast";
 import { useLogoutMutation } from "@/service/(auth)/logout.api";
 import { useAuthContext } from "@/hooks/useAuthContext";
@@ -31,7 +31,7 @@ const Header = () => {
   const [, dispatch] = useAuthContext();
 
   const currentUserQuery = useQuery(
-    createGetCurrentUserInformationQueryOptions()
+    createGetCurrentUserInformationQuery()
   );
 
   const currentUser = currentUserQuery.data;

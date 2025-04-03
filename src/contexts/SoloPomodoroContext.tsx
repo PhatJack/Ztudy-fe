@@ -104,7 +104,6 @@ export const SoloPomodoroProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const [state, dispatch] = useReducer(pomodoroReducer, initialState);
-  const workerRef = useRef<Worker | null>(null);
 
   const formatTime = (timeInSeconds: number): FormattedTime => {
     const hours = Math.floor(timeInSeconds / 3600);
@@ -140,24 +139,19 @@ export const SoloPomodoroProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const toggleTimer = useCallback((): void => {
     dispatch({ type: "SET_IS_RUNNING", payload: !state.isRunning });
-    //send message to worker to start or stop timer
-    workerRef.current?.postMessage({
-      isRunning: !state.isRunning,
-      remainingTime: state.remainingTime,
-    });
-  }, [state.isRunning, state.remainingTime]);
+  }, [state.isRunning]);
 
   const resetTimer = useCallback((): void => {
     dispatch({ type: "RESET_TIMER" });
-    workerRef.current?.postMessage("stop");
   }, []);
 
   const switchMode = useCallback((): void => {
     const newIsFocusMode = !state.isFocusMode;
+    const newTime = newIsFocusMode ? state.focusTime : state.breakTime;
     dispatch({ type: "SET_IS_FOCUS_MODE", payload: newIsFocusMode });
     dispatch({
       type: "SET_REMAINING_TIME",
-      payload: newIsFocusMode ? state.focusTime : state.breakTime,
+      payload: newTime,
     });
   }, [state.isFocusMode, state.breakTime, state.focusTime]);
 
@@ -166,32 +160,50 @@ export const SoloPomodoroProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   useEffect(() => {
-    workerRef.current = new Worker(
-      new URL("../lib/workers/timer.worker.js", import.meta.url)
-    );
-    workerRef.current.onmessage = (event) => {
-      if (event.data.finished) {
-        const audio = new Audio("/notification.mp3");
-        audio
-          .play()
-          .catch(() => console.warn("Failed to play notification sound"));
+    let interval: NodeJS.Timeout | undefined;
 
-        if (state.isLoopMode) {
-          switchMode();
-        } else {
-          dispatch({ type: "SET_IS_RUNNING", payload: false });
-        }
-      } else {
+    if (state.isRunning && state.remainingTime > 0) {
+      interval = setInterval(() => {
         dispatch({
           type: "SET_REMAINING_TIME",
-          payload: event.data.remainingTime,
+          payload: state.remainingTime - 1,
         });
+      }, 1000);
+    } else if (state.remainingTime === 0) {
+      try {
+        const audio = new Audio("/notification.mp3");
+        audio.play().catch((error) => {
+          console.warn("Failed to play notification sound:", error);
+        });
+      } catch (error) {
+        console.warn("Error creating Audio object:", error);
+      }
+
+      if (state.isLoopMode) {
+        // Nếu bật loop, tiếp tục chuyển đổi giữa focus và break
+        switchMode();
+      } else if (state.isFocusMode) {
+        // Nếu không loop và đang ở focus, chuyển sang break
+        switchMode();
+      } else {
+        // Nếu không loop và đang ở break, dừng timer
+        dispatch({ type: "SET_IS_RUNNING", payload: false });
+        dispatch({ type: "SET_REMAINING_TIME", payload: state.focusTime });
+      }
+    }
+
+    return () => {
+      if (interval) {
+        clearInterval(interval);
       }
     };
-    return () => {
-      workerRef.current?.terminate();
-    };
-  }, [state.isLoopMode, switchMode]);
+  }, [
+    state.isLoopMode,
+    switchMode,
+    state.isRunning,
+    state.remainingTime,
+    state.isFocusMode,
+  ]);
 
   // Display timer in title
   useEffect(() => {
