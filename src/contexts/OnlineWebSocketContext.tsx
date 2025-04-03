@@ -40,9 +40,7 @@ export const OnlineWebSocketProvider: React.FC<
       console.log(data);
       switch (data.type) {
         case "online_count":
-          // updateOnlineCount(data.online_count);
           setOnlineCount(data.online_count);
-          console.log(`Số người online hiện tại: ${data.online_count}`);
           break;
         case "send_achievement":
           console.log(`Cập nhật level mới: ${data.level}`);
@@ -52,7 +50,7 @@ export const OnlineWebSocketProvider: React.FC<
           break;
       }
     },
-    [onlineCount, setOnlineCount]
+    [setOnlineCount]
   );
   // Connect online status socket
   const connectOnlineSocket = useCallback(() => {
@@ -105,7 +103,7 @@ export const OnlineWebSocketProvider: React.FC<
       onlineCount,
       setOnlineCount,
     }),
-    [connectOnlineSocket, disconnectOnlineSocket]
+    [connectOnlineSocket, disconnectOnlineSocket, onlineCount, setOnlineCount]
   );
 
   return (

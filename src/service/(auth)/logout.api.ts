@@ -6,7 +6,7 @@ export async function logoutApi(body: any): Promise<void> {
   await apiClient.post("/auth/logout/", body);
 }
 
-export function useLogoutMutation(body?: any) {
+export function useLogoutMutation(body: object = {}) {
   const queryClient = getQueryClient();
 
   return useMutation<any, void, any>({

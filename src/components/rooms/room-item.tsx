@@ -1,7 +1,7 @@
 import { RoomSchema } from "@/lib/schemas/room/room.schema";
 import React from "react";
 import { Badge } from "../ui/badge";
-import { PlusSquareIcon, User2 } from "lucide-react";
+import {  User2 } from "lucide-react";
 interface Props {
   room: RoomSchema;
   handleJoinRoom: () => void;

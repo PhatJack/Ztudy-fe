@@ -190,9 +190,8 @@ export const SoloPomodoroProvider: React.FC<{ children: React.ReactNode }> = ({
     };
     return () => {
       workerRef.current?.terminate();
-      console.log("Worker terminated");
     };
-  }, [state.isLoopMode]);
+  }, [state.isLoopMode, switchMode]);
 
   // Display timer in title
   useEffect(() => {

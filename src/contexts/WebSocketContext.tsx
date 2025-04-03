@@ -148,7 +148,6 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
       }
     },
     [
-      chatSocketRef.current,
       stateAuth.user?.id,
       addTypingUser,
       removeTypingUser,

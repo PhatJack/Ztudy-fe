@@ -2,7 +2,7 @@ import LoadingSpinner from "@/components/loading/loading-spinner";
 import CameraDisplay from "@/components/rooms/camera/CameraDisplay";
 import TooltipTemplate from "@/components/tooltip/TooltipTemplate";
 import { Button } from "@/components/ui/button";
-import { useLeaveRoomMutation } from "@/service/(rooms)/room/leave-room.api";
+import { useCancelRequestMutation } from "@/service/(rooms)/request/request.api";
 import { Camera, CameraOff, Mic, MicOff } from "lucide-react";
 import React from "react";
 
@@ -22,7 +22,7 @@ const PendingScreen = ({
   handleCancelRequest,
   roomCode,
 }: PendingScreenProps) => {
-  const leaveRoomMutation = useLeaveRoomMutation();
+  const leaveRoomMutation = useCancelRequestMutation();
 
   const onClick = () => {
     leaveRoomMutation.mutate(roomCode, {
