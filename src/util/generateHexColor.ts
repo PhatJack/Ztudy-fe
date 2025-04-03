@@ -1,5 +1,5 @@
 export function generateSoftHexColor() : string {
-	// Soft color range (higher than 100 to avoid very dark colors, lower than 230 to avoid very bright colors)
+	// Tông màu nhẹ (higher than 100 to avoid very dark colors, lower than 230 to avoid very bright colors)
 	const min = 100;
 	const max = 230;
 

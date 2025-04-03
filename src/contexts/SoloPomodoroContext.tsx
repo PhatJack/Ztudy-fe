@@ -4,7 +4,6 @@ import React, {
   useCallback,
   useEffect,
   useReducer,
-  useRef,
 } from "react";
 
 // Types
@@ -13,7 +12,7 @@ interface FormattedTime {
   minutes: string;
   seconds: string;
 }
-
+// định nghĩa type TimerMode và TimeOperation
 type TimerMode = "focus" | "break";
 type TimeOperation = "add" | "subtract";
 
@@ -198,6 +197,7 @@ export const SoloPomodoroProvider: React.FC<{ children: React.ReactNode }> = ({
       }
     };
   }, [
+    state.focusTime,
     state.isLoopMode,
     switchMode,
     state.isRunning,

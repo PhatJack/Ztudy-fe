@@ -58,7 +58,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       }
     };
     getUser();
-  }, []);
+  }, [connectOnlineSocket]);
 
   const value = useMemo(() => ({ state, dispatch }), [state]);
 

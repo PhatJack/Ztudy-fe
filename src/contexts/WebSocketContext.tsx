@@ -154,6 +154,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
       setIsAdmin,
       setIsPending,
       pendingRequests,
+			router
     ]
   );
 
