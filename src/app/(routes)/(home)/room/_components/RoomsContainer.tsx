@@ -16,36 +16,6 @@ import { useJoinRandomRoomMutation } from "@/service/(rooms)/room/join-random-ro
 import JoinRandomRoomButton from "./JoinRandomRoomButton";
 import { useAuthContext } from "@/hooks/useAuthContext";
 
-const RoomList = ({
-  rooms,
-  isLoading,
-  handleJoinRoom,
-}: {
-  rooms: any[];
-  isLoading: boolean;
-  handleJoinRoom: (code: string) => void;
-}) => {
-  if (isLoading) {
-    return <LoadingSpinner className="col-span-5" />;
-  }
-
-  if (rooms.length === 0) {
-    return <p>No rooms available.</p>;
-  }
-
-  return (
-    <>
-      {rooms.map((room, index) => (
-        <RoomItem
-          key={index}
-          room={room}
-          handleJoinRoom={() => handleJoinRoom(room.code_invite)}
-        />
-      ))}
-    </>
-  );
-};
-
 const RoomsContainer = () => {
   const { connectChatSocket } = useRoomWebSocket();
   const { setIsPending, setCurrentRoom, setIsAdmin } = useChatContext();
@@ -115,31 +85,59 @@ const RoomsContainer = () => {
         <h2 className="text-xl font-bold uppercase">Your Rooms</h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 gap-4">
           <AddNewRoomModal />
-          <RoomList
-            rooms={yourRooms}
-            isLoading={isLoadingYourRooms}
-            handleJoinRoom={handleJoinRoom}
-          />
+          {isLoadingYourRooms ? (
+            <LoadingSpinner className="col-span-5" />
+          ) : yourRooms.length === 0 ? (
+            <p></p>
+          ) : (
+            <>
+              {yourRooms.map((room, index) => (
+                <RoomItem
+                  key={index}
+                  room={room}
+                  handleJoinRoom={() => handleJoinRoom(room.code_invite)}
+                />
+              ))}
+            </>
+          )}
         </div>
       </div>
       <div className="space-y-2">
         <h2 className="text-xl font-bold uppercase">Suggested Rooms</h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 gap-4">
-          <RoomList
-            rooms={suggestedRooms}
-            isLoading={isLoadingSuggested}
-            handleJoinRoom={handleJoinRoom}
-          />
+          {isLoadingSuggested ? (
+            <LoadingSpinner className="col-span-5" />
+          ) : suggestedRooms.length === 0 ? (
+            <p>No suggested rooms available.</p>
+          ) : (
+            <>
+              {suggestedRooms.map((room, index) => (
+                <RoomItem
+                  key={index}
+                  room={room}
+                  handleJoinRoom={() => handleJoinRoom(room.code_invite)}
+                />
+              ))}
+            </>
+          )}
         </div>
       </div>
       <div className="space-y-2">
         <h2 className="text-xl font-bold uppercase">Trending Rooms</h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 gap-4">
-          <RoomList
-            rooms={trendingRooms}
-            isLoading={isLoadingTrending}
-            handleJoinRoom={handleJoinRoom}
-          />
+          {isLoadingTrending ? (
+            <LoadingSpinner className="col-span-5" />
+          ) : trendingRooms.length === 0 ? (
+            <p>No trending rooms available.</p>
+          ) : (
+            trendingRooms.map((room, index) => (
+              <RoomItem
+                key={index}
+                room={room}
+                handleJoinRoom={() => handleJoinRoom(room.code_invite)}
+              />
+            ))
+          )}
         </div>
       </div>
     </div>

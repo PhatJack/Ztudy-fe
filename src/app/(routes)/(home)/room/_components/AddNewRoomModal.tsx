@@ -112,7 +112,7 @@ const AddNewRoomModal = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="min-w-[300px] h-auto text-lg flex-col [&_svg]:size-12 hover:bg-primary/90">
+        <Button className="min-w-[300px] min-h-[10em] h-auto text-lg flex-col [&_svg]:size-12 hover:bg-primary/90">
           <span>
             <PlusCircle />
           </span>
