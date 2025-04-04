@@ -6,6 +6,7 @@ import { useChatContext } from "@/hooks/useChatContext";
 import { useJoinRoomMutation } from "@/service/(rooms)/room/join-room.api";
 import { useListSuggestedRooms } from "@/service/(rooms)/room/list-suggested-rooms.api";
 import { useListTrendingRooms } from "@/service/(rooms)/room/list-trending-rooms.api";
+import { useListRooms } from "@/service/(rooms)/room/list-rooms.api";
 import { useQueries } from "@tanstack/react-query";
 import { useRouter } from "nextjs-toploader/app";
 import React, { useMemo } from "react";
@@ -13,26 +14,60 @@ import AddNewRoomModal from "./AddNewRoomModal";
 import JoinRoomWithCode from "./JoinRoomWithCode";
 import { useJoinRandomRoomMutation } from "@/service/(rooms)/room/join-random-room.api";
 import JoinRandomRoomButton from "./JoinRandomRoomButton";
+import { useAuthContext } from "@/hooks/useAuthContext";
+
+const RoomList = ({
+  rooms,
+  isLoading,
+  handleJoinRoom,
+}: {
+  rooms: any[];
+  isLoading: boolean;
+  handleJoinRoom: (code: string) => void;
+}) => {
+  if (isLoading) {
+    return <LoadingSpinner className="col-span-5" />;
+  }
+
+  if (rooms.length === 0) {
+    return <p>No rooms available.</p>;
+  }
+
+  return (
+    <>
+      {rooms.map((room, index) => (
+        <RoomItem
+          key={index}
+          room={room}
+          handleJoinRoom={() => handleJoinRoom(room.code_invite)}
+        />
+      ))}
+    </>
+  );
+};
 
 const RoomsContainer = () => {
   const { connectChatSocket } = useRoomWebSocket();
   const { setIsPending, setCurrentRoom, setIsAdmin } = useChatContext();
   const router = useRouter();
+  const [state] = useAuthContext();
   const joinRoomMutation = useJoinRoomMutation();
   const joinRandomRoomMutation = useJoinRandomRoomMutation();
 
-  const [suggestedRoomsQuery, trendingRoomsQuery] = useQueries({
+  const [yourRoomsQuery, suggestedRoomsQuery, trendingRoomsQuery] = useQueries({
     queries: [
+      useListRooms({ expand: "category", creator_user: state.user?.id }),
       useListSuggestedRooms({ expand: "category" }),
       useListTrendingRooms({ expand: "category" }),
     ],
   });
-  const { suggestedRooms, trendingRooms } = useMemo(
+  const { yourRooms, suggestedRooms, trendingRooms } = useMemo(
     () => ({
+      yourRooms: yourRoomsQuery.data?.results || [],
       suggestedRooms: suggestedRoomsQuery.data?.results || [],
       trendingRooms: trendingRoomsQuery.data?.results || [],
     }),
-    [suggestedRoomsQuery.data, trendingRoomsQuery.data]
+    [yourRoomsQuery.data, suggestedRoomsQuery.data, trendingRoomsQuery.data]
   );
 
   const handleJoinRoom = (roomCode: string) => {
@@ -63,60 +98,51 @@ const RoomsContainer = () => {
     });
   };
 
+  const isLoadingYourRooms = yourRoomsQuery.isLoading;
   const isLoadingSuggested = suggestedRoomsQuery.isLoading;
   const isLoadingTrending = trendingRoomsQuery.isLoading;
 
   return (
-    <>
-      <div className="flex flex-col space-y-6">
-        <div className="w-full flex justify-between items-center">
-          <div className=""></div>
-          <div className="flex items-center gap-2">
-            <JoinRandomRoomButton handleJoinRandomRoom={handleJoinRandomRoom} />
-            <JoinRoomWithCode handleJoinRoom={handleJoinRoom} />
-          </div>
-        </div>
-        <div className="space-y-2">
-          <h2 className="text-xl font-bold uppercase">Suggested Rooms</h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 gap-4">
-            {isLoadingSuggested ? (
-              <LoadingSpinner className="col-span-5" />
-            ) : suggestedRooms.length === 0 ? (
-              <p>No suggested rooms available.</p>
-            ) : (
-              <>
-                <AddNewRoomModal />
-                {suggestedRooms.map((room, index) => (
-                  <RoomItem
-                    key={index}
-                    room={room}
-                    handleJoinRoom={() => handleJoinRoom(room.code_invite)}
-                  />
-                ))}
-              </>
-            )}
-          </div>
-        </div>
-        <div className="space-y-2">
-          <h2 className="text-xl font-bold uppercase">Trending Rooms</h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 gap-4">
-            {isLoadingTrending ? (
-              <LoadingSpinner className="col-span-5" />
-            ) : trendingRooms.length === 0 ? (
-              <p>No trending rooms available.</p>
-            ) : (
-              trendingRooms.map((room, index) => (
-                <RoomItem
-                  key={index}
-                  room={room}
-                  handleJoinRoom={() => handleJoinRoom(room.code_invite)}
-                />
-              ))
-            )}
-          </div>
+    <div className="flex flex-col space-y-6">
+      <div className="w-full flex justify-between items-center">
+        <div className=""></div>
+        <div className="flex items-center gap-2">
+          <JoinRandomRoomButton handleJoinRandomRoom={handleJoinRandomRoom} />
+          <JoinRoomWithCode handleJoinRoom={handleJoinRoom} />
         </div>
       </div>
-    </>
+      <div className="space-y-2">
+        <h2 className="text-xl font-bold uppercase">Your Rooms</h2>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 gap-4">
+          <AddNewRoomModal />
+          <RoomList
+            rooms={yourRooms}
+            isLoading={isLoadingYourRooms}
+            handleJoinRoom={handleJoinRoom}
+          />
+        </div>
+      </div>
+      <div className="space-y-2">
+        <h2 className="text-xl font-bold uppercase">Suggested Rooms</h2>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 gap-4">
+          <RoomList
+            rooms={suggestedRooms}
+            isLoading={isLoadingSuggested}
+            handleJoinRoom={handleJoinRoom}
+          />
+        </div>
+      </div>
+      <div className="space-y-2">
+        <h2 className="text-xl font-bold uppercase">Trending Rooms</h2>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 gap-4">
+          <RoomList
+            rooms={trendingRooms}
+            isLoading={isLoadingTrending}
+            handleJoinRoom={handleJoinRoom}
+          />
+        </div>
+      </div>
+    </div>
   );
 };
 
