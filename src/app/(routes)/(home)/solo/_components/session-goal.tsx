@@ -58,7 +58,7 @@ const SessionGoal = () => {
   });
 
   return (
-    <div className="bg-background text-foreground p-5 rounded-md w-[267px] min-w-[267px] h-fit flex flex-col space-y-4 shadow-lg">
+    <div className="bg-background text-foreground p-5 rounded-md w-[280px] min-w-[280px] h-fit flex flex-col space-y-4 shadow-lg">
       <div className="flex justify-between items-center">
         <span className="text-xs inline-flex items-center gap-1">
           <Target size={14} />

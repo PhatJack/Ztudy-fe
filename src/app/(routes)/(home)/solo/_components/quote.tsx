@@ -33,7 +33,7 @@ const Quote = () => {
   }, [quotesQuery.data, dispatch, quote]);
 
   return (
-    <div className="w-[267px] min-w-[267px] p-5 rounded-md bg-background shadow-lg">
+    <div className="w-[280px] min-w-[280px] p-5 rounded-md bg-background shadow-lg">
       {quotesQuery.isLoading && quotesQuery.isFetching ? (
         <div className="w-full h-[100px] flex justify-center items-center">
           <LoadingSpinner />

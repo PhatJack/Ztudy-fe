@@ -43,7 +43,7 @@ const StudyStat = () => {
   const [, dispatch] = useSoloContext();
 
   return (
-    <div className="shadow-lg p-5 rounded-md bg-background w-[267px] min-w-[267px]">
+    <div className="shadow-lg p-5 rounded-md bg-background w-[280px] min-w-[280px]">
       <div className="flex justify-between items-center">
         <span className="text-xs inline-flex items-center gap-1">
           <ChartNoAxesColumn size={14} />
@@ -135,7 +135,7 @@ const StudyStat = () => {
                           }
                         : undefined
                     }
-                    className="font-bold text-sm"
+                    className="font-bold"
                   >
                     {" "}
                     {studyStats?.current_monthly_level.level &&

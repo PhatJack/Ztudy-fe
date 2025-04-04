@@ -5,6 +5,7 @@ import Pomodoro from "./pomodoro";
 import BackgroundList from "./background-list";
 import dynamic from "next/dynamic";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useOnlineWebSocket } from "@/contexts/OnlineWebSocketContext";
 
 const QuoteDynamic = dynamic(() => import("./quote"), {
   ssr: false,
@@ -32,6 +33,7 @@ const PomodoroDynamic = dynamic(() => import("./pomodoro"), {
 });
 
 const StickyContainer = () => {
+  const { onlineCount } = useOnlineWebSocket();
   const [state] = useSoloContext();
 
   return (
@@ -47,6 +49,15 @@ const StickyContainer = () => {
         {state.activePanel === "backgroundIframe" ? (
           <BackgroundListDynamic />
         ) : null}
+      </div>
+      <div className="absolute bottom-0 left-0 flex gap-6">
+        <div className="flex items-center space-x-1 w-fit px-2 py-1 rounded-full bg-background text-sm">
+          <span className="size-2 bg-emerald-400 animate-pulse-custom rounded-full"></span>
+          <span>
+            <strong>{onlineCount}</strong>
+            <span> onlines are solo stuyding</span>
+          </span>
+        </div>
       </div>
     </>
   );

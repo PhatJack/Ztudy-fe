@@ -55,7 +55,7 @@ const Header = () => {
       <div className="w-full flex justify-between items-center">
         <div className="w-full">
           <div className="md:block hidden">
-            <HeaderStats />
+            <HeaderStats user={currentUser} />
           </div>
           <div className="md:hidden block">
             <HeaderMobileMenu />
