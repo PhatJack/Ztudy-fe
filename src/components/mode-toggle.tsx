@@ -38,14 +38,14 @@ export function ModeToggle() {
       aria-label="Toggle theme"
     >
       <Sun
-        className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ease-in-out ${
+        className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 ${
           isDark
             ? "opacity-0 scale-50 rotate-90"
             : "opacity-100 scale-100 rotate-0"
         }`}
       />
       <Moon
-        className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ease-in-out ${
+        className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 ${
           isDark
             ? "opacity-100 scale-100 rotate-0"
             : "opacity-0 scale-50 -rotate-90"
