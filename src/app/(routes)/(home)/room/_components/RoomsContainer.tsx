@@ -94,6 +94,7 @@ const RoomsContainer = () => {
               {yourRooms.map((room, index) => (
                 <RoomItem
                   key={index}
+                  showType={true}
                   room={room}
                   handleJoinRoom={() => handleJoinRoom(room.code_invite)}
                 />
