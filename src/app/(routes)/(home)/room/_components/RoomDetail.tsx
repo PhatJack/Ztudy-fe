@@ -68,7 +68,7 @@ const RoomDetail = ({ roomCode }: Props) => {
         }
         setLoading(false);
         setCurrentRoom(res.data.room);
-        setIsAdmin(res.data.participant.is_admin);
+        setIsAdmin(res.data.participant.role === "ADMIN");
       } catch (error) {
         toast.error("Failed to join room.");
         router.push("/room");

@@ -8,6 +8,7 @@ import React from "react";
 import toast from "react-hot-toast";
 import TooltipTemplate from "@/components/tooltip/TooltipTemplate";
 import LeaveRoomDialog from "./LeaveRoomDialog";
+import { useChatContext } from "@/hooks/useChatContext";
 
 interface Props {
   roomCode: string;
@@ -16,6 +17,7 @@ interface Props {
 const LeaveRoomButton = ({ roomCode }: Props) => {
   const router = useRouter();
   const { disconnectChatSocket } = useRoomWebSocket();
+  const { setCurrentRoom, setIsAdmin } = useChatContext();
   const leaveRoomMutation = useLeaveRoomMutation();
   const endRoomMutation = useEndRoomMutation();
 
@@ -23,6 +25,8 @@ const LeaveRoomButton = ({ roomCode }: Props) => {
     leaveRoomMutation.mutate(roomCode, {
       onSuccess: () => {
         disconnectChatSocket();
+        setCurrentRoom(null);
+        setIsAdmin(false);
         toast.success("You have left the room.");
         router.push("/room");
       },

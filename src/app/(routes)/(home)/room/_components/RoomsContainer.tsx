@@ -50,7 +50,7 @@ const RoomsContainer = () => {
           setIsPending(true);
         }
         setCurrentRoom(data.data.room);
-        setIsAdmin(data.data.participant.is_admin);
+        setIsAdmin(data.data.participant.role == "ADMIN");
         connectChatSocket(roomCode.trim());
         router.push(`/room/${roomCode}`);
       },
