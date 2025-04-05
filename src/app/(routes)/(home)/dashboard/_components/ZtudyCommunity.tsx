@@ -26,7 +26,7 @@ const ZtudyCommunity = () => {
                 className="rounded-full w-9 h-9"
                 src={user.avatar || "/default.png"}
               />
-              {checkLastLogin(user.last_login) && (
+              {user.is_online && (
                 <span className="size-3 rounded-full bg-emerald-400 absolute right-0 bottom-0 border-2 border-white"></span>
               )}
             </div>
