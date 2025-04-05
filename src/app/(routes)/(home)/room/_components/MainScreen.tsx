@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React from "react";
 import LeaveRoomButton from "./LeaveRoomButton";
 import TooltipTemplate from "@/components/tooltip/TooltipTemplate";
@@ -9,14 +9,12 @@ import {
   Mic,
   MicOff,
   MonitorPlay,
-  PhoneCall,
 } from "lucide-react";
 
-const MainScreen = () => {
+const MainScreen = ({ roomCode }: { roomCode: string }) => {
   return (
     <div className="w-full h-full flex flex-col gap-6">
-      <div className="flex-1 p-4 rounded-lg bg-white">
-			</div>
+      <div className="flex-1 p-4 rounded-lg bg-white"></div>
       <div className="p-3 rounded-lg bg-white flex gap-6 justify-center items-center">
         <TooltipTemplate content="Camera">
           <Button
@@ -40,18 +38,7 @@ const MainScreen = () => {
             {true ? <Mic /> : <MicOff />}
           </Button>
         </TooltipTemplate>
-        <TooltipTemplate content="Leave room">
-          <Button
-            type="button"
-            size={"icon"}
-            variant={"destructive"}
-            className="rounded-full w-12 h-12 [&_svg]:size-5"
-            // variant={cameraEnabled ? "default" : "outline"}
-            // onClick={() => setCameraEnabled(!cameraEnabled)}
-          >
-            <PhoneCall className="rotate-[135deg]" />
-          </Button>
-        </TooltipTemplate>
+        <LeaveRoomButton roomCode={roomCode} />
         <TooltipTemplate content="Presentation">
           <Button
             type="button"

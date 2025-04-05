@@ -51,14 +51,6 @@ const RoomDetail = ({ roomCode }: Props) => {
     router.push("/room");
   };
 
-  const handleLeaveRoom = () => {
-    disconnectChatSocket();
-    setCurrentRoom(null);
-    setIsAdmin(false);
-    toast.success("You have left the room.");
-    router.push("/room");
-  };
-
   useEffect(() => {
     connectChatSocket(roomCode);
     return () => {
@@ -115,11 +107,7 @@ const RoomDetail = ({ roomCode }: Props) => {
   return (
     <div className="size-full flex xl:flex-row flex-col gap-4 xl:h-[calc(100vh-3rem)] overflow-hidden">
       <div className="xl:w-[75%] flex flex-col gap-6">
-        <MainScreen />
-        <LeaveRoomButton
-          handleLeaveRoom={handleLeaveRoom}
-          roomCode={roomCode}
-        />
+        <MainScreen roomCode={roomCode} />
       </div>
       <div className="xl:w-[25%] bg-white dark:bg-background h-full rounded-lg flex flex-col gap-4 overflow-hidden">
         <Tabs
