@@ -46,7 +46,7 @@ const RoomItem = ({ room, handleJoinRoom, showType = false }: Props) => {
   return (
     <div
       onClick={handleJoinRoom}
-      className="w-full h-auto rounded-xl relative p-3 overflow-hidden cursor-pointer border group"
+      className="w-full h-auto rounded-xl relative p-3 overflow-hidden cursor-pointer border group hover:border-primary/50 transition-colors"
     >
       <div className="w-full flex flex-col gap-3 h-full">
         <div
@@ -88,9 +88,17 @@ const RoomItem = ({ room, handleJoinRoom, showType = false }: Props) => {
         <div className="flex flex-col gap-2">
           <h3 className="font-medium text-base line-clamp-1">{room.name}</h3>
           <div className="flex justify-between items-center gap-3">
-            <Badge variant={"warning"}>
-              <span>{(room.category as any)?.name}</span>
-            </Badge>
+            <div className="flex-1">
+              {room.category && (room.category as any)?.name && room.category !== 0 ? (
+                <Badge variant={"warning"}>
+                  <span>{(room.category as any)?.name}</span>
+                </Badge>
+              ) : (
+                <Badge variant={"secondary"} className="bg-slate-100 text-slate-600">
+                  <span>No category</span>
+                </Badge>
+              )}
+            </div>
             <Badge className="gap-1" variant={"secondary"}>
               <User2 size={12} />
               <span>{room.max_participants}</span>

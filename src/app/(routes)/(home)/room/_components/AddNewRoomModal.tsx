@@ -41,7 +41,7 @@ import { useUploadThumbnailMutation } from "@/service/(rooms)/room/upload-thumbn
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { PlusCircle } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useInView } from "react-intersection-observer";
@@ -52,6 +52,7 @@ const AddNewRoomModal = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [state] = useAuthContext();
   const { ref, inView } = useInView();
+  const nameInputRef = useRef<HTMLInputElement>(null);
   const {
     data,
     error,
@@ -64,10 +65,11 @@ const AddNewRoomModal = () => {
   });
   const addRoomMutation = useCreateRoomMutation();
   const uploadThumbnailMutation = useUploadThumbnailMutation();
+
   const addRoomForm = useForm<CreateRoomBodySchema>({
     defaultValues: {
-      name: "",
-      category: -1,
+      name: "My room",
+      category: null,
       max_participants: 1,
       type: "PUBLIC",
       creator_user: 0,
@@ -75,12 +77,44 @@ const AddNewRoomModal = () => {
     resolver: zodResolver(createRoomBodySchema),
   });
 
+  useEffect(() => {
+    if (state?.user?.username) {
+      addRoomForm.setValue("name", `${state.user.username}'s room`);
+    }
+  }, [state?.user?.username]);
+
+  useEffect(() => {
+    if (open) {
+      const roomName = state?.user?.username
+        ? `${state.user.username}'s room`
+        : "My room";
+
+      addRoomForm.reset({
+        name: roomName,
+        category: null,
+        max_participants: 2,
+        type: "PUBLIC",
+        creator_user: 0,
+      });
+    }
+  }, [open, state?.user?.username]);
+
+  useEffect(() => {
+    if (open && nameInputRef.current) {
+      // Focus vào input
+      nameInputRef.current.focus();
+      // Select toàn bộ text
+      nameInputRef.current.select();
+    }
+  }, [open]);
+
   const onSubmit = async (data: CreateRoomBodySchema) => {
     const newData = {
       ...data,
       creator_user: state?.user?.id ?? 0,
-      category: Number(data.category),
+      category: data.category && data.category !== 0 ? Number(data.category) : null
     };
+    
     await addRoomMutation.mutateAsync(newData, {
       onSuccess: async (data) => {
         if (selectedFile) {
@@ -90,10 +124,6 @@ const AddNewRoomModal = () => {
           });
         }
         toast.success("Room created successfully");
-        addRoomForm.reset();
-        queryClient.invalidateQueries({
-          queryKey: ["rooms"],
-        });
         setOpen(false);
       },
       onError: (error) => {
@@ -112,7 +142,7 @@ const AddNewRoomModal = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="min-w-[300px] min-h-[10em] h-auto text-lg flex-col [&_svg]:size-12 hover:bg-primary/90">
+        <Button className="w-full h-full min-h-[260px] text-lg flex flex-col gap-4 [&_svg]:size-12 hover:bg-primary/90">
           <span>
             <PlusCircle />
           </span>
@@ -147,7 +177,12 @@ const AddNewRoomModal = () => {
                     <FormItem>
                       <FormLabel>Room name</FormLabel>
                       <FormControl>
-                        <Input placeholder="Enter room name" {...field} />
+                        <Input
+                          placeholder="Enter room name"
+                          {...field}
+                          onFocus={(e) => e.target.select()}
+                          autoFocus
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -158,11 +193,10 @@ const AddNewRoomModal = () => {
                   name="category"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Category</FormLabel>
+                      <FormLabel>Category (required for public rooms)</FormLabel>
                       <Select
-                        onValueChange={field.onChange}
-                        defaultValue={String(field.value)}
-                      >
+                        onValueChange={(value) => field.onChange(Number(value))}
+                        defaultValue={field.value?.toString()}>
                         <FormControl>
                           <SelectTrigger className="bg-input">
                             <SelectValue placeholder="Select category" />
@@ -180,8 +214,8 @@ const AddNewRoomModal = () => {
                             </div>
                           ) : (
                             <>
-                              <SelectItem key={-1} value={String(-1)} disabled>
-                                Choose a category
+                              <SelectItem key={0} value="0">
+                                No category
                               </SelectItem>
                               {data?.results?.map((category) => (
                                 <SelectItem
@@ -217,6 +251,7 @@ const AddNewRoomModal = () => {
                           placeholder="Enter number of participants"
                           {...field}
                           type="number"
+                          min={2}
                           max={50}
                           onChange={(event) =>
                             field.onChange(+event.target.value)
