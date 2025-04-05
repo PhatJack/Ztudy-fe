@@ -14,6 +14,7 @@ import {
 const MainScreen = ({ roomCode }: { roomCode: string }) => {
   return (
     <div className="w-full h-full flex flex-col gap-6">
+      
       <div className="flex-1 p-4 rounded-lg bg-white"></div>
       <div className="p-3 rounded-lg bg-white flex gap-6 justify-center items-center">
         <TooltipTemplate content="Camera">
@@ -39,7 +40,7 @@ const MainScreen = ({ roomCode }: { roomCode: string }) => {
           </Button>
         </TooltipTemplate>
         <LeaveRoomButton roomCode={roomCode} />
-        <TooltipTemplate content="Presentation">
+        {/* <TooltipTemplate content="Presentation">
           <Button
             type="button"
             size={"icon"}
@@ -49,7 +50,7 @@ const MainScreen = ({ roomCode }: { roomCode: string }) => {
           >
             <MonitorPlay />
           </Button>
-        </TooltipTemplate>
+        </TooltipTemplate> */}
       </div>
       {/* <LeaveRoomButton handleLeaveRoom={handleLeaveRoom} roomCode={roomCode} /> */}
     </div>

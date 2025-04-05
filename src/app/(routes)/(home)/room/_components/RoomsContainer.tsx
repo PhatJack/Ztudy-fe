@@ -26,7 +26,10 @@ const RoomsContainer = () => {
 
   const [yourRoomsQuery, suggestedRoomsQuery, trendingRoomsQuery] = useQueries({
     queries: [
-      useListRooms({ expand: "category", creator_user: state.user?.id }),
+      {
+        ...useListRooms({ expand: "category", creator_user: state.user?.id }),
+        enabled: !!state.user?.id
+      },
       useListSuggestedRooms({ expand: "category" }),
       useListTrendingRooms({ expand: "category" }),
     ],

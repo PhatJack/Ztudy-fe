@@ -139,6 +139,15 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
           setIsAdmin(true);
           break;
 
+        case "room_ended":
+          setCurrentRoom(null);
+          router.push("/room");
+          if (chatSocketRef.current) {
+            chatSocketRef.current.close();
+            chatSocketRef.current = null;
+          }
+          toast.error("The room has been ended.");
+          break;
         default:
           break;
       }
