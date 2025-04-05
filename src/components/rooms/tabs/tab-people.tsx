@@ -33,10 +33,10 @@ const TabPeople = ({ participants, roomCode }: Props) => {
   );
 
   return (
-    <div className="h-full flex flex-col">
-      <div className="sticky top-[65px] border-b bg-white p-4 shadow-lg">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+    <div className="h-full flex flex-col ">
+      <div className="sticky top-[65px] border-b bg-white p-4 shadow-lg dark:bg-background">
+        <div className="relative ">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4 dark:text-gray-500" />
           <Input
             type="text"
             placeholder="Search people"
@@ -55,7 +55,7 @@ const TabPeople = ({ participants, roomCode }: Props) => {
             <div className="flex items-center gap-3">
               <AvatarCustom src={participant.user?.avatar} />
               <div className="flex flex-col">
-                <span className="font-semibold text-gray-900">
+                <span className="font-semibold text-gray-900 dark:text-gray-100">
                   {participant.user?.username}
                 </span>
                 <RoleBadge role={participant.role} />

@@ -135,10 +135,12 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
           setParticipants(data.participants);
           break;
 
-        case "user_assigned_admin":
+        case "user_assigned_moderator":
           setIsAdmin(true);
           break;
-
+        case "user_revoked_moderator":
+          setIsAdmin(false);
+          break;
         case "room_ended":
           setCurrentRoom(null);
           router.push("/room");

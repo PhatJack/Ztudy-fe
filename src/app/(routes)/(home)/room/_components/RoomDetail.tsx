@@ -1,4 +1,5 @@
 "use client";
+import AvatarCustom from "@/components/avatar/AvatarCustom";
 import TabChat from "@/components/rooms/tabs/tab-chat";
 import TabPeople from "@/components/rooms/tabs/tab-people";
 import TabRequests from "@/components/rooms/tabs/tab-requests";
@@ -6,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { tabs } from "@/constants/room-tabs";
 import { useRoomWebSocket } from "@/contexts/WebSocketContext";
 import { useRouter } from "nextjs-toploader/app";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import PendingScreen from "./PendingScreen";
 import toast from "react-hot-toast";
 import { useChatContext } from "@/hooks/useChatContext";
@@ -40,6 +41,7 @@ const RoomDetail = ({ roomCode }: Props) => {
     typingUsers,
     setMessages,
     currentRoom,
+    isAdmin,
     setIsAdmin,
     setCurrentRoom,
   } = useChatContext();
@@ -84,6 +86,17 @@ const RoomDetail = ({ roomCode }: Props) => {
     }
   }, [roomCode]);
 
+  // Filter tabs based on room type and admin status
+  const filteredTabs = useMemo(() => {
+    if (!currentRoom) return tabs;
+    return tabs.filter(tab => {
+      if (tab.value === "requestToJoin") {
+        return currentRoom.type === "PRIVATE" && isAdmin;
+      }
+      return true;
+    });
+  }, [currentRoom, isAdmin]);
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -114,11 +127,11 @@ const RoomDetail = ({ roomCode }: Props) => {
           className="xl:h-full h-[500px] relative overflow-hidden flex flex-col"
           defaultValue="roomChat"
         >
-          <TabsList className="w-full flex-wrap px-4 py-3 h-fit bg-white rounded-b-none sticky top-0 border-b shadow-md gap-2">
-            {tabs.map((tab, index) => (
+          <TabsList className="w-full flex-wrap px-4 py-3 h-fit bg-white dark:bg-background rounded-b-none sticky top-0 border-b dark:border-border shadow-md gap-2">
+            {filteredTabs.map((tab, index) => (
               <TabsTrigger
                 key={index}
-                className="flex-1 basis-[125px] py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground font-bold gap-1"
+                className="flex-1 basis-[125px] py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground hover:bg-muted dark:hover:bg-muted font-bold gap-1 dark:text-foreground dark:data-[state=active]:text-primary-foreground"
                 value={tab.value}
               >
                 <span>
@@ -126,23 +139,27 @@ const RoomDetail = ({ roomCode }: Props) => {
                 </span>
                 <span>{tab.name}</span>
                 {tab.value === "requestToJoin" &&
+                  isAdmin &&
+                  currentRoom?.type === "PRIVATE" &&
                   pendingRequests.length > 0 && (
-                    <span className="size-6 bg-secondary flex justify-center items-center rounded-full">{`${pendingRequests.length}`}</span>
+                    <span className="size-6 bg-secondary dark:bg-secondary/80 flex justify-center items-center rounded-full text-sm font-medium">{`${pendingRequests.length}`}</span>
                   )}
                 {tab.value === "people" && participants.length > 0 && (
-                  <span className="size-6 bg-secondary flex justify-center items-center rounded-full">{`${participants.length}`}</span>
+                  <span className="size-6 bg-secondary dark:bg-secondary/80 flex justify-center items-center rounded-full text-sm font-medium">{`${participants.length}`}</span>
                 )}
               </TabsTrigger>
             ))}
           </TabsList>
 
-          <TabsContent className="mt-0" value="requestToJoin">
-            <TabRequests requests={pendingRequests} roomCode={roomCode} />
-          </TabsContent>
-          <TabsContent className="mt-0 h-full overflow-hidden" value="roomChat">
+          {currentRoom?.type === "PRIVATE" && isAdmin && (
+            <TabsContent className="mt-0 bg-white dark:bg-background" value="requestToJoin">
+              <TabRequests requests={pendingRequests} roomCode={roomCode} />
+            </TabsContent>
+          )}
+          <TabsContent className="mt-0 h-full overflow-hidden bg-white dark:bg-background" value="roomChat">
             <TabChat messages={messages} typingUsers={typingUsers} />
           </TabsContent>
-          <TabsContent className="mt-0" value="people">
+          <TabsContent className="mt-0 bg-white dark:bg-background" value="people">
             <TabPeople participants={participants} roomCode={roomCode} />
           </TabsContent>
         </Tabs>
