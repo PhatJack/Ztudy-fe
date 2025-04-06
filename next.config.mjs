@@ -15,6 +15,12 @@ const nextConfig = {
 				pathname: "/**",
 				hostname: "study-together-static-prod.st-static.com",
 			},
+			{
+				protocol: "https",
+				port: "",
+				pathname: "/**",
+				hostname: "img.youtube.com",
+			},
 		],
 	},
 	reactStrictMode: false,

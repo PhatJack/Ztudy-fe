@@ -44,7 +44,10 @@ const BackgroundOptionsList = ({ activeTab }: Props) => {
           >
             <Image
               fill
-              src={backgroundVideo.image}
+              src={
+                backgroundVideo.image ??
+                `https://img.youtube.com/vi/${backgroundVideo.youtube_url.split("v=")[1]}/1.jpg`
+              }
               alt={"video youtube"}
               sizes="(min-width: 60em) 24vw, (min-width: 28em) 45vw, 100vw"
             />
