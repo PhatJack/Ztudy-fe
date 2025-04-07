@@ -11,10 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useRouter } from "nextjs-toploader/app";
-import { useQuery } from "@tanstack/react-query";
-import { createGetCurrentUserInformationQuery } from "@/service/(current-user)/get-current-user-information.api";
 import toast from "react-hot-toast";
 import { useLogoutMutation } from "@/service/(auth)/logout.api";
 import { useAuthContext } from "@/hooks/useAuthContext";
@@ -28,19 +25,14 @@ const Header = () => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const logoutMutation = useLogoutMutation();
   const router = useRouter();
-  const [, dispatch] = useAuthContext();
-
-  const currentUserQuery = useQuery(
-    createGetCurrentUserInformationQuery()
-  );
-
-  const currentUser = currentUserQuery.data;
+  const [state, dispatch] = useAuthContext();
 
   const handleLogout = () => {
     logoutMutation.mutate(
       {},
       {
         onSuccess: () => {
+          localStorage.removeItem("auth");
           disconnectOnlineSocket();
           dispatch({ type: "SET_USER", payload: null });
           router.push("/login");
@@ -55,70 +47,59 @@ const Header = () => {
       <div className="w-full flex justify-between items-center">
         <div className="w-full">
           <div className="md:block hidden">
-            <HeaderStats user={currentUser} />
+            <HeaderStats user={state.user} />
           </div>
           <div className="md:hidden block">
             <HeaderMobileMenu />
           </div>
         </div>
         <div className="w-full flex justify-end items-center gap-4">
-          {currentUserQuery.isLoading ? (
-            <div className="size-8 rounded-full bg-gray-300 animate-pulse"></div>
-          ) : null}
-          {currentUserQuery.isSuccess ? (
-            <DropdownMenu
-              modal={false}
-              open={openModal}
-              onOpenChange={setOpenModal}
-            >
-              <DropdownMenuTrigger>
-                <AvatarCustom
-                  src={currentUser?.avatar}
-                  className="w-9 h-9 cursor-pointer"
-                />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56">
-                <DropdownMenuLabel>
-                  <div className="flex items-center gap-2">
-                    <Avatar>
-                      <AvatarImage
-                        src={
-                          currentUser?.avatar
-                            ? currentUser?.avatar
-                            : "/default.png"
-                        }
-                      />
-                      <AvatarFallback>LD</AvatarFallback>
-                    </Avatar>
-                    <span className="text-lg">{currentUser?.username}</span>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                  <DropdownMenuItem
-                    onSelect={() => {
-                      router.push("/profile");
-                      setOpenModal(false);
-                    }}
-                  >
-                    <span className="flex items-center gap-2">
-                      <UserRound size={16} />
-                      <span>Profile</span>
-                    </span>
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                  <DropdownMenuItem onSelect={handleLogout}>
-                    <span className="flex items-center gap-2 cursor-pointer">
-                      <DoorOpen size={16} />
-                      <span>Logout</span>
-                    </span>
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : null}
+          <DropdownMenu
+            modal={false}
+            open={openModal}
+            onOpenChange={setOpenModal}
+          >
+            <DropdownMenuTrigger>
+              <AvatarCustom
+                src={state.user?.avatar}
+                className="w-9 h-9 cursor-pointer"
+              />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56">
+              <DropdownMenuLabel>
+                <div className="flex items-center gap-2">
+                  <AvatarCustom
+                    src={state.user?.avatar}
+                    className="cursor-pointer"
+                  />
+                  <span className="text-lg">{state.user?.username}</span>
+                </div>
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuItem
+                  onSelect={() => {
+                    router.push("/profile");
+                    setOpenModal(false);
+                  }}
+                >
+                  <span className="flex items-center gap-2">
+                    <UserRound size={16} />
+                    <span>Profile</span>
+                  </span>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuItem onSelect={handleLogout}>
+                  <span className="flex items-center gap-2 cursor-pointer">
+                    <DoorOpen size={16} />
+                    <span>Logout</span>
+                  </span>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <Button
             type="button"
             onClick={() => router.push("/solo")}
