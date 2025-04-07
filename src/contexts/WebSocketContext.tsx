@@ -1,6 +1,7 @@
 "use client";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { useChatContext } from "@/hooks/useChatContext";
+import { useRouter } from "nextjs-toploader/app";
 import React, {
   createContext,
   useContext,
@@ -13,7 +14,6 @@ import toast from "react-hot-toast";
 
 // WebSocket context type
 interface WebSocketContextProps {
-  connectOnlineSocket: () => void;
   connectChatSocket: (roomCode: string) => void;
   disconnectChatSocket: () => void;
   sendTypingStatus: (isTyping: boolean) => void;
@@ -33,6 +33,7 @@ interface WebSocketProviderProps {
 export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
   children,
 }) => {
+  const router = useRouter();
   const [stateAuth] = useAuthContext();
   const {
     setMessages,
@@ -47,32 +48,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
   } = useChatContext();
 
   // Use refs for WebSockets to prevent re-renders
-  const onlineSocketRef = useRef<WebSocket | null>(null);
   const chatSocketRef = useRef<WebSocket | null>(null);
-
-  // Connect online status socket
-  const connectOnlineSocket = useCallback(() => {
-    if (!onlineSocketRef.current) {
-      const ws = new WebSocket(
-        `${process.env.NEXT_PUBLIC_WEBSOCKET_URL}/online/`
-      );
-      onlineSocketRef.current = ws;
-
-      ws.onopen = () => {
-        console.log("Online WebSocket Connected");
-      };
-
-      ws.onclose = () => {
-        console.log("Online WebSocket Disconnected");
-        onlineSocketRef.current = null;
-      };
-
-      ws.onerror = (error) => {
-        console.error("Online WebSocket Error:", error);
-        onlineSocketRef.current = null;
-      };
-    }
-  }, []);
 
   // Handle message
   const handleMessage = useCallback(
@@ -110,14 +86,6 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
           break;
 
         case "user_left":
-          const isPending = pendingRequests.find(
-            (user) => user.user.id == data.user.id
-          );
-          if (isPending) {
-            setPendingRequests((prev) =>
-              prev.filter((user) => user.user.id !== data.user.id)
-            );
-          }
           setParticipants((prev) =>
             prev.filter((user) => user.user.id !== data.user.id)
           );
@@ -153,7 +121,9 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
           break;
 
         case "user_rejected":
+          setIsPending(false);
           setCurrentRoom(null);
+          router.push("/room");
           if (chatSocketRef.current) {
             chatSocketRef.current.close();
             chatSocketRef.current = null;
@@ -165,16 +135,26 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
           setParticipants(data.participants);
           break;
 
-        case "user_assigned_admin":
+        case "user_assigned_moderator":
           setIsAdmin(true);
           break;
-
+        case "user_revoked_moderator":
+          setIsAdmin(false);
+          break;
+        case "room_ended":
+          setCurrentRoom(null);
+          router.push("/room");
+          if (chatSocketRef.current) {
+            chatSocketRef.current.close();
+            chatSocketRef.current = null;
+          }
+          toast.error("The room has been ended.");
+          break;
         default:
           break;
       }
     },
     [
-      chatSocketRef.current,
       stateAuth.user?.id,
       addTypingUser,
       removeTypingUser,
@@ -185,6 +165,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
       setIsAdmin,
       setIsPending,
       pendingRequests,
+			router
     ]
   );
 
@@ -256,11 +237,6 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
   // Cleanup WebSockets on unmount
   useEffect(() => {
     return () => {
-      if (onlineSocketRef.current) {
-        onlineSocketRef.current.close();
-        onlineSocketRef.current = null;
-      }
-
       if (chatSocketRef.current) {
         chatSocketRef.current.close();
         chatSocketRef.current = null;
@@ -271,19 +247,12 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
   // Memoize context value to prevent unnecessary re-renders
   const value = useMemo(
     () => ({
-      connectOnlineSocket,
       connectChatSocket,
       disconnectChatSocket,
       sendTypingStatus,
       chatSocketRef,
     }),
-    [
-      connectOnlineSocket,
-      connectChatSocket,
-      disconnectChatSocket,
-      sendTypingStatus,
-      chatSocketRef,
-    ]
+    [connectChatSocket, disconnectChatSocket, sendTypingStatus, chatSocketRef]
   );
 
   return (

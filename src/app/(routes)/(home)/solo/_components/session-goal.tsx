@@ -8,7 +8,7 @@ import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useSoloContext } from "@/hooks/useSoloContext";
-import { createGetCurrentUserInformationQueryOptions } from "@/service/(current-user)/get-current-user-information.api";
+import { createGetCurrentUserInformationQuery } from "@/service/(current-user)/get-current-user-information.api";
 import {
   CreateGoalBodySchema,
   useCreateGoalMutation,
@@ -22,7 +22,7 @@ import toast from "react-hot-toast";
 
 const SessionGoal = () => {
   const currentUserQuery = useQuery(
-    createGetCurrentUserInformationQueryOptions()
+    createGetCurrentUserInformationQuery()
   );
   const userId = currentUserQuery.data?.id;
   const createGoalMutation = useCreateGoalMutation();
@@ -58,7 +58,7 @@ const SessionGoal = () => {
   });
 
   return (
-    <div className="bg-background text-foreground p-5 rounded-md w-[267px] min-w-[267px] h-fit flex flex-col space-y-4 shadow-lg">
+    <div className="bg-background text-foreground p-5 rounded-md w-[280px] min-w-[280px] h-fit flex flex-col space-y-4 shadow-lg">
       <div className="flex justify-between items-center">
         <span className="text-xs inline-flex items-center gap-1">
           <Target size={14} />

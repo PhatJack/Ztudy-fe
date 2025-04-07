@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Nunito } from "next/font/google";
+import "./theme-toggle.css";
+import { Nunito, Quicksand } from "next/font/google";
 import Providers from "./providers";
 
 const nunito = Nunito({
@@ -8,6 +9,10 @@ const nunito = Nunito({
   weight: ["400", "700"],
 });
 
+const quickSand = Quicksand({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+});
 export const metadata: Metadata = {
   title: {
     template: "%s | Ztudy",
@@ -32,7 +37,9 @@ export default function RootLayout({
 }>) {
   return (
     <html suppressHydrationWarning={true} lang="en">
-      <body className={`${nunito.className} antialiased relative bg-muted/60`}>
+      <body
+        className={`${nunito.className} ${quickSand.className} antialiased relative bg-muted/60`}
+      >
         <Providers>{children}</Providers>
       </body>
     </html>

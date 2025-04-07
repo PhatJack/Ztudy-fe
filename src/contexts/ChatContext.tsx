@@ -18,8 +18,10 @@ export type Message = {
   timestamp: string;
 };
 
+export type Role = "ADMIN" | "MODERATOR" | "USER";
+
 export type Participant = {
-  is_admin: boolean;
+  role: Role;
   is_approved: boolean;
   is_out: boolean;
   user: UserSchema;

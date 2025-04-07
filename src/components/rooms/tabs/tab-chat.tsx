@@ -9,6 +9,8 @@ import { format } from "date-fns";
 import { ChevronRight } from "lucide-react";
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import debounce from "lodash.debounce";
+import AvatarCustom from "@/components/avatar/AvatarCustom";
+import { cn } from "@/lib/utils";
 
 interface Props {
   messages: Message[];
@@ -20,7 +22,7 @@ const TabChat = ({ messages, typingUsers }: Props) => {
   const [message, setMessage] = useState<string>("");
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const messagesContainerRef = useRef<HTMLDivElement | null>(null);
-  const [state, dispatch] = useAuthContext();
+  const [state] = useAuthContext();
 
   // Scroll to bottom when messages update
   useEffect(() => {
@@ -62,19 +64,50 @@ const TabChat = ({ messages, typingUsers }: Props) => {
         ref={messagesContainerRef}
         className="flex-1 overflow-y-auto px-4 py-2 space-y-4"
       >
-        {messages.map((message, index) => (
-          <div key={index} className="flex flex-col gap-1">
-            <div className="flex items-center gap-2">
-              <span className="font-semibold">{message.user.username}</span>
-              <span className="text-xs text-muted-foreground">
-                {format(message.timestamp, "p")}
-              </span>
+        {messages.map((message, index) => {
+          const isCurrentUser = message.user.id === state.user?.id;
+          return (
+            <div
+              key={index}
+              className={cn(
+                "flex gap-3",
+                isCurrentUser ? "flex-row-reverse" : "flex-row"
+              )}
+            >
+              <div className="flex-shrink-0">
+                <AvatarCustom src={message.user.avatar} />
+              </div>
+              <div
+                className={cn(
+                  "flex flex-col gap-1 max-w-[70%]",
+                  isCurrentUser ? "items-end" : "items-start"
+                )}
+              >
+                <div className="flex items-center gap-2">
+                  <span className={cn(
+                    "text-xs text-muted-foreground",
+                    isCurrentUser && "order-last"
+                  )}>
+                    {format(message.timestamp, "p")}
+                  </span>
+                  <span className="font-semibold text-sm">
+                    {message.user.username}
+                  </span>
+                </div>
+                <div
+                  className={cn(
+                    "rounded-2xl px-4 py-2 break-words",
+                    isCurrentUser
+                      ? "bg-primary text-primary-foreground rounded-tr-none"
+                      : "bg-muted rounded-tl-none"
+                  )}
+                >
+                  {message.content}
+                </div>
+              </div>
             </div>
-            <div className="w-full bg-muted p-3 rounded-md">
-              {message.content}
-            </div>
-          </div>
-        ))}
+          );
+        })}
         <div ref={messagesEndRef} />
       </div>
 
@@ -91,10 +124,10 @@ const TabChat = ({ messages, typingUsers }: Props) => {
           <Button
             type="submit"
             size="icon"
-            className="bg-primary text-white"
+            className="bg-primary text-white hover:bg-primary/90"
             disabled={!message.trim()}
           >
-            <ChevronRight />
+            <ChevronRight className="h-4 w-4" />
           </Button>
         </form>
       </div>

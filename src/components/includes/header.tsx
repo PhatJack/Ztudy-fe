@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button } from "../ui/button";
 import { DoorOpen, Undo2, UserRound } from "lucide-react";
 import {
@@ -14,22 +14,24 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useRouter } from "nextjs-toploader/app";
 import { useQuery } from "@tanstack/react-query";
-import { createGetCurrentUserInformationQueryOptions } from "@/service/(current-user)/get-current-user-information.api";
+import { createGetCurrentUserInformationQuery } from "@/service/(current-user)/get-current-user-information.api";
 import toast from "react-hot-toast";
 import { useLogoutMutation } from "@/service/(auth)/logout.api";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import HeaderStats from "./components/header-stats";
 import HeaderMobileMenu from "./components/header-mobile-menu";
 import AvatarCustom from "../avatar/AvatarCustom";
+import { useOnlineWebSocket } from "@/contexts/OnlineWebSocketContext";
 
 const Header = () => {
+  const { disconnectOnlineSocket } = useOnlineWebSocket();
   const [openModal, setOpenModal] = useState<boolean>(false);
   const logoutMutation = useLogoutMutation();
   const router = useRouter();
   const [, dispatch] = useAuthContext();
 
   const currentUserQuery = useQuery(
-    createGetCurrentUserInformationQueryOptions()
+    createGetCurrentUserInformationQuery()
   );
 
   const currentUser = currentUserQuery.data;
@@ -39,6 +41,8 @@ const Header = () => {
       {},
       {
         onSuccess: () => {
+          disconnectOnlineSocket();
+          dispatch({ type: "SET_USER", payload: null });
           router.push("/login");
           toast.success("Logged out successfully");
         },
@@ -46,18 +50,12 @@ const Header = () => {
     );
   };
 
-  useEffect(() => {
-    if (currentUser) {
-      dispatch({ type: "SET_USER", payload: currentUser });
-    }
-  }, [currentUser]);
-
   return (
-    <header className="w-full px-4 py-2 bg-white dark:bg-background max-h-14 h-14 sticky top-0 border-b border-gray-200 shadow-sm z-[40]">
+    <header className="w-full px-4 py-2 bg-white dark:bg-background max-h-14 h-14 sticky top-0 border-b shadow-sm z-[40]">
       <div className="w-full flex justify-between items-center">
         <div className="w-full">
           <div className="md:block hidden">
-            <HeaderStats />
+            <HeaderStats user={currentUser} />
           </div>
           <div className="md:hidden block">
             <HeaderMobileMenu />
@@ -74,7 +72,10 @@ const Header = () => {
               onOpenChange={setOpenModal}
             >
               <DropdownMenuTrigger>
-                <AvatarCustom src={currentUser?.avatar} className="w-9 h-9 cursor-pointer"/>
+                <AvatarCustom
+                  src={currentUser?.avatar}
+                  className="w-9 h-9 cursor-pointer"
+                />
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56">
                 <DropdownMenuLabel>

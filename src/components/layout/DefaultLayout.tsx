@@ -1,10 +1,12 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import Sidebar from "../includes/sidebar";
 import Header from "../includes/header";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import PreferencesScreen from "../check-preference/preferences-screen";
+import { useAchievementNotification } from "@/hooks/useAchievementNotification";
+import AchievementPopup from "../popup/AchivementPopup";
 
 const DefaultLayout = ({
   children,
@@ -14,6 +16,13 @@ const DefaultLayout = ({
   const location = usePathname();
   const isInRoom = location.startsWith("/room/");
   const isShowHeader = location === "/solo" || isInRoom;
+
+  const {
+    showAchievement,
+    achievementLevel,
+    achievementMessage,
+    closeAchievementPopup,
+  } = useAchievementNotification();
 
   return (
     <>
@@ -35,6 +44,12 @@ const DefaultLayout = ({
         </main>
         <PreferencesScreen />
       </div>
+      <AchievementPopup
+        isOpen={showAchievement}
+        level={achievementLevel}
+        message={achievementMessage}
+        onClose={closeAchievementPopup}
+      />
     </>
   );
 };

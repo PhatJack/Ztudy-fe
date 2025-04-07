@@ -5,10 +5,11 @@ import NextTopLoader from "nextjs-toploader";
 import { Toaster } from "react-hot-toast";
 import { getQueryClient } from "./get-query-client";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ChatProvider } from "@/contexts/ChatContext";
 import { WebSocketProvider } from "@/contexts/WebSocketContext";
+import { OnlineWebSocketProvider } from "@/contexts/OnlineWebSocketContext";
+import dynamic from "next/dynamic";
 
 const queryClient = getQueryClient();
 
@@ -17,22 +18,37 @@ export default function Providers({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const ReactQueryDevtools =
+    process.env.NODE_ENV === "development"
+      ? dynamic(
+          () =>
+            import("@tanstack/react-query-devtools").then(
+              (mod) => mod.ReactQueryDevtools
+            ),
+          {
+            ssr: false,
+          }
+        )
+      : () => null;
+
   return (
     <ThemeProvider
       attribute="class"
       defaultTheme="system"
       enableSystem
-      disableTransitionOnChange
+      // disableTransitionOnChange
     >
       <QueryClientProvider client={queryClient}>
         <NextTopLoader color="hsl(150 30% 45%)" zIndex={9999} />
-        <AuthProvider>
-          <ChatProvider>
-            <WebSocketProvider>
-              <TooltipProvider>{children}</TooltipProvider>
-            </WebSocketProvider>
-          </ChatProvider>
-        </AuthProvider>
+        <OnlineWebSocketProvider>
+          <AuthProvider>
+            <ChatProvider>
+              <WebSocketProvider>
+                <TooltipProvider>{children}</TooltipProvider>
+              </WebSocketProvider>
+            </ChatProvider>
+          </AuthProvider>
+        </OnlineWebSocketProvider>
         <Toaster />
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>

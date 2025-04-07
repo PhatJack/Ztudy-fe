@@ -13,29 +13,25 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  loginBodySchema,
-  LoginBodySchema,
-  useLoginMutation,
-} from "@/service/(auth)/login.api";
+import { LoginBodySchema, useLoginMutation } from "@/service/(auth)/login.api";
 import toast from "react-hot-toast";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "nextjs-toploader/app";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import LoadingSpinner from "@/components/loading/loading-spinner";
 import { checkPreferencesApi } from "@/service/(users)/check-preferences.api";
 import { useAuthContext } from "@/hooks/useAuthContext";
+import { useOnlineWebSocket } from "@/contexts/OnlineWebSocketContext";
 
 export function LoginForm() {
-  const [, dispatch] = useAuthContext();
+  const { connectOnlineSocket } = useOnlineWebSocket();
+  const [state, dispatch] = useAuthContext();
   const [isShowingPassword, setIsShowingPassword] = useState<boolean>(false);
   const loginForm = useForm<LoginBodySchema>({
     defaultValues: {
       email: "",
       password: "",
     },
-    resolver: zodResolver(loginBodySchema),
   });
   const router = useRouter();
   const loginMutation = useLoginMutation();
@@ -44,14 +40,14 @@ export function LoginForm() {
       onSuccess: async (data) => {
         try {
           const res = await checkPreferencesApi(data.user.id);
-          if (res.status == 400) {
+          if (res.status == 200) {
             dispatch({ type: "CHECK_PREFERENCES", payload: false });
-          } else {
-            dispatch({ type: "CHECK_PREFERENCES", payload: true });
           }
         } catch (error) {
-          console.error("Error checking preferences:", error);
+          dispatch({ type: "CHECK_PREFERENCES", payload: true });
         }
+        dispatch({ type: "SET_USER", payload: data.user });
+        connectOnlineSocket();
         router.push("/dashboard");
         toast.success("Login successful");
       },
@@ -103,6 +99,7 @@ export function LoginForm() {
                 <FormLabel>Email</FormLabel>
                 <FormControl>
                   <Input
+                    type="email"
                     placeholder="Enter your email"
                     {...field}
                     disabled={loginMutation.isPending}

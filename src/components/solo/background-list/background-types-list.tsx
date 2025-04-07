@@ -10,7 +10,10 @@ interface Props {
 }
 
 const BackgroundTypesList = ({ activeTab, setActiveTab }: Props) => {
-  const backgroundVideoTypesQuery = useQuery(useListBackgroundVideoTypes());
+  const backgroundVideoTypesQuery = useQuery({
+    ...useListBackgroundVideoTypes(),
+    refetchOnWindowFocus: false,
+  });
 
   const backgroundVideoTypes = backgroundVideoTypesQuery.data?.results;
 

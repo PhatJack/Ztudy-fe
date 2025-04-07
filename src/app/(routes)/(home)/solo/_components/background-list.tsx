@@ -3,7 +3,7 @@ import YoutubeLinkInput from "@/components/solo/background-list/youtube-link-inp
 import React from "react";
 const BackgroundList = () => {
   return (
-    <div className="w-[267px] min-w-[267px] bg-background rounded-md p-5 shadow-lg flex flex-col space-y-4">
+    <div className="w-[280px] min-w-[280px] bg-background rounded-md p-5 shadow-lg flex flex-col space-y-4">
       <BackgroundContainer />
       <YoutubeLinkInput />
     </div>

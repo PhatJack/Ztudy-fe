@@ -12,9 +12,10 @@ interface Props {
 
 const BackgroundOptionsList = ({ activeTab }: Props) => {
   const [state, dispatch] = useSoloContext();
-  const backgroundVideosQuery = useQuery(
-    useListBackgroundVideos({ type: activeTab })
-  );
+  const backgroundVideosQuery = useQuery({
+    ...useListBackgroundVideos({ type: activeTab }),
+    refetchOnWindowFocus: false,
+  });
 
   const backgroundVideos = backgroundVideosQuery.data?.results;
 
@@ -23,7 +24,7 @@ const BackgroundOptionsList = ({ activeTab }: Props) => {
   };
 
   return (
-    <div className="grid grid-cols-4 gap-1">
+    <div className="w-full grid grid-cols-4 gap-1 ">
       {backgroundVideosQuery.isLoading
         ? Array.from({ length: 10 }).map((_, i) => (
             <Skeleton className="size-14" key={i} />
@@ -39,9 +40,17 @@ const BackgroundOptionsList = ({ activeTab }: Props) => {
           <div
             key={backgroundVideo.id}
             onClick={() => handleClick(backgroundVideo.youtube_url)}
-            className="size-14 rounded-md relative overflow-hidden cursor-pointer"
+            className="size-[54px] rounded-md relative overflow-hidden cursor-pointer"
           >
-            <Image fill src={backgroundVideo.image} alt={"video youtube"} />
+            <Image
+              fill
+              src={
+                backgroundVideo.image ??
+                `https://img.youtube.com/vi/${backgroundVideo.youtube_url.split("v=")[1]}/1.jpg`
+              }
+              alt={"video youtube"}
+              sizes="(min-width: 60em) 24vw, (min-width: 28em) 45vw, 100vw"
+            />
             {state.backgroundURL === backgroundVideo.youtube_url ? (
               <div className="absolute inset-0 bg-black/20 flex justify-center items-center">
                 <Check size={26} className="text-white" />

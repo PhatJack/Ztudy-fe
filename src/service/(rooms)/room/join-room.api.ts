@@ -9,7 +9,7 @@ export const joinRoomResponseSchema = z.object({
   participant: z.object({
     id: z.number(),
     joined_at: z.string().datetime(),
-    is_admin: z.boolean(),
+    role: z.string(),
     is_out: z.boolean(),
     is_approved: z.boolean(),
     room: z.number(),
