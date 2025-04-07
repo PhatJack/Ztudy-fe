@@ -1,0 +1,121 @@
+{
+	"framework": "nextjs",
+	"buildCommand": "pnpm build",
+	"rewrites": [
+		{
+			"source": "/login",
+			"destination": "/"
+		},
+		{
+			"source": "/register",
+			"destination": "/"
+		},
+		{
+			"source": "/forgot-password",
+			"destination": "/"
+		},
+		{
+			"source": "/reset-password",
+			"destination": "/"
+		},
+		{
+			"source": "/privacy-policy",
+			"destination": "/"
+		},
+		{
+			"source": "/terms-and-conditions",
+			"destination": "/"
+		},
+		{
+			"source": "/dashboard",
+			"missing": [
+				{
+					"type": "cookie",
+					"key": "access_token"
+				}
+			],
+			"destination": "/login"
+		},
+		{
+			"source": "/profile",
+			"missing": [
+				{
+					"type": "cookie",
+					"key": "access_token"
+				}
+			],
+			"destination": "/login"
+		},
+		{
+			"source": "/solo",
+			"missing": [
+				{
+					"type": "cookie",
+					"key": "access_token"
+				}
+			],
+			"destination": "/login"
+		},
+		{
+			"source": "/room",
+			"missing": [
+				{
+					"type": "cookie",
+					"key": "access_token"
+				}
+			],
+			"destination": "/login"
+		},
+		{
+			"source": "/study-goal",
+			"missing": [
+				{
+					"type": "cookie",
+					"key": "access_token"
+				}
+			],
+			"destination": "/login"
+		},
+		{
+			"source": "/room/:roomCode",
+			"missing": [
+				{
+					"type": "cookie",
+					"key": "access_token"
+				}
+			],
+			"destination": "/login"
+		}
+	],
+	"trailingSlash": false,
+	"images": {
+		"qualities": [
+			25,
+			50,
+			75
+		],
+		"formats": [
+			"image/webp"
+		],
+		"remotePatterns": [
+			{
+				"protocol": "https",
+				"port": "",
+				"pathname": "/**",
+				"hostname": "res.cloudinary.com"
+			},
+			{
+				"protocol": "https",
+				"port": "",
+				"pathname": "/**",
+				"hostname": "study-together-static-prod.st-static.com"
+			},
+			{
+				"protocol": "https",
+				"port": "",
+				"pathname": "/**",
+				"hostname": "img.youtube.com"
+			}
+		]
+	}
+}

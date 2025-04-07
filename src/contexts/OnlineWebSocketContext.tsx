@@ -37,13 +37,11 @@ export const OnlineWebSocketProvider: React.FC<
   const handleMessage = useCallback(
     (event: any) => {
       const data = JSON.parse(event.data);
-      console.log(data);
       switch (data.type) {
         case "online_count":
           setOnlineCount(data.online_count);
           break;
         case "send_achievement":
-          console.log(`Cập nhật level mới: ${data.level}`);
           // Dispatch a custom event to notify about the achievement
           const achievementEvent = new CustomEvent("achievement-notification", {
             detail: {
@@ -56,7 +54,6 @@ export const OnlineWebSocketProvider: React.FC<
           window.dispatchEvent(achievementEvent);
           break;
         default:
-          console.log("unhandle data", data);
           break;
       }
     },
@@ -71,19 +68,15 @@ export const OnlineWebSocketProvider: React.FC<
       );
       onlineSocketRef.current = ws;
 
-      ws.onopen = () => {
-        console.log("Online WebSocket Connected");
-      };
+      ws.onopen = () => {};
 
       ws.onmessage = handleMessage;
 
       ws.onclose = () => {
-        console.log("Online WebSocket Disconnected");
         onlineSocketRef.current = null;
       };
 
       ws.onerror = (error) => {
-        console.error("Online WebSocket Error:", error);
         onlineSocketRef.current = null;
       };
     }

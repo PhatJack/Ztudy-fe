@@ -46,6 +46,7 @@ export function LoginForm() {
         } catch (error) {
           dispatch({ type: "CHECK_PREFERENCES", payload: true });
         }
+        localStorage.setItem("auth", "true");
         dispatch({ type: "SET_USER", payload: data.user });
         connectOnlineSocket();
         router.push("/dashboard");

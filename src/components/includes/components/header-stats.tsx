@@ -4,7 +4,7 @@ import { Aperture, Clock9 } from "lucide-react";
 import React from "react";
 
 interface Props {
-  user?: CurrentUserResponseSchema;
+  user?: CurrentUserResponseSchema | null;
 }
 
 const HeaderStats = ({ user }: Props) => {
