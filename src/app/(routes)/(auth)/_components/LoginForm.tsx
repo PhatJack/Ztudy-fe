@@ -47,6 +47,7 @@ export function LoginForm() {
         } catch (error) {
           dispatch({ type: "CHECK_PREFERENCES", payload: true });
         }
+        dispatch({ type: "SET_USER", payload: data.user });
         connectOnlineSocket();
         router.push("/dashboard");
         toast.success("Login successful");

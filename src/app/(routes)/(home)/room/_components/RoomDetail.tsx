@@ -118,7 +118,7 @@ const RoomDetail = ({ roomCode }: Props) => {
   }
 
   return (
-    <div className="size-full flex xl:flex-row flex-col gap-4 xl:h-[calc(100vh-3rem)] overflow-hidden">
+    <div className="size-full flex xl:flex-row flex-col gap-6 xl:h-[calc(100vh-3rem)] overflow-hidden">
       <div className="xl:w-[75%] flex flex-col gap-6">
         <MainScreen roomCode={roomCode} />
       </div>

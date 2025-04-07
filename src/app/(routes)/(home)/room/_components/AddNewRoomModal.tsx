@@ -47,7 +47,6 @@ import toast from "react-hot-toast";
 import { useInView } from "react-intersection-observer";
 
 const AddNewRoomModal = () => {
-  const queryClient = getQueryClient();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [open, setOpen] = useState<boolean>(false);
   const [state] = useAuthContext();

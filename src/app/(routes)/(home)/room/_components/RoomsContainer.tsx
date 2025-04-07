@@ -86,7 +86,7 @@ const RoomsContainer = () => {
       </div>
       <div className="space-y-2">
         <h2 className="text-xl font-bold uppercase">Your Rooms</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
           <div className="min-w-[200px]">
             <AddNewRoomModal />
           </div>
@@ -110,7 +110,7 @@ const RoomsContainer = () => {
       </div>
       <div className="space-y-2">
         <h2 className="text-xl font-bold uppercase">Suggested Rooms</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
           {isLoadingSuggested ? (
             <LoadingSpinner className="col-span-full" />
           ) : suggestedRooms.length === 0 ? (
@@ -130,7 +130,7 @@ const RoomsContainer = () => {
       </div>
       <div className="space-y-2">
         <h2 className="text-xl font-bold uppercase">Trending Rooms</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
           {isLoadingTrending ? (
             <LoadingSpinner className="col-span-full" />
           ) : trendingRooms.length === 0 ? (

@@ -44,6 +44,16 @@ export const OnlineWebSocketProvider: React.FC<
           break;
         case "send_achievement":
           console.log(`Cập nhật level mới: ${data.level}`);
+          // Dispatch a custom event to notify about the achievement
+          const achievementEvent = new CustomEvent("achievement-notification", {
+            detail: {
+              level: data.level,
+              message:
+                data.message ||
+                `Congratulations! You've reached level ${data.level}!`,
+            },
+          });
+          window.dispatchEvent(achievementEvent);
           break;
         default:
           console.log("unhandle data", data);
@@ -52,6 +62,7 @@ export const OnlineWebSocketProvider: React.FC<
     },
     [setOnlineCount]
   );
+
   // Connect online status socket
   const connectOnlineSocket = useCallback(() => {
     if (!onlineSocketRef.current) {

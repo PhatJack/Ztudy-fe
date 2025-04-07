@@ -35,7 +35,7 @@ const RoleBadge = ({ role }: Props) => {
   const config = getRoleConfig(role);
 
   return (
-    <Badge variant="outline" className={cn("gap-1 font-medium border-0", config.className)}>
+    <Badge variant="outline" className={cn("gap-1 font-medium border-0 w-fit", config.className)}>
       {config.icon}
       {config.label}
     </Badge>
