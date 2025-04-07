@@ -43,7 +43,6 @@ export function LoginForm() {
           if (res.status == 200) {
             dispatch({ type: "CHECK_PREFERENCES", payload: false });
           }
-          console.log(state.isCheckPreferences);
         } catch (error) {
           dispatch({ type: "CHECK_PREFERENCES", payload: true });
         }
