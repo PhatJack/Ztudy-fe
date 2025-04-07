@@ -51,7 +51,7 @@ const Header = () => {
   };
 
   return (
-    <header className="w-full px-4 py-2 bg-white dark:bg-background max-h-14 h-14 sticky top-0 border-b border-gray-200 shadow-sm z-[40]">
+    <header className="w-full px-4 py-2 bg-white dark:bg-background max-h-14 h-14 sticky top-0 border-b shadow-sm z-[40]">
       <div className="w-full flex justify-between items-center">
         <div className="w-full">
           <div className="md:block hidden">

@@ -12,15 +12,15 @@ const badgeVariants = cva(
           "border-transparent bg-primary text-primary-foreground shadow hover:bg-primary/80",
         secondary:
           "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        black: "border-transparent bg-black text-white shadow-sm hover:bg-black/90",
+        white: "border-transparent bg-white text-black shadow-sm hover:bg-white/90",
         success:
-          "border-transparent bg-emerald-100 dark:bg-emerald-950/20 dark:border-emerald-800/30 text-emerald-900 dark:text-emerald-200",
+          "border-transparent bg-emerald-100 text-emerald-900 shadow-sm hover:bg-emerald-900/90 hover:text-emerald-100",
         warning:
-          "border-transparent bg-amber-100 dark:bg-amber-950/20 dark:border-amber-800/30 text-amber-900 dark:text-amber-20",
-        info: "border-transparent bg-cyan-100 dark:bg-cyan-950/20 dark:border-cyan-800/30 text-cyan-900 dark:text-cyan-20",
+          "border-transparent bg-amber-100 text-amber-900 shadow-sm hover:bg-amber-900/90 hover:text-amber-100",
         danger:
-          "border-transparent bg-rose-100 dark:bg-rose-950/20 dark:border-rose-800/30 text-rose-900 dark:text-rose-20",
-        destructive:
-          "border-transparent bg-destructive text-destructive-foreground shadow hover:bg-destructive/80",
+          "border-transparent bg-rose-100 text-rose-900 shadow-sm hover:bg-rose-900/90 hover:text-rose-100",
+        info: "border-transparent bg-cyan-100 text-cyan-900 shadow-sm hover:bg-cyan-900/90 hover:text-cyan-100",
         outline: "text-foreground",
       },
     },
