@@ -1,7 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 html,
 body {
 	height: 100%;
@@ -138,26 +137,4 @@ body {
 		transform: scale(1);
 		box-shadow: 0 0 5px 0px rgb(69, 180, 109);
 	}
-}
-
-@keyframes marquee {
-	from { transform: translateX(0%); }
-	to { transform: translateX(-100%); }
-}
-
-.animate-marquee {
-	display: inline-block;
-	white-space: nowrap;
-	animation: marquee 10s linear infinite;
-	padding-left: 100%;
-	padding-right: 100%;
-}
-
-/* Additional marquee speed variations */
-.animate-marquee.marquee-slow {
-	animation-duration: 7s;
-}
-
-.animate-marquee.marquee-fast {
-	animation-duration: 5s;
 }
