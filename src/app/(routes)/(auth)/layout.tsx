@@ -33,7 +33,8 @@ export default function AuthLayout({
           fill
           src="/login_right.webp"
           alt="Image"
-          sizes="100vw"
+          sizes="50vw"
+					priority
           className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
         />
       </div>

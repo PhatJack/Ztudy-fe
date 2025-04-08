@@ -1,25 +1,33 @@
 "use client";
 import AvatarCustom from "@/components/avatar/AvatarCustom";
 import LoadingSpinner from "@/components/loading/loading-spinner";
-import { useListUsers } from "@/service/(users)/list-users.api";
-import { checkLastLogin } from "@/util/checkLastLogin";
-import { useQuery } from "@tanstack/react-query";
-import React from "react";
+import { useListUsersInfinite } from "@/service/(users)/list-users.api";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import React, { useEffect } from "react";
+import { useInView } from "react-intersection-observer";
 
 const ZtudyCommunity = () => {
-  const usersQuery = useQuery({ ...useListUsers(), staleTime: 3 * 60 * 1000 });
-  const users = usersQuery.data?.results.filter((user) => user.id !== 1);
+  const { ref, inView } = useInView();
+  const { data, isFetching, isLoading, fetchNextPage, isFetchingNextPage } =
+    useInfiniteQuery({
+      ...useListUsersInfinite(),
+    });
+
+  useEffect(() => {
+    if (inView) {
+      fetchNextPage();
+    }
+  }, [fetchNextPage, inView]);
 
   return (
     <div className="flex flex-col space-y-2 divide-y divide-background dark:divide-input overflow-y-auto">
-      {usersQuery.isLoading && (
-        <div className="h-full w-full flex justify-center items-center">
-          <LoadingSpinner />
-        </div>
-      )}
-      {usersQuery.isSuccess &&
-        users &&
-        users.map((user, index) => (
+      {isLoading || isFetching && (
+          <div className="h-full w-full flex justify-center items-center">
+            <LoadingSpinner />
+          </div>
+        )}
+      {data &&
+        data.results.map((user, index) => (
           <div key={index} className="flex space-x-2 items-center pt-2 px-2">
             <div className="relative">
               <AvatarCustom
@@ -33,6 +41,15 @@ const ZtudyCommunity = () => {
             <span className="text-sm">{user.username}</span>
           </div>
         ))}
+      {
+        <div ref={ref} className="text-center w-full text-sm !mt-3">
+          {isFetchingNextPage ? (
+            <LoadingSpinner />
+          ) : (
+            "That's the whole community folks!"
+          )}
+        </div>
+      }
     </div>
   );
 };

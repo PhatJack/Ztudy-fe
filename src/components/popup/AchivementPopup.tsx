@@ -5,9 +5,12 @@ import { Trophy, Star, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Confetti from "react-confetti";
 import { useWindowSize } from "@/hooks/useWindowSize";
+import { getLevelColor } from "@/util/generateRandomColorForLevel";
+import { MonthlyLevelSchema } from "@/lib/schemas/monthly-level.schema";
+import { useTheme } from "next-themes";
 
 interface AchievementPopupProps {
-  level: number;
+  level: MonthlyLevelSchema | undefined;
   message?: string;
   isOpen: boolean;
   onClose: () => void;
@@ -19,6 +22,7 @@ const AchievementPopup: React.FC<AchievementPopupProps> = ({
   isOpen,
   onClose,
 }) => {
+  const { theme } = useTheme();
   const [showConfetti, setShowConfetti] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const { width, height } = useWindowSize();
@@ -76,13 +80,13 @@ const AchievementPopup: React.FC<AchievementPopupProps> = ({
         style={{ opacity: isVisible ? 1 : 0 }}
       >
         <div
-          className="relative w-full max-w-md p-6 mx-4 bg-gradient-to-b from-indigo-100 to-purple-100 dark:from-indigo-950 dark:to-purple-900 rounded-lg shadow-2xl transition-all duration-300 ease-in-out"
+          className="relative w-full max-w-md p-6 mx-4 bg-gradient-to-b from-background to-background rounded-lg shadow-2xl transition-all duration-300 ease-in-out"
           style={{
             transform: isVisible ? "scale(1)" : "scale(0.5)",
             opacity: isVisible ? 1 : 0,
           }}
         >
-          <div className="absolute -top-16 left-1/2 transform -translate-x-1/2 flex justify-center">
+          <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 flex justify-center">
             <div className="relative hover-float">
               <div className="absolute inset-0 rounded-full bg-yellow-300 blur-lg opacity-50"></div>
               <div className="relative flex items-center justify-center w-24 h-24 bg-gradient-to-r from-yellow-400 to-yellow-500 dark:from-yellow-500 dark:to-amber-600 rounded-full shadow-lg">
@@ -93,32 +97,30 @@ const AchievementPopup: React.FC<AchievementPopupProps> = ({
 
           <div className="pt-12 text-center">
             <div className="fade-in-up" style={{ animationDelay: "0.3s" }}>
-              <h3 className="text-2xl font-bold text-purple-800 dark:text-purple-200">
-                Level Up!
-              </h3>
+              <h3 className="text-2xl font-bold">Level Up!</h3>
               <div className="my-4 flex justify-center items-center space-x-2">
                 <Sparkles className="w-5 h-5 text-yellow-500" />
-                <span className="text-4xl font-extrabold text-indigo-700 dark:text-indigo-300">
-                  Level {level}
+                <span className="text-4xl font-extrabold">
+                  Level
+                  <span
+									className="ml-2"
+                    style={
+                      level
+                        ? {
+                            color: getLevelColor(
+                              level,
+                              theme === "dark" ? "dark" : "light"
+                            ),
+                          }
+                        : undefined
+                    }
+                  >
+                    {level}
+                  </span>
                 </span>
                 <Sparkles className="w-5 h-5 text-yellow-500" />
               </div>
               <p className="text-gray-700 dark:text-gray-200">{message}</p>
-            </div>
-
-            <div className="flex justify-center mt-8 gap-3">
-              <div className="fade-in-scale" style={{ animationDelay: "0.5s" }}>
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <Star
-                    key={i}
-                    className={`inline-block w-6 h-6 ${
-                      i < level % 5 || level % 5 === 0
-                        ? "text-yellow-500 fill-yellow-500"
-                        : "text-gray-300 dark:text-gray-600"
-                    }`}
-                  />
-                ))}
-              </div>
             </div>
 
             <div className="fade-in" style={{ animationDelay: "0.7s" }}>
