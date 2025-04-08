@@ -38,7 +38,7 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning={true} lang="en">
       <body
-        className={`${nunito.className} ${quickSand.className} antialiased relative bg-muted/60`}
+        className={`${quickSand.className} ${nunito.className} antialiased relative bg-muted/60`}
       >
         <Providers>{children}</Providers>
       </body>
