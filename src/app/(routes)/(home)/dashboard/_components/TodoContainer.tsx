@@ -1,20 +1,10 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { Plus, Target } from "lucide-react";
 import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useQuery } from "@tanstack/react-query";
 import { useListGoals } from "@/service/(goal)/list-goals.api";
 import { CurrentUserResponseSchema } from "@/service/(current-user)/get-current-user-information.api";
-import {
-  CreateGoalBodySchema,
-  useCreateGoalMutation,
-} from "@/service/(goal)/create-goal.api";
-import { useForm } from "react-hook-form";
-import { Form, FormControl, FormField } from "@/components/ui/form";
-import toast from "react-hot-toast";
 import GoalList from "@/components/goal/goal-list";
 import LoadingSpinner from "@/components/loading/loading-spinner";
 import AddTodoForm from "@/components/form/AddTodoForm";

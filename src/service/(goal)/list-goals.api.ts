@@ -4,7 +4,8 @@ import {
   createListResponseSchema,
   paginationRequestSchema,
 } from "@/lib/schemas/pagination.schema";
-import { queryOptions } from "@tanstack/react-query";
+import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
 import { z } from "zod";
 
@@ -35,6 +36,38 @@ export const useListGoals = (query: GoalQuerySchema = {}) => {
   return queryOptions<GoalResponseBodySchema>({
     queryKey,
     queryFn: async () => await listGoalsApi(goalQuerySchema.parse(query)),
+    throwOnError: isAxiosError,
+  });
+};
+
+export const useInfiniteListGoals = (query: GoalQuerySchema = {}) => {
+  const queryKey = ["goals", query];
+
+  return infiniteQueryOptions<
+    GoalResponseBodySchema, // TQueryFnData: Raw data from the query
+    unknown, // TError: Error type
+    GoalResponseBodySchema, // TData: Transformed/selected data
+    Array<string | GoalQuerySchema>, // TQueryKey: Query key type
+    number // TPageParam: Page parameter type
+  >({
+    queryKey,
+    queryFn: ({ pageParam = 1 }) =>
+      listGoalsApi({ ...query, page: pageParam, page_size: 25 }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      const nextPage = lastPage.page + 1;
+      return nextPage > lastPage.totalPages ? undefined : nextPage;
+    },
+    getPreviousPageParam: (firstPage) => {
+      const previousPage = firstPage.page - 1;
+      return previousPage < 1 ? undefined : previousPage;
+    },
+    select: (data) => ({
+      totalItems: data.pages[0]?.totalItems || 0,
+      totalPages: data.pages[0]?.totalPages || 0,
+      page: data.pages[0]?.page || 1,
+      results: data.pages.flatMap((page) => page.results),
+    }),
     throwOnError: isAxiosError,
   });
 };

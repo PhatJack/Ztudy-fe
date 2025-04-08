@@ -57,10 +57,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         connectOnlineSocket();
       }
     };
-    if (localStorage.getItem("auth") === "true") {
+    if (getCookie("isLoggedIn") === "1") {
       getUser();
     }
-  }, [connectOnlineSocket]);
+  }, [connectOnlineSocket, getCookie("isLoggedIn")]);
 
   const value = useMemo(() => ({ state, dispatch }), [state]);
 

@@ -32,7 +32,7 @@ const YoutubeLinkInput = () => {
         setErrorLink(true);
       }
     }, 500),
-    [dispatch]
+    [dispatch, debounce]
   );
 
   return (

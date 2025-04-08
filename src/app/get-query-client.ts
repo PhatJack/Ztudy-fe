@@ -10,7 +10,7 @@ function makeQueryClient() {
   return new QueryClient({
     defaultOptions: {
       queries: {
-        staleTime: 1000, // Dữ liệu sẽ được xem là "cũ" sau 1s
+        staleTime: 10000, // Dữ liệu sẽ được xem là "cũ" sau 10s
         refetchOnWindowFocus: true, // Khi người dùng quay lại tab, query sẽ được refetch
         throwOnError: (error) => {
           if (isAxiosError(error)) return true; // Nếu lỗi từ Axios, ném lỗi

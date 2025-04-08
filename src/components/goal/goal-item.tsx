@@ -10,12 +10,14 @@ import {
 import toast from "react-hot-toast";
 import { CheckedState } from "@radix-ui/react-checkbox";
 import { useDeleteGoalMutation } from "@/service/(goal)/delete-goal.api";
+import { cn } from "@/lib/utils";
 
 interface Props {
   goal: GoalSchema;
+  className?: string;
 }
 
-const GoalItem = ({ goal }: Props) => {
+const GoalItem = ({ goal, className }: Props) => {
   const patchGoalMutation = usePatchGoalMutation();
   const deleteGoalMutation = useDeleteGoalMutation();
 
@@ -44,13 +46,14 @@ const GoalItem = ({ goal }: Props) => {
 
   return (
     <div
-      className={`flex justify-between items-center w-full px-3 py-2 rounded-lg bg-background h-fit ${
-        goal.status === "COMPLETED" ? "line-through" : ""
-      } ${
+      className={cn(
+        `flex justify-between items-center w-full px-3 py-2 rounded-lg bg-background h-fit `,
+        goal.status === "COMPLETED" ? "line-through" : "",
         patchGoalMutation.isPending || deleteGoalMutation.isPending
           ? "opacity-50 pointer-event-none"
-          : ""
-      }`}
+          : "",
+        className
+      )}
     >
       <div className="flex items-center gap-2 flex-1">
         <Checkbox
@@ -59,7 +62,7 @@ const GoalItem = ({ goal }: Props) => {
           defaultChecked={goal.status == "COMPLETED" ? true : false}
           onCheckedChange={(checked) => handleGoalStatus(checked)}
         />
-        <span className="text-xs text-muted-foreground">{goal.goal}</span>
+        <span className="text-xs font-medium text-muted-foreground">{goal.goal}</span>
       </div>
       {goal.status === "OPEN" && (
         <Button

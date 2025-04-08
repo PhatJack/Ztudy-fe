@@ -22,6 +22,7 @@ import LoadingSpinner from "@/components/loading/loading-spinner";
 import { checkPreferencesApi } from "@/service/(users)/check-preferences.api";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { useOnlineWebSocket } from "@/contexts/OnlineWebSocketContext";
+import { setCookie } from "cookies-next";
 
 export function LoginForm() {
   const { connectOnlineSocket } = useOnlineWebSocket();
@@ -36,6 +37,7 @@ export function LoginForm() {
   const router = useRouter();
   const loginMutation = useLoginMutation();
   const onSubmit = (data: LoginBodySchema) => {
+    console.log(data);
     loginMutation.mutate(data, {
       onSuccess: async (data) => {
         try {
@@ -46,7 +48,11 @@ export function LoginForm() {
         } catch (error) {
           dispatch({ type: "CHECK_PREFERENCES", payload: true });
         }
-        localStorage.setItem("auth", "true");
+        setCookie("isLoggedIn", "1", {
+          maxAge: 604800,
+          secure: true,
+          sameSite: "lax",
+        });
         dispatch({ type: "SET_USER", payload: data.user });
         connectOnlineSocket();
         router.push("/dashboard");

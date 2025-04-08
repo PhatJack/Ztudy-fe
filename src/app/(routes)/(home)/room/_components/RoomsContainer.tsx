@@ -9,12 +9,13 @@ import { useListTrendingRooms } from "@/service/(rooms)/room/list-trending-rooms
 import { useListRooms } from "@/service/(rooms)/room/list-rooms.api";
 import { useQueries } from "@tanstack/react-query";
 import { useRouter } from "nextjs-toploader/app";
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import AddNewRoomModal from "./AddNewRoomModal";
 import JoinRoomWithCode from "./JoinRoomWithCode";
 import { useJoinRandomRoomMutation } from "@/service/(rooms)/room/join-random-room.api";
 import JoinRandomRoomButton from "./JoinRandomRoomButton";
 import { useAuthContext } from "@/hooks/useAuthContext";
+import PaginationCustom from "@/components/pagination/PaginationCustom";
 
 const RoomsContainer = () => {
   const { connectChatSocket } = useRoomWebSocket();
@@ -24,14 +25,29 @@ const RoomsContainer = () => {
   const joinRoomMutation = useJoinRoomMutation();
   const joinRandomRoomMutation = useJoinRandomRoomMutation();
 
+  // Pagination states for each room type
+  const [yourRoomsPage, setYourRoomsPage] = useState<number>(1);
+  const [suggestedRoomsPage, setSuggestedRoomsPage] = useState<number>(1);
+  const [trendingRoomsPage, setTrendingRoomsPage] = useState<number>(1);
+
   const [yourRoomsQuery, suggestedRoomsQuery, trendingRoomsQuery] = useQueries({
     queries: [
       {
-        ...useListRooms({ expand: "category", creator_user: state.user?.id }),
-        enabled: !!state.user?.id
+        ...useListRooms({
+          expand: "category",
+          creator_user: state.user?.id,
+          page: yourRoomsPage,
+        }),
+        enabled: !!state.user?.id,
       },
-      useListSuggestedRooms({ expand: "category" }),
-      useListTrendingRooms({ expand: "category" }),
+      useListSuggestedRooms({
+        expand: "category",
+        page: suggestedRoomsPage,
+      }),
+      useListTrendingRooms({
+        expand: "category",
+        page: trendingRoomsPage,
+      }),
     ],
   });
   const { yourRooms, suggestedRooms, trendingRooms } = useMemo(
@@ -84,6 +100,7 @@ const RoomsContainer = () => {
           <JoinRoomWithCode handleJoinRoom={handleJoinRoom} />
         </div>
       </div>
+
       <div className="space-y-2">
         <h2 className="text-xl font-bold uppercase">Your Rooms</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
@@ -107,7 +124,15 @@ const RoomsContainer = () => {
             </>
           )}
         </div>
+        {yourRooms.length > 0 && (
+          <PaginationCustom
+            onPageChange={(page) => setYourRoomsPage(page)}
+            currentPage={yourRoomsPage}
+            totalPages={yourRoomsQuery.data?.totalPages}
+          />
+        )}
       </div>
+
       <div className="space-y-2">
         <h2 className="text-xl font-bold uppercase">Suggested Rooms</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
@@ -127,7 +152,15 @@ const RoomsContainer = () => {
             </>
           )}
         </div>
+        {suggestedRooms.length > 0 && (
+          <PaginationCustom
+            onPageChange={(page) => setSuggestedRoomsPage(page)}
+            currentPage={suggestedRoomsPage}
+            totalPages={suggestedRoomsQuery.data?.totalPages}
+          />
+        )}
       </div>
+
       <div className="space-y-2">
         <h2 className="text-xl font-bold uppercase">Trending Rooms</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
@@ -145,6 +178,13 @@ const RoomsContainer = () => {
             ))
           )}
         </div>
+        {trendingRooms.length > 0 && (
+          <PaginationCustom
+            onPageChange={(page) => setTrendingRoomsPage(page)}
+            currentPage={trendingRoomsPage}
+            totalPages={trendingRoomsQuery.data?.totalPages}
+          />
+        )}
       </div>
     </div>
   );

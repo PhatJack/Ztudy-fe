@@ -19,6 +19,7 @@ import HeaderStats from "./components/header-stats";
 import HeaderMobileMenu from "./components/header-mobile-menu";
 import AvatarCustom from "../avatar/AvatarCustom";
 import { useOnlineWebSocket } from "@/contexts/OnlineWebSocketContext";
+import { deleteCookie } from "cookies-next";
 
 const Header = () => {
   const { disconnectOnlineSocket } = useOnlineWebSocket();
@@ -32,7 +33,7 @@ const Header = () => {
       {},
       {
         onSuccess: () => {
-          localStorage.removeItem("auth");
+          deleteCookie("isLoggedIn", { secure: true, sameSite: "lax" });
           disconnectOnlineSocket();
           dispatch({ type: "SET_USER", payload: null });
           router.push("/login");

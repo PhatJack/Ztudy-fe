@@ -23,7 +23,6 @@ const nextConfig = {
 			},
 		],
 	},
-	reactStrictMode: false,
 };
 
 const withBundleAnalyzer = bundleAnalyzer({

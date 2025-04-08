@@ -8,11 +8,6 @@ const nunito = Nunito({
   subsets: ["latin"],
   weight: ["400", "700"],
 });
-
-const quickSand = Quicksand({
-  subsets: ["latin"],
-  weight: ["400", "700"],
-});
 export const metadata: Metadata = {
   title: {
     template: "%s | Ztudy",
@@ -37,9 +32,7 @@ export default function RootLayout({
 }>) {
   return (
     <html suppressHydrationWarning={true} lang="en">
-      <body
-        className={`${quickSand.className} ${nunito.className} antialiased relative bg-muted/60`}
-      >
+      <body className={`${nunito.className} antialiased relative bg-muted/60`}>
         <Providers>{children}</Providers>
       </body>
     </html>

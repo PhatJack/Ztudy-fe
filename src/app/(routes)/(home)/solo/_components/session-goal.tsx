@@ -1,61 +1,35 @@
 "use client";
 
+import AddTodoForm from "@/components/form/AddTodoForm";
+import GoalItem from "@/components/goal/goal-item";
 import LoadingSpinner from "@/components/loading/loading-spinner";
 import TooltipTemplate from "@/components/tooltip/TooltipTemplate";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useSoloContext } from "@/hooks/useSoloContext";
 import { createGetCurrentUserInformationQuery } from "@/service/(current-user)/get-current-user-information.api";
-import {
-  CreateGoalBodySchema,
-  useCreateGoalMutation,
-} from "@/service/(goal)/create-goal.api";
-import { useListGoals } from "@/service/(goal)/list-goals.api";
-import { useQuery } from "@tanstack/react-query";
-import { OctagonAlert, Plus, Target, X } from "lucide-react";
+import { useInfiniteListGoals } from "@/service/(goal)/list-goals.api";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { OctagonAlert, Target, X } from "lucide-react";
 import React, { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import toast from "react-hot-toast";
+import { useInView } from "react-intersection-observer";
 
 const SessionGoal = () => {
-  const currentUserQuery = useQuery(
-    createGetCurrentUserInformationQuery()
-  );
+  const { ref, inView } = useInView();
+  const currentUserQuery = useQuery(createGetCurrentUserInformationQuery());
   const userId = currentUserQuery.data?.id;
-  const createGoalMutation = useCreateGoalMutation();
 
-  // const goalsQuery = useQuery(useListGoals({user: userId}));
-
-	// const goals = goalsQuery.data?.results;
+  const { data, isFetching, isLoading, fetchNextPage, isFetchingNextPage } =
+    useInfiniteQuery({
+      ...useInfiniteListGoals({ user: userId }),
+      placeholderData: (previousData, previousQuery) => previousData,
+    });
 
   const [, dispatch] = useSoloContext();
 
-  const goalForm = useForm<CreateGoalBodySchema>({
-    defaultValues: {
-      goal: "",
-      status: "OPEN",
-    },
-  });
-
-  const onGoalSubmit = goalForm.handleSubmit((data: CreateGoalBodySchema) => {
-    const formData = {
-      ...data,
-      user_id: currentUserQuery.data?.id,
-    };
-
-    createGoalMutation.mutate(formData, {
-      onSuccess: () => {
-        goalForm.reset();
-      },
-      onError: (error) => {
-        console.error(error);
-        toast.error("Failed to create goal");
-      },
-    });
-  });
+  useEffect(() => {
+    if (inView) {
+      fetchNextPage();
+    }
+  }, [fetchNextPage, inView]);
 
   return (
     <div className="bg-background text-foreground p-5 rounded-md w-[280px] min-w-[280px] h-fit flex flex-col space-y-4 shadow-lg">
@@ -84,64 +58,25 @@ const SessionGoal = () => {
           </span>
         </div>
       </div>
-      <Form {...goalForm}>
-        <form onSubmit={onGoalSubmit} className="flex gap-2">
-          <FormField
-            control={goalForm.control}
-            name="goal"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input
-                    placeholder="shadcn"
-                    {...field}
-                    disabled={
-                      goalForm.formState.isSubmitting ||
-                      !goalForm.formState.isValid ||
-                      !goalForm.formState.isDirty
-                    }
-                    className="bg-white dark:bg-black border-2 border-gray-200"
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <Button
-            type="submit"
-            size={"icon"}
-            variant={"secondary"}
-            disabled={
-              goalForm.formState.isSubmitting ||
-              !goalForm.formState.isValid ||
-              !goalForm.formState.isDirty
+      <div className="flex flex-col space-y-2">
+        <AddTodoForm
+          user={currentUserQuery.data}
+          isDisplayIcon={false}
+          className="border p-2"
+        />
+        <div className="flex flex-col overflow-hidden">
+          <div className="max-h-[250px] overflow-y-auto flex flex-col">
+            {data &&
+              data.results.map((goal) => (
+                <GoalItem goal={goal} key={goal.id} className="p-0" />
+              ))}
+            {
+              <div ref={ref} className="text-center w-full text-sm">
+                {isFetchingNextPage ? <LoadingSpinner /> : ""}
+              </div>
             }
-          >
-            <Plus />
-          </Button>
-        </form>
-      </Form>
-      <div className="flex flex-col gap-3">
-        {/* {goalsQuery.isLoading ? (
-          <div className="h-[200px] w-full flex justify-center items-center">
-            <LoadingSpinner />
           </div>
-        ) : null}
-        {goals &&
-          goals.map((item, index) => (
-            <div key={index} className="flex items-center gap-1">
-              <Checkbox
-                id={`goal${index}`}
-                className="rounded-full"
-                checked={item.status === "COMPLETED" ? true : false}
-              />
-              <Label
-                htmlFor={`goal${index}`}
-                className="peer-data-[state=checked]:line-through"
-              >
-                {item.title}
-              </Label>
-            </div>
-          ))} */}
+        </div>
       </div>
     </div>
   );
