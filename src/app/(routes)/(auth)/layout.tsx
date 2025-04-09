@@ -26,11 +26,11 @@ export default function AuthLayout({
       <div className="relative hidden bg-muted lg:block">
         <Image
           fill
-          src="/login_right.webp"
+          src="/quote.webp"
           alt="Image"
-          sizes="50vw"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           priority
-          className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+          className="absolute inset-0 h-full w-full dark:brightness-[0.2] dark:grayscale"
         />
       </div>
     </div>

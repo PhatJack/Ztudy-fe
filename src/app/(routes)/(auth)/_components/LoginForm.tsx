@@ -161,6 +161,7 @@ export function LoginForm() {
           <div className="flex flex-col gap-3">
             <Button
               variant="outline"
+							type="button"
               className="w-full bg-[#181717] text-white hover:bg-[#181717]/90 hover:text-white"
             >
               <svg
