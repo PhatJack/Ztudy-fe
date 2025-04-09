@@ -22,7 +22,38 @@ export const metadata: Metadata = {
     { name: "Hoang Gia Bao" },
   ],
   description:
-    "Ztudy is a website for studying and learning.You can learn and study with your friends or create a solo room for yourself.The website have a lot of features like video call, chat, share screen, etc.But due to any distraction, we have to turn off all mic to let you 100% focus on your work.",
+    "Ztudy is a collaborative learning platform where you can study with friends or solo. Enjoy features like video calls, chat, screen sharing, and distraction-free modes—like muting mics—to stay 100% focused. Boost productivity and learning together!",
+  keywords: [
+    "study app",
+    "collaborative learning",
+    "focus tool",
+    "video call study",
+    "productivity app",
+    "technology study",
+    "study with friends",
+    "distraction-free study",
+    "study platform",
+    "online learning",
+    "study tools",
+    "study group",
+  ],
+  openGraph: {
+    title: "Ztudy - Study Together, Stay Focused",
+    description:
+      "Ztudy is a collaborative learning platform where you can study with friends or solo. Enjoy features like video calls, chat, screen sharing, and distraction-free modes—like muting mics—to stay 100% focused. Boost productivity and learning together!",
+    url: "https://ztudy.io.vn",
+    siteName: "Ztudy",
+    type: "website",
+    images: [
+      {
+        url: "https://ztudy.io.vn/og-image.webp",
+        width: 1200,
+        height: 630,
+        alt: "Ztudy - Study Together, Stay Focused",
+      },
+    ],
+  },
+  metadataBase: new URL("https://ztudy.io.vn"),
 };
 
 export default function RootLayout({
