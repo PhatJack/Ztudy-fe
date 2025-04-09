@@ -44,6 +44,7 @@ const RoomDetail = ({ roomCode }: Props) => {
     isAdmin,
     setIsAdmin,
     setCurrentRoom,
+    isModerator,
   } = useChatContext();
   const { connectChatSocket, disconnectChatSocket } = useRoomWebSocket();
 
@@ -89,13 +90,13 @@ const RoomDetail = ({ roomCode }: Props) => {
   // Filter tabs based on room type and admin status
   const filteredTabs = useMemo(() => {
     if (!currentRoom) return tabs;
-    return tabs.filter(tab => {
+    return tabs.filter((tab) => {
       if (tab.value === "requestToJoin") {
-        return currentRoom.type === "PRIVATE" && isAdmin;
+        return currentRoom.type === "PRIVATE" && (isAdmin || isModerator);
       }
       return true;
     });
-  }, [currentRoom, isAdmin]);
+  }, [currentRoom, isAdmin, isModerator]);
 
   if (loading) {
     return (
@@ -151,15 +152,24 @@ const RoomDetail = ({ roomCode }: Props) => {
             ))}
           </TabsList>
 
-          {currentRoom?.type === "PRIVATE" && isAdmin && (
-            <TabsContent className="mt-0 bg-white dark:bg-background" value="requestToJoin">
+          {currentRoom?.type === "PRIVATE" && (isAdmin || isModerator) && (
+            <TabsContent
+              className="mt-0 bg-white dark:bg-background"
+              value="requestToJoin"
+            >
               <TabRequests requests={pendingRequests} roomCode={roomCode} />
             </TabsContent>
           )}
-          <TabsContent className="mt-0 h-full overflow-hidden bg-white dark:bg-background" value="roomChat">
+          <TabsContent
+            className="mt-0 h-full overflow-hidden bg-white dark:bg-background"
+            value="roomChat"
+          >
             <TabChat messages={messages} typingUsers={typingUsers} />
           </TabsContent>
-          <TabsContent className="mt-0 bg-white dark:bg-background" value="people">
+          <TabsContent
+            className="mt-0 bg-white dark:bg-background"
+            value="people"
+          >
             <TabPeople participants={participants} roomCode={roomCode} />
           </TabsContent>
         </Tabs>

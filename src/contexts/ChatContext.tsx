@@ -46,6 +46,8 @@ interface ChatContextType {
   setIsAdmin: React.Dispatch<React.SetStateAction<boolean>>;
   isPending: boolean;
   setIsPending: React.Dispatch<React.SetStateAction<boolean>>;
+	isModerator: boolean;
+	setIsModerator: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 // Create context with default values
@@ -66,6 +68,7 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
   const [typingUsers, setTypingUsers] = useState<Set<number>>(new Set());
   const [pendingRequests, setPendingRequests] = useState<Participant[]>([]);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [isModerator, setIsModerator] = useState<boolean>(false);
   const [isPending, setIsPending] = useState<boolean>(false);
 
   // Memoize the add/remove typing user functions to prevent re-renders
@@ -111,6 +114,8 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
       setIsAdmin,
       isPending,
       setIsPending,
+      isModerator,
+      setIsModerator,
     }),
     [
       messages,
@@ -122,6 +127,7 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
       isPending,
       addTypingUser,
       removeTypingUser,
+      isModerator,
     ]
   );
 

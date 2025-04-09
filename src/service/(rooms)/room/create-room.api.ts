@@ -1,29 +1,40 @@
+import { getQueryClient } from "@/app/get-query-client";
 import { apiClient } from "@/lib/client";
 import { roomSchema } from "@/lib/schemas/room/room.schema";
 import { useMutation } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
 import { z } from "zod";
 
-export const createRoomBodySchema = z.object({
-  name: z.string()
-    .min(1, "Name is required")
-    .max(50, "Name must be less than 50 characters")
-    .regex(/^[a-zA-Z0-9\s']+$/, "Name can only contain letters, numbers, spaces and apostrophes"),
-  category: z.number().nullable(),
-  max_participants: z.number()
-    .min(2, "Minimum 2 participants required")
-    .max(50, "Maximum 50 participants allowed"),
-  type: z.enum(["PUBLIC", "PRIVATE"]),
-  creator_user: z.number(),
-}).refine((data) => {
-  if (data.type === "PUBLIC" && (!data.category || data.category === 0)) {
-    return false;
-  }
-  return true;
-}, {
-  message: "Category is required for public rooms",
-  path: ["category"]
-});
+export const createRoomBodySchema = z
+  .object({
+    name: z
+      .string()
+      .min(1, "Name is required")
+      .max(50, "Name must be less than 50 characters")
+      .regex(
+        /^[a-zA-Z0-9\s']+$/,
+        "Name can only contain letters, numbers, spaces and apostrophes"
+      ),
+    category: z.number().nullable(),
+    max_participants: z
+      .number()
+      .min(2, "Minimum 2 participants required")
+      .max(50, "Maximum 50 participants allowed"),
+    type: z.enum(["PUBLIC", "PRIVATE"]),
+    creator_user: z.number(),
+  })
+  .refine(
+    (data) => {
+      if (data.type === "PUBLIC" && (!data.category || data.category === 0)) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: "Category is required for public rooms",
+      path: ["category"],
+    }
+  );
 
 export type CreateRoomBodySchema = z.infer<typeof createRoomBodySchema>;
 
@@ -55,11 +66,15 @@ export async function createRoomApi(
 }
 
 export function useCreateRoomMutation() {
+  const queryClient = getQueryClient();
   const mutationKey = ["create-study-group"];
   return useMutation<CreateRoomResponseSchema, Error, CreateRoomBodySchema>({
     mutationKey,
     mutationFn: (body: CreateRoomBodySchema) =>
       createRoomApi(createRoomBodySchema.parse(body)),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["rooms"] });
+    },
     throwOnError: isAxiosError,
   });
 }

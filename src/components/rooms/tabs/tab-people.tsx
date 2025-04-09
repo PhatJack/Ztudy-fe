@@ -1,5 +1,6 @@
 import AvatarCustom from "@/components/avatar/AvatarCustom";
 import RoleBadge from "@/components/badge/RoleBadge";
+import TooltipTemplate from "@/components/tooltip/TooltipTemplate";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -9,6 +10,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Participant } from "@/contexts/ChatContext";
+import { useAuthContext } from "@/hooks/useAuthContext";
 import { useChatContext } from "@/hooks/useChatContext";
 import {
   useAssignAdminMutation,
@@ -23,6 +25,7 @@ interface Props {
 }
 
 const TabPeople = ({ participants, roomCode }: Props) => {
+  const [state] = useAuthContext();
   const { mutate: assignAdmin } = useAssignAdminMutation();
   const { mutate: revokeModerator } = useRevokeAdminMutation();
   const { isAdmin, currentRoom } = useChatContext();
@@ -46,7 +49,7 @@ const TabPeople = ({ participants, roomCode }: Props) => {
           />
         </div>
       </div>
-      <div className="overflow-y-auto flex flex-col space-y-4 p-4">
+      <div className="overflow-y-auto flex flex-col space-y-2 p-4">
         {filteredParticipants.map((participant, index) => (
           <div
             key={index}
@@ -56,61 +59,55 @@ const TabPeople = ({ participants, roomCode }: Props) => {
               <AvatarCustom src={participant.user?.avatar} />
               <div className="flex flex-col">
                 <span className="font-semibold text-gray-900 dark:text-gray-100">
-                  {participant.user?.username}
+                  {participant.user?.username}{" "}
+                  {`${state.user?.id == participant.user.id ? "(You)" : ""}`}
                 </span>
                 <RoleBadge role={participant.role} />
               </div>
             </div>
             <div className="flex gap-2">
-              {currentRoom?.type === "PRIVATE" && isAdmin && participant.role === "USER" && (
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        size={"sm"}
-                        variant={"warning"}
-                        type="button"
-                        onClick={() =>
-                          assignAdmin({ roomCode, userId: participant.user.id })
-                        }
-                        className="flex items-center gap-2 bg-amber-100 text-amber-700 hover:bg-amber-200 transition-colors"
-                      >
-                        <Shield className="h-4 w-4" />
-                        <span>Make Moderator</span>
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Promote to moderator role</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              )}
-              {currentRoom?.type === "PRIVATE" && isAdmin && participant.role === "MODERATOR" && (
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        size={"sm"}
-                        variant={"destructive"}
-                        type="button"
-                        onClick={() =>
-                          revokeModerator({
-                            roomCode,
-                            userId: participant.user.id,
-                          })
-                        }
-                        className="flex items-center gap-2"
-                      >
-                        <ShieldOff className="h-4 w-4" />
-                        <span>Remove Moderator</span>
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Remove moderator privileges</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              )}
+              {currentRoom?.type === "PRIVATE" &&
+                isAdmin &&
+                participant.role === "USER" && (
+                  <TooltipTemplate content="Promote to moderator role">
+                    <Button
+                      size={"sm"}
+                      variant={"warning"}
+                      type="button"
+                      onClick={() =>
+                        assignAdmin({
+                          roomCode,
+                          userId: participant.user.id,
+                        })
+                      }
+                      className="flex items-center gap-2 bg-amber-100 text-amber-700 hover:bg-amber-200 transition-colors"
+                    >
+                      <Shield className="h-4 w-4" />
+                      <span>Make Moderator</span>
+                    </Button>
+                  </TooltipTemplate>
+                )}
+              {currentRoom?.type === "PRIVATE" &&
+                isAdmin &&
+                participant.role === "MODERATOR" && (
+                  <TooltipTemplate content="Remove moderator privileges">
+                    <Button
+                      size={"sm"}
+                      variant={"destructive"}
+                      type="button"
+                      onClick={() =>
+                        revokeModerator({
+                          roomCode,
+                          userId: participant.user.id,
+                        })
+                      }
+                      className="flex items-center gap-2"
+                    >
+                      <ShieldOff className="h-4 w-4" />
+                      <span>Remove Moderator</span>
+                    </Button>
+                  </TooltipTemplate>
+                )}
             </div>
           </div>
         ))}

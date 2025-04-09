@@ -44,22 +44,20 @@ const LeaveRoomButton = ({ roomCode }: Props) => {
   };
 
   return (
-    <TooltipTemplate content="Leave room">
-      <LeaveRoomDialog
-        roomCode={roomCode}
-        onLeave={handleLeaveRoom}
-        onEnd={handleEndRoom}
+    <LeaveRoomDialog
+      roomCode={roomCode}
+      onLeave={handleLeaveRoom}
+      onEnd={handleEndRoom}
+    >
+      <Button
+        type="button"
+        size={"icon"}
+        variant={"destructive"}
+        className="rounded-full w-12 h-12 [&_svg]:size-5"
       >
-        <Button
-          type="button"
-          size={"icon"}
-          variant={"destructive"}
-          className="rounded-full w-12 h-12 [&_svg]:size-5"
-        >
-          <PhoneCall className="rotate-[135deg]" />
-        </Button>
-      </LeaveRoomDialog>
-    </TooltipTemplate>
+        <PhoneCall className="rotate-[135deg]" />
+      </Button>
+    </LeaveRoomDialog>
   );
 };
 

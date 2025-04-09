@@ -45,6 +45,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
     setIsAdmin,
     setIsPending,
     pendingRequests,
+    setIsModerator,
   } = useChatContext();
 
   // Use refs for WebSockets to prevent re-renders
@@ -73,10 +74,10 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
 
         case "user_joined":
           // Play door bell sound when user joins
-          const audio = new Audio("/door-bell.mp3");
-          audio
-            .play()
-            .catch((error) => console.log("Error playing sound:", error));
+          // const audio = new Audio("/door-bell.mp3");
+          // audio
+          //   .play()
+          //   .catch((error) => console.log("Error playing sound:", error));
           setParticipants((prev) => {
             if (!prev.find((p) => p?.user?.id === data.user.id)) {
               return [...prev, data.user];
@@ -136,10 +137,10 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
           break;
 
         case "user_assigned_moderator":
-          setIsAdmin(true);
+          setIsModerator(true);
           break;
         case "user_revoked_moderator":
-          setIsAdmin(false);
+          setIsModerator(false);
           break;
         case "room_ended":
           setCurrentRoom(null);
@@ -165,14 +166,13 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
       setIsAdmin,
       setIsPending,
       pendingRequests,
-			router
+      router,
     ]
   );
 
   // Handle Error
   const handleError = useCallback((error: any) => {
     console.error("Chat WebSocket Error:", error);
-    chatSocketRef.current = null;
   }, []);
 
   // Connect chat WebSocket using ref
@@ -200,14 +200,15 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
       chatSocketRef.current = new WebSocket(
         `${process.env.NEXT_PUBLIC_WEBSOCKET_URL}/chat/${roomCode}/`
       );
+      console.log(chatSocketRef.current);
 
       chatSocketRef.current.onopen = () => {
         console.log("Chat WebSocket Connected");
       };
+
       // Handle close event
       chatSocketRef.current.onclose = () => {
         console.log("Chat WebSocket Disconnected");
-        chatSocketRef.current = null;
       };
 
       chatSocketRef.current.onmessage = handleMessage;
@@ -252,7 +253,12 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
       sendTypingStatus,
       chatSocketRef,
     }),
-    [connectChatSocket, disconnectChatSocket, sendTypingStatus, chatSocketRef]
+    [
+      connectChatSocket,
+      disconnectChatSocket,
+      sendTypingStatus,
+      chatSocketRef.current,
+    ]
   );
 
   return (
