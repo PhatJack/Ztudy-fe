@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { Trophy, Star, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import Confetti from "react-confetti";
+import ReactConfetti from "react-confetti";
 import { useWindowSize } from "@/hooks/useWindowSize";
 import { getLevelColor } from "@/util/generateRandomColorForLevel";
 import { MonthlyLevelSchema } from "@/lib/schemas/monthly-level.schema";
@@ -36,10 +36,10 @@ const AchievementPopup: React.FC<AchievementPopupProps> = ({
       const sound = new Audio("/level-up.mp3");
       sound.play().catch((err) => console.error("Error playing sound:", err));
 
-      // Auto-hide confetti after 3 seconds
+      // Auto-hide confetti after 5 seconds
       const timer = setTimeout(() => {
         setShowConfetti(false);
-      }, 3000);
+      }, 5000);
 
       return () => clearTimeout(timer);
     } else {
@@ -67,11 +67,11 @@ const AchievementPopup: React.FC<AchievementPopupProps> = ({
   return (
     <>
       {showConfetti && (
-        <Confetti
+        <ReactConfetti
           width={width}
           height={height}
           recycle={false}
-          numberOfPieces={200}
+          numberOfPieces={300}
           gravity={0.2}
         />
       )}
@@ -103,7 +103,7 @@ const AchievementPopup: React.FC<AchievementPopupProps> = ({
                 <span className="text-4xl font-extrabold">
                   Level
                   <span
-									className="ml-2"
+                    className="ml-2"
                     style={
                       level
                         ? {

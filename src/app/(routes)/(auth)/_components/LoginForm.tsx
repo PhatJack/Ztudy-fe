@@ -125,7 +125,7 @@ export function LoginForm() {
                 <FormControl>
                   <div className="relative">
                     <Input
-                      placeholder="Enter your email"
+                      placeholder="Enter your password"
                       type={isShowingPassword ? "text" : "password"}
                       {...field}
                       disabled={loginMutation.isPending}

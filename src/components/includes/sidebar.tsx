@@ -9,10 +9,10 @@ function Sidebar() {
   return (
     <div className="md:max-w-24 h-full fixed left-0 top-0 z-40 p-2 box-border hidden md:flex flex-col justify-between items-center bg-white dark:bg-background border-r">
       <div className="w-full h-full flex flex-col justify-start items-center gap-4">
-        <div className="w-full flex flex-col justify-center items-center">
+        <div className="w-full p-2">
           <Link
             href={"/dashboard"}
-            className="w-full flex justify-center items-center relative"
+            className="aspect-square w-full flex justify-center items-center relative rounded-full overflow-hidden"
           >
             <Image
               alt="Logo"
