@@ -57,6 +57,9 @@ const config: Config = {
         sm: "calc(var(--radius) - 4px)",
       },
     },
+    animation: {
+      aurora: "aurora 8s ease-in-out infinite alternate",
+    },
   },
   plugins: [require("tailwindcss-animate")],
 };

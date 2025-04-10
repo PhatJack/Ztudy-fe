@@ -8,8 +8,11 @@ import TodoContainer from "./TodoContainer";
 import { Button } from "@/components/ui/button";
 import { Users } from "lucide-react";
 import { useOnlineWebSocket } from "@/contexts/OnlineWebSocketContext";
+import { AuroraText } from "@/components/text/AuroraText";
+import { useTheme } from "next-themes";
 
 const DashboardPage = () => {
+  const { theme } = useTheme();
   const { onlineCount } = useOnlineWebSocket();
   const [openCommunity, setOpenCommunity] = useState(false);
 
@@ -32,8 +35,17 @@ const DashboardPage = () => {
                 <h1 className="font-medium text-muted-foreground">
                   Hello, {userQuery.data?.username || "username"}!
                 </h1>
-                <p className="font-bold text-3xl xl:text-2xl leading-6 font-sans">
-                  Welcome back to Ztudy!
+                <p className="font-bold text-3xl leading-6 font-sans">
+                  Welcome back to{" "}
+                  <AuroraText
+                    colors={
+                      !(theme === "dark")
+                        ? ["#38a169", "#d6a756", "#60b070", "#00f0ff"]
+                        : ["#7ccba0", "#f1c27d", "#93d8a5", "#a5f3fc"]
+                    }
+                  >
+                    Ztudy
+                  </AuroraText>
                 </p>
               </div>
             </div>

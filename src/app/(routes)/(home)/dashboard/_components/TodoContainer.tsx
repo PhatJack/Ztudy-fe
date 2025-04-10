@@ -22,7 +22,7 @@ const TodoContainer = ({ user }: Props) => {
   const [currentPageOpen, setCurrentPageOpen] = useState<number>(1);
   const [currentPageCompleted, setCurrentPageCompleted] = useState<number>(1);
   const [activeTab, setActiveTab] = useState<"OPEN" | "COMPLETED" | undefined>(
-    "COMPLETED"
+    "OPEN"
   );
 
   const handlePageChange = ({

@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 html,
 body {
 	height: 100%;
@@ -136,5 +137,32 @@ body {
 	100% {
 		transform: scale(1);
 		box-shadow: 0 0 5px 0px rgb(69, 180, 109);
+	}
+}
+
+@keyframes aurora {
+	0% {
+		background-position: 0% 50%;
+		transform: rotate(-5deg) scale(0.9);
+	}
+
+	25% {
+		background-position: 50% 100%;
+		transform: rotate(5deg) scale(1.1);
+	}
+
+	50% {
+		background-position: 100% 50%;
+		transform: rotate(-3deg) scale(0.95);
+	}
+
+	75% {
+		background-position: 50% 0%;
+		transform: rotate(3deg) scale(1.05);
+	}
+
+	100% {
+		background-position: 0% 50%;
+		transform: rotate(-5deg) scale(0.9);
 	}
 }
