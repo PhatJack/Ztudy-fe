@@ -173,6 +173,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
   // Handle Error
   const handleError = useCallback((error: any) => {
     console.error("Chat WebSocket Error:", error);
+    chatSocketRef.current = null;
   }, []);
 
   // Connect chat WebSocket using ref
@@ -209,6 +210,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
       // Handle close event
       chatSocketRef.current.onclose = () => {
         console.log("Chat WebSocket Disconnected");
+        chatSocketRef.current = null;
       };
 
       chatSocketRef.current.onmessage = handleMessage;
