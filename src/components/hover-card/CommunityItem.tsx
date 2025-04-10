@@ -33,7 +33,7 @@ const CommunityItem = ({ user }: Props) => {
           <span className="text-sm">{user.username}</span>
         </div>
       </HoverCardTrigger>
-      <HoverCardContent className="w-72 rounded-2xl overflow-hidden shadow-xl border border-gray-100 bg-gradient-to-br from-white to-gray-50 p-0 transform transition-transform duration-300">
+      <HoverCardContent className="w-72 rounded-2xl overflow-hidden shadow-xl border border-gray-100 dark:border-gray-700 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 p-0 transform transition-transform duration-300">
         {/* Gradient Header with Glass Effect */}
         <div className="bg-gradient-to-r from-indigo-600 via-violet-600 to-teal-600 p-4 text-white relative overflow-hidden">
           <div className="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
@@ -58,25 +58,31 @@ const CommunityItem = ({ user }: Props) => {
           </div>
         </div>
 
-        {/* Body Content with Enhanced Styling */}
+        {/* Body Content */}
         <div className="p-5 space-y-4 text-sm">
           {/* Email */}
-          <div className="text-gray-700 flex items-center gap-3 bg-gray-100/50 rounded-lg p-2 hover:bg-gray-100 transition-colors">
+          <div className="flex items-center gap-3 bg-gray-100/50 dark:bg-gray-800/50 rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
             <span className="text-lg">📧</span>
-            <span className="font-medium text-gray-800">{user.email}</span>
+            <span className="font-medium text-gray-800 dark:text-gray-100">
+              {user.email}
+            </span>
           </div>
 
           {/* Study Time */}
-          <div className="flex justify-between items-center bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-2 hover:shadow-md transition-shadow">
-            <span className="text-gray-700 font-medium">🕓 Monthly Study:</span>
+          <div className="flex justify-between items-center bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900 dark:to-indigo-900 rounded-lg p-2 hover:shadow-md transition-shadow">
+            <span className="text-gray-700 dark:text-gray-200 font-medium">
+              🕓 Monthly Study:
+            </span>
             <span className="bg-indigo-500 text-white px-3 py-1 rounded-full font-semibold text-xs shadow-sm">
               {user.monthly_study_time.toFixed(1)} hours
             </span>
           </div>
 
           {/* Monthly Level */}
-          <div className="flex justify-between items-center bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-2 hover:shadow-md transition-shadow">
-            <span className="text-gray-700 font-medium">🌟 Monthly Level:</span>
+          <div className="flex justify-between items-center bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900 dark:to-pink-900 rounded-lg p-2 hover:shadow-md transition-shadow">
+            <span className="text-gray-700 dark:text-gray-200 font-medium">
+              🌟 Monthly Level:
+            </span>
             <span
               className="ml-2 font-bold text-lg animate-pulse"
               style={{
@@ -92,8 +98,10 @@ const CommunityItem = ({ user }: Props) => {
           </div>
 
           {/* Status */}
-          <div className="flex justify-between items-center bg-gradient-to-r from-emerald-50 to-teal-50 rounded-lg p-2 hover:shadow-md transition-shadow">
-            <span className="text-gray-700 font-medium">Status:</span>
+          <div className="flex justify-between items-center bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900 dark:to-teal-900 rounded-lg p-2 hover:shadow-md transition-shadow">
+            <span className="text-gray-700 dark:text-gray-200 font-medium">
+              Status:
+            </span>
             <span
               className={`px-3 py-1 rounded-full font-semibold text-xs shadow-sm ${
                 user.is_active
@@ -106,7 +114,7 @@ const CommunityItem = ({ user }: Props) => {
           </div>
 
           {/* Join Date */}
-          <p className="text-xs text-gray-500 pt-2 font-medium tracking-wide flex items-center gap-2">
+          <p className="text-xs text-gray-500 dark:text-gray-400 pt-2 font-medium tracking-wide flex items-center gap-2">
             <span className="text-yellow-500 text-lg">🎉</span>
             Joined: {new Date(user.date_joined).toLocaleDateString()}
           </p>

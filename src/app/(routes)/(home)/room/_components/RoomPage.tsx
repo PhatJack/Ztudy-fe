@@ -1,15 +1,11 @@
-"use client"
 import React from "react";
 import RoomsContainer from "./RoomsContainer";
-import RoomProviders from "../providers";
 
 const RoomPage = () => {
   return (
     <div className="p-6">
       <div className="bg-white dark:bg-background size-full p-6 rounded-md flex flex-col space-y-6">
-        <RoomProviders>
-          <RoomsContainer />
-        </RoomProviders>
+        <RoomsContainer />
       </div>
     </div>
   );
