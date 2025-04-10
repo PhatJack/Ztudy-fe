@@ -174,7 +174,7 @@ const TodoContainer = ({ user }: Props) => {
               fill
             />
             <h3 className="text-2xl font-bold mb-3 relative z-10">
-              🎯 Why Goal Setting?
+              💡 Why Goal Setting?
             </h3>
             <div className="space-y-4 relative z-10">
               <div className="flex gap-3">
@@ -192,7 +192,10 @@ const TodoContainer = ({ user }: Props) => {
 
               <div className="flex gap-3">
                 <div className="min-w-10 h-10 rounded-full bg-primary/90 flex items-center justify-center">
-                  <ArrowUpToLine size={18} className="text-secondary-foreground" />
+                  <ArrowUpToLine
+                    size={18}
+                    className="text-secondary-foreground"
+                  />
                 </div>
                 <div>
                   <h4 className="font-semibold">Track Progress</h4>

@@ -53,6 +53,21 @@ export const metadata: Metadata = {
       },
     ],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Ztudy - Study Together, Stay Focused",
+    description:
+      "Ztudy is a collaborative learning platform where you can study with friends or solo. Enjoy features like video calls, chat, screen sharing, and distraction-free modes—like muting mics—to stay 100% focused. Boost productivity and learning together!",
+    creator: "@jackphatdev",
+    images: [
+      {
+        url: "https://ztudy.io.vn/og-image.webp",
+        width: 1200,
+        height: 630,
+        alt: "Ztudy - Study Together, Stay Focused",
+      },
+    ],
+  },
   metadataBase: new URL("https://ztudy.io.vn"),
 };
 

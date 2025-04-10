@@ -62,35 +62,40 @@ export const OnlineWebSocketProvider: React.FC<
 
   // Connect online status socket
   const connectOnlineSocket = useCallback(() => {
-    if (!onlineSocketRef.current) {
-      const ws = new WebSocket(
-        `${process.env.NEXT_PUBLIC_WEBSOCKET_URL}/online/`
-      );
-      onlineSocketRef.current = ws;
-
-      ws.onopen = () => {};
-
-      ws.onmessage = handleMessage;
-
-      ws.onclose = () => {
-        onlineSocketRef.current = null;
-      };
-
-      ws.onerror = (error) => {
-        onlineSocketRef.current = null;
-      };
+    if (
+      onlineSocketRef.current &&
+      onlineSocketRef.current.readyState === WebSocket.OPEN
+    ) {
+      return;
     }
-  }, [handleMessage]);
 
-  // Cleanup WebSocket on unmount
-  useEffect(() => {
-    return () => {
-      if (onlineSocketRef.current) {
-        onlineSocketRef.current.close();
-        onlineSocketRef.current = null;
-      }
+    if (
+      onlineSocketRef.current &&
+      onlineSocketRef.current.readyState !== WebSocket.CLOSED
+    ) {
+      onlineSocketRef.current.onopen = null;
+      onlineSocketRef.current.onmessage = null;
+      onlineSocketRef.current.onerror = null;
+      onlineSocketRef.current.onclose = null;
+      onlineSocketRef.current.close();
+      onlineSocketRef.current = null;
+    }
+    onlineSocketRef.current = new WebSocket(
+      `${process.env.NEXT_PUBLIC_WEBSOCKET_URL}/online/`
+    );
+
+    onlineSocketRef.current.onopen = () => {};
+
+    onlineSocketRef.current.onmessage = handleMessage;
+
+    onlineSocketRef.current.onclose = () => {
+      onlineSocketRef.current = null;
     };
-  }, []);
+
+    onlineSocketRef.current.onerror = (error) => {
+      onlineSocketRef.current = null;
+    };
+  }, [handleMessage]);
 
   const disconnectOnlineSocket = useCallback(() => {
     if (onlineSocketRef.current) {
@@ -98,6 +103,13 @@ export const OnlineWebSocketProvider: React.FC<
       onlineSocketRef.current = null;
     }
   }, []);
+
+  // Cleanup WebSocket on unmount
+  useEffect(() => {
+    return () => {
+      disconnectOnlineSocket();
+    };
+  }, [disconnectOnlineSocket]);
 
   // Memoize context value to prevent unnecessary re-renders
   const value = useMemo(
