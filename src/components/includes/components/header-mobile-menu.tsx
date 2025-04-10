@@ -23,7 +23,7 @@ const HeaderMobileMenu = () => {
   return (
     <Sheet open={openModal} onOpenChange={() => setOpenModal(!openModal)}>
       <SheetTrigger asChild>
-        <Button size={"icon"} variant={"ghost"}>
+        <Button size={"icon"} variant={"ghost"} className="w-10 h-10 [&_svg]:size-5">
           <Menu />
         </Button>
       </SheetTrigger>
