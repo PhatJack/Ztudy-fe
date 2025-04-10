@@ -53,7 +53,7 @@ const CustomTooltipContent = ({ active, payload, label }: any) => {
     return null;
   }
 
-  const studyTimeHours = payload[0].value
+  const studyTimeHours = payload[0].value;
 
   return (
     <div className="rounded-md border bg-background p-2 shadow-sm">
@@ -107,38 +107,36 @@ function ChartBlock() {
       </div>
 
       {studyTimeChartQuery.isLoading ? (
-        <Skeleton className="h-[200px] w-full" />
+        <Skeleton className="h-[400px] w-full" />
       ) : studyTimeChartQuery.isError ? (
         <div className="text-center py-8 text-destructive">
           Failed to load chart data
         </div>
       ) : (
         <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
-          <ResponsiveContainer width="100%" height={250}>
-            <BarChart accessibilityLayer data={chartData}>
-              <CartesianGrid vertical={false} />
-              <XAxis
-                dataKey="date"
-                tickLine={false}
-                tickMargin={10}
-                axisLine={false}
-              />
-              <YAxis
-                dataKey="total_study"
-                tickLine={false}
-                tickMargin={10}
-                axisLine={false}
-                tickFormatter={(value) => `${value}`}
-              />
-              <ChartTooltip content={<CustomTooltipContent />} />
-              <Bar
-                dataKey="total_study"
-                fill="hsl(var(--chart-4))"
-                radius={4}
-                barSize={20}
-              />
-            </BarChart>
-          </ResponsiveContainer>
+          <BarChart accessibilityLayer data={chartData}>
+            <CartesianGrid vertical={false} />
+            <XAxis
+              dataKey="date"
+              tickLine={false}
+              tickMargin={10}
+              axisLine={false}
+            />
+            <YAxis
+              dataKey="total_study"
+              tickLine={false}
+              tickMargin={10}
+              axisLine={false}
+              tickFormatter={(value) => `${value}`}
+            />
+            <ChartTooltip content={<CustomTooltipContent />} />
+            <Bar
+              dataKey="total_study"
+              fill="hsl(var(--chart-4))"
+              radius={4}
+              barSize={20}
+            />
+          </BarChart>
         </ChartContainer>
       )}
     </div>

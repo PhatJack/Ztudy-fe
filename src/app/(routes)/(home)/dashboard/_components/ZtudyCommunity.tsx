@@ -1,5 +1,4 @@
 "use client";
-import AvatarCustom from "@/components/avatar/AvatarCustom";
 import CommunityItem from "@/components/hover-card/CommunityItem";
 import LoadingSpinner from "@/components/loading/loading-spinner";
 import { useListUsersInfinite } from "@/service/(users)/list-users.api";

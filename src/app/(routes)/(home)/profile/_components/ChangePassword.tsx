@@ -1,5 +1,5 @@
 "use client";
-import React from 'react'
+import React from "react";
 import TooltipTemplate from "@/components/tooltip/TooltipTemplate";
 import { Button } from "@/components/ui/button";
 import {
@@ -41,9 +41,9 @@ const ChangePassword = () => {
       },
       onError: (error) => {
         console.log(error);
-				if(error?.old_password){
-					toast.error(error?.old_password?.[0] || "An error occurred.");
-				}
+        if (error?.old_password) {
+          toast.error(error?.old_password?.[0] || "An error occurred.");
+        }
       },
     });
   };
@@ -76,6 +76,7 @@ const ChangePassword = () => {
                   <Input
                     {...field}
                     type="password"
+                    autoComplete="true"
                     placeholder={"Enter your current password"}
                   />
                 </FormControl>
@@ -93,6 +94,7 @@ const ChangePassword = () => {
                   <Input
                     {...field}
                     type="password"
+                    autoComplete="true"
                     placeholder={"Enter your new password"}
                   />
                 </FormControl>
@@ -110,6 +112,7 @@ const ChangePassword = () => {
                   <Input
                     {...field}
                     type="password"
+                    autoComplete="true"
                     placeholder={"Cofirm your new password"}
                   />
                 </FormControl>
