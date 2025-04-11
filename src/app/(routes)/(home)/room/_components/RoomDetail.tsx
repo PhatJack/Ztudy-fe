@@ -1,5 +1,4 @@
 "use client";
-import AvatarCustom from "@/components/avatar/AvatarCustom";
 import TabChat from "@/components/rooms/tabs/tab-chat";
 import TabPeople from "@/components/rooms/tabs/tab-people";
 import TabRequests from "@/components/rooms/tabs/tab-requests";
@@ -8,13 +7,10 @@ import { tabs } from "@/constants/room-tabs";
 import { useRoomWebSocket } from "@/contexts/WebSocketContext";
 import { useRouter } from "nextjs-toploader/app";
 import React, { useEffect, useState, useMemo } from "react";
-import PendingScreen from "./PendingScreen";
 import toast from "react-hot-toast";
 import { useChatContext } from "@/hooks/useChatContext";
-import { Button } from "@/components/ui/button";
 import { joinRoomApi } from "@/service/(rooms)/room/join-room.api";
 import LoadingSpinner from "@/components/loading/loading-spinner";
-import LeaveRoomButton from "./LeaveRoomButton";
 import MainScreen from "./MainScreen";
 import dynamic from "next/dynamic";
 
@@ -29,8 +25,6 @@ const PendingScreenDynamic = dynamic(
 
 const RoomDetail = ({ roomCode }: Props) => {
   const [loading, setLoading] = useState<boolean>(true);
-  const [cameraEnabled, setCameraEnabled] = useState<boolean>(true);
-  const [micEnabled, setMicEnabled] = useState<boolean>(true);
   const router = useRouter();
   const {
     isPending,
@@ -108,10 +102,6 @@ const RoomDetail = ({ roomCode }: Props) => {
   if (isPending) {
     return (
       <PendingScreenDynamic
-        cameraEnabled={cameraEnabled}
-        micEnabled={micEnabled}
-        setCameraEnabled={setCameraEnabled}
-        setMicEnabled={setMicEnabled}
         handleCancelRequest={() => handleCancelRequest()}
         roomCode={roomCode}
       />

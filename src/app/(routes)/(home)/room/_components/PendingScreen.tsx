@@ -2,26 +2,25 @@ import LoadingSpinner from "@/components/loading/loading-spinner";
 import CameraDisplay from "@/components/rooms/camera/CameraDisplay";
 import TooltipTemplate from "@/components/tooltip/TooltipTemplate";
 import { Button } from "@/components/ui/button";
+import { useRoomDetailContext } from "@/contexts/RoomDetailContext";
 import { useCancelRequestMutation } from "@/service/(rooms)/request/request.api";
 import { Camera, CameraOff, Mic, MicOff } from "lucide-react";
 import React from "react";
 
 interface PendingScreenProps {
-  cameraEnabled?: boolean;
-  micEnabled?: boolean;
-  setCameraEnabled: (enabled: boolean) => void;
-  setMicEnabled: (enabled: boolean) => void;
   handleCancelRequest: () => void;
   roomCode: string;
 }
 const PendingScreen = ({
-  cameraEnabled = false,
-  micEnabled = false,
-  setCameraEnabled,
-  setMicEnabled,
   handleCancelRequest,
   roomCode,
 }: PendingScreenProps) => {
+  const {
+    isAudioEnabled,
+    isVideoEnabled,
+    setIsAudioEnabled,
+    setIsVideoEnabled,
+  } = useRoomDetailContext();
   const leaveRoomMutation = useCancelRequestMutation();
 
   const onClick = () => {
@@ -37,8 +36,8 @@ const PendingScreen = ({
       <div className="p-6 w-full bg-white rounded-lg flex justify-center items-center space-x-6">
         <div className="w-full flex flex-col space-y-6 justify-center items-center">
           <CameraDisplay
-            cameraEnabled={cameraEnabled}
-            micEnabled={micEnabled}
+            cameraEnabled={isVideoEnabled}
+            micEnabled={isAudioEnabled}
           />
           <div className="flex space-x-6 flex-wrap">
             <TooltipTemplate content="Camera">
@@ -46,10 +45,10 @@ const PendingScreen = ({
                 type="button"
                 size={"icon"}
                 className="rounded-full w-14 h-14 [&_svg]:size-6"
-                variant={cameraEnabled ? "default" : "outline"}
-                onClick={() => setCameraEnabled(!cameraEnabled)}
+                variant={isVideoEnabled ? "default" : "outline"}
+                onClick={() => setIsVideoEnabled(!isVideoEnabled)}
               >
-                {cameraEnabled ? <Camera /> : <CameraOff />}
+                {isVideoEnabled ? <Camera /> : <CameraOff />}
               </Button>
             </TooltipTemplate>
             <TooltipTemplate content="Mutes">
@@ -57,10 +56,10 @@ const PendingScreen = ({
                 type="button"
                 size={"icon"}
                 className="rounded-full w-14 h-14 [&_svg]:size-6"
-                variant={micEnabled ? "default" : "outline"}
-                onClick={() => setMicEnabled(!micEnabled)}
+                variant={isAudioEnabled ? "default" : "outline"}
+                onClick={() => setIsAudioEnabled(!isAudioEnabled)}
               >
-                {micEnabled ? <Mic /> : <MicOff />}
+                {isAudioEnabled ? <Mic /> : <MicOff />}
               </Button>
             </TooltipTemplate>
           </div>

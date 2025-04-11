@@ -51,5 +51,6 @@ export const config = {
     "/reset-password",
     "/privacy-policy",
     "/terms-and-conditions",
+		"/google-callback",
   ],
 };

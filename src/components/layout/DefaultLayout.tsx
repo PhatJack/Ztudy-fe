@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import PreferencesScreen from "../check-preference/preferences-screen";
 import { useAchievementNotification } from "@/hooks/useAchievementNotification";
 import AchievementPopup from "../popup/AchivementPopup";
+import CookieBanner from "../cookie-banner/CookieBanner";
 
 const DefaultLayout = ({
   children,
@@ -50,6 +51,7 @@ const DefaultLayout = ({
         message={achievementMessage}
         onClose={closeAchievementPopup}
       />
+      <CookieBanner />
     </>
   );
 };

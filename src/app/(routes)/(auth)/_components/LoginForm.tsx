@@ -49,7 +49,7 @@ export function LoginForm() {
           dispatch({ type: "CHECK_PREFERENCES", payload: true });
         }
         setCookie("isLoggedIn", "1", {
-          maxAge: 60 * 60, // 1 hour
+          maxAge: 60 * 60 * 24 * 365, // 1 year in seconds
           secure: true,
           sameSite: "lax",
         });
