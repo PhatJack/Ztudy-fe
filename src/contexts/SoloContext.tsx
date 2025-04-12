@@ -1,3 +1,4 @@
+import { GoalSchema } from "@/lib/schemas/goal/goal.schema";
 import React, { createContext, useMemo, useReducer, Dispatch } from "react";
 
 // Define the type for the state
@@ -20,6 +21,8 @@ export interface InitialState {
   backgroundURL: string;
   isAddYtbScript: boolean;
   activeSounds: SoundState[];
+  completedGoals: GoalSchema[];
+  totalOpenGoals?: number;
 }
 
 // Define the action type
@@ -55,6 +58,14 @@ export type Action =
   | {
       type: "SAVE_ACTIVE_SOUNDS";
       payload: SoundState[];
+    }
+  | {
+      type: "SAVE_COMPLETED_GOALS";
+      payload: GoalSchema;
+    }
+  | {
+      type: "SAVE_OPEN_GOALS";
+      payload?: number;
     };
 
 // Create the initial state
@@ -69,9 +80,12 @@ const initialState: InitialState = {
     author: "Will Rogers",
   },
   volume: 0.5,
-  backgroundURL: "https://www.youtube.com/watch?v=oIK0XHuMh64&list=RDoIK0XHuMh64",
+  backgroundURL:
+    "https://www.youtube.com/watch?v=oIK0XHuMh64&list=RDoIK0XHuMh64",
   isAddYtbScript: false,
   activeSounds: [],
+  completedGoals: [],
+  totalOpenGoals: 0,
 };
 
 // Create the context with an initial value of `null`
@@ -105,6 +119,16 @@ const reducer = (state: InitialState, action: Action): InitialState => {
       return { ...state, isAddYtbScript: action.payload };
     case "SAVE_ACTIVE_SOUNDS":
       return { ...state, activeSounds: action.payload };
+    case "SAVE_COMPLETED_GOALS":
+      return {
+        ...state,
+        completedGoals: [...state.completedGoals, action.payload],
+      };
+    case "SAVE_OPEN_GOALS":
+      return {
+        ...state,
+        totalOpenGoals: action.payload,
+      };
     default:
       return state;
   }

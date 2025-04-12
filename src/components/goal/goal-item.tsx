@@ -15,9 +15,10 @@ import { cn } from "@/lib/utils";
 interface Props {
   goal: GoalSchema;
   className?: string;
+  onComplete?: (goal: GoalSchema) => void;
 }
 
-const GoalItem = ({ goal, className }: Props) => {
+const GoalItem = ({ goal, className, onComplete }: Props) => {
   const patchGoalMutation = usePatchGoalMutation();
   const deleteGoalMutation = useDeleteGoalMutation();
 
@@ -31,6 +32,9 @@ const GoalItem = ({ goal, className }: Props) => {
       patchGoalMutation.mutate(updatedGoal, {
         onSuccess() {
           toast.success("Goal status updated successfully!");
+          if (onComplete) {
+            onComplete(goal);
+          }
         },
       });
     }

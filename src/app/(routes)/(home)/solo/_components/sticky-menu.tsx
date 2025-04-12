@@ -81,7 +81,9 @@ const StickyMenu = () => {
             </span>
           </div>
           <p className="text-sm">
-            <strong>0 / 1</strong>
+            <strong>
+              {state.completedGoals.length} / {state.totalOpenGoals}
+            </strong>
           </p>
         </div>
       </div>
