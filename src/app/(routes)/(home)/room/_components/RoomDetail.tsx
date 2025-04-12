@@ -13,6 +13,7 @@ import { joinRoomApi } from "@/service/(rooms)/room/join-room.api";
 import LoadingSpinner from "@/components/loading/loading-spinner";
 import MainScreen from "./MainScreen";
 import dynamic from "next/dynamic";
+import { useRoomDetailContext } from "@/contexts/RoomDetailContext";
 
 interface Props {
   roomCode: string;
@@ -24,6 +25,7 @@ const PendingScreenDynamic = dynamic(
 );
 
 const RoomDetail = ({ roomCode }: Props) => {
+  const { joinChannel } = useRoomDetailContext();
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
   const {
@@ -63,6 +65,11 @@ const RoomDetail = ({ roomCode }: Props) => {
         if (res.status === 202) {
           setIsPending(true);
         }
+        await joinChannel({
+          code_invitation: roomCode,
+          initialAudioEnabled: true,
+          initialVideoEnabled: true,
+        });
         setLoading(false);
         setCurrentRoom(res.data.room);
         setIsAdmin(res.data.participant.role === "ADMIN");

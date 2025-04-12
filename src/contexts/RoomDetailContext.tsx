@@ -12,19 +12,19 @@ import AgoraRTC, {
   IMicrophoneAudioTrack,
   ILocalVideoTrack,
   IAgoraRTCRemoteUser,
-  ILocalAudioTrack,
+  ILocalAudioTrack
 } from "agora-rtc-react";
-import { apiClient } from "@/lib/client";
 import { getAgoraTokenApi } from "@/service/(rooms)/agora/get-token-agora.api";
 
+interface ExtendedRemoteUser extends IAgoraRTCRemoteUser {
+  username?: string;
+}
 interface RoomDetailContextType {
   // State
   localTracks: (IMicrophoneAudioTrack | ICameraVideoTrack)[];
-  remoteUsers: IAgoraRTCRemoteUser[];
+  remoteUsers: ExtendedRemoteUser[];
   isVideoEnabled: boolean;
-  setIsVideoEnabled: React.Dispatch<React.SetStateAction<boolean>>;
   isAudioEnabled: boolean;
-  setIsAudioEnabled: React.Dispatch<React.SetStateAction<boolean>>;
   isScreenSharing: boolean;
   screenTrack: ILocalVideoTrack | [ILocalVideoTrack, ILocalAudioTrack] | null;
   isLoading: boolean;
@@ -34,11 +34,15 @@ interface RoomDetailContextType {
   toggleAudio: () => Promise<void>;
   toggleScreenShare: () => Promise<void>;
   leaveChannel: () => Promise<void>;
-  joinChannel: (
-    code_invitation: string,
-    initialAudioEnabled: boolean,
-    initialVideoEnabled: boolean
-  ) => Promise<void>;
+  joinChannel: ({
+    code_invitation,
+    initialAudioEnabled,
+    initialVideoEnabled,
+  }: {
+    code_invitation: string;
+    initialAudioEnabled: boolean;
+    initialVideoEnabled: boolean;
+  }) => Promise<void>;
 }
 
 // Create the context with a default undefined value
@@ -163,11 +167,15 @@ export const RoomDetailProvider = ({ children }: RoomDetailProviderProps) => {
     await cleanup();
   };
 
-  const joinChannel = async (
-    code_invitation: string,
-    initialAudioEnabled: boolean,
-    initialVideoEnabled: boolean
-  ) => {
+  const joinChannel = async ({
+    code_invitation,
+    initialAudioEnabled,
+    initialVideoEnabled,
+  }: {
+    code_invitation: string;
+    initialAudioEnabled: boolean;
+    initialVideoEnabled: boolean;
+  }) => {
     try {
       if (!code_invitation) {
         return;
@@ -268,9 +276,7 @@ export const RoomDetailProvider = ({ children }: RoomDetailProviderProps) => {
       localTracks,
       remoteUsers,
       isVideoEnabled,
-      setIsVideoEnabled,
       isAudioEnabled,
-      setIsAudioEnabled,
       isScreenSharing,
       screenTrack,
       isLoading,
@@ -284,9 +290,7 @@ export const RoomDetailProvider = ({ children }: RoomDetailProviderProps) => {
       localTracks,
       remoteUsers,
       isVideoEnabled,
-      setIsVideoEnabled,
       isAudioEnabled,
-      setIsAudioEnabled,
       isScreenSharing,
       screenTrack,
       isLoading,

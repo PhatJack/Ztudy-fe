@@ -15,12 +15,8 @@ const PendingScreen = ({
   handleCancelRequest,
   roomCode,
 }: PendingScreenProps) => {
-  const {
-    isAudioEnabled,
-    isVideoEnabled,
-    setIsAudioEnabled,
-    setIsVideoEnabled,
-  } = useRoomDetailContext();
+  const { isAudioEnabled, isVideoEnabled, toggleAudio, toggleVideo } =
+    useRoomDetailContext();
   const leaveRoomMutation = useCancelRequestMutation();
 
   const onClick = () => {
@@ -46,7 +42,7 @@ const PendingScreen = ({
                 size={"icon"}
                 className="rounded-full w-14 h-14 [&_svg]:size-6"
                 variant={isVideoEnabled ? "default" : "outline"}
-                onClick={() => setIsVideoEnabled(!isVideoEnabled)}
+                onClick={() => toggleVideo()}
               >
                 {isVideoEnabled ? <Camera /> : <CameraOff />}
               </Button>
@@ -57,7 +53,7 @@ const PendingScreen = ({
                 size={"icon"}
                 className="rounded-full w-14 h-14 [&_svg]:size-6"
                 variant={isAudioEnabled ? "default" : "outline"}
-                onClick={() => setIsAudioEnabled(!isAudioEnabled)}
+                onClick={() => toggleAudio()}
               >
                 {isAudioEnabled ? <Mic /> : <MicOff />}
               </Button>
@@ -66,7 +62,7 @@ const PendingScreen = ({
         </div>
         <div className="w-full flex flex-col space-y-6 justify-center items-center">
           <LoadingSpinner size={50} className="text-primary" />
-          <h2 className="text-2xl font-bold">Waiting for Approval</h2>
+          <h2 className="text-2xl font-bold"> for Approval</h2>
           <p>
             Your request to join this room is pending approval from an admin.
           </p>

@@ -7,10 +7,15 @@ interface Props {
   size?: number;
 }
 
-const LoadingSpinner = ({ className,size = 24 }: Props) => {
+const LoadingSpinner = ({ className, size = 24 }: Props) => {
   return (
-    <span className={cn("w-full flex justify-center items-center", className)}>
-      <Loader2 size={size} className="animate-spin text-primary"/>
+    <span
+      className={cn(
+        "w-full flex justify-center items-center text-primary",
+        className
+      )}
+    >
+      <Loader2 size={size} className="animate-spin" />
     </span>
   );
 };
