@@ -92,7 +92,7 @@ const DashboardPage = () => {
                   </div>
                   <Link
                     href={"/solo"}
-                    className="group relative w-full max-w-3xl h-[220px] overflow-hidden rounded-2xl transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl"
+                    className="group relative w-full max-w-3xl h-[250px] overflow-hidden rounded-2xl transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl"
                   >
                     {/* Background Image */}
                     <div className="absolute inset-0 z-0">
@@ -100,8 +100,8 @@ const DashboardPage = () => {
                         src="/solo-gif.gif"
                         alt="Study Ambience"
                         fill
-                        className="object-cover"
-                        priority
+                        className="object-center object-cover"
+                        unoptimized
                       />
                       {/* Gradient Overlays */}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
@@ -115,23 +115,25 @@ const DashboardPage = () => {
                         <h3 className="text-2xl md:text-3xl font-extrabold font-sans text-white">
                           <AuroraText
                             colors={[
-                              "#328e6e",
-                              "#67ae6e",
-                              "#90c67c",
-                              "#e1eebc",
+                              "#B2E6D4	",
+                              "#9DD9D2",
+                              "#C7D9B7",
+                              "#83E8BA",
                             ]}
                           >
                             Join Solo Study
                           </AuroraText>
                         </h3>
-                        <p className="text-white/90 text-sm md:text-base max-w-lg">
+                        <p className="text-white/90 text-sm sm:text-base text-center">
                           Focus on your studies in a peaceful environment with
                           ambient music and productivity tools
                         </p>
                         {/* Action Button */}
-                        <div className="flex items-center gap-2 text-white/90 text-sm font-medium mt-4 group-hover:text-white transition-colors">
-                          <span>Start Studying</span>
-                          <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+                        <div className="flex justify-start">
+                          <Button className="gap-2" variant={"info"}>
+                            <span>Start Studying</span>
+                            <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+                          </Button>
                         </div>
                       </div>
 

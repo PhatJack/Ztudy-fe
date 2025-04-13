@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import React, { memo } from "react";
 
 interface AuroraTextProps {
@@ -26,10 +27,10 @@ export const AuroraText = memo(
     };
 
     return (
-      <span className={`relative inline-block ${className}`}>
+      <span className={cn(`relative inline-block`, className)}>
         <span className="sr-only">{children}</span>
         <span
-          className="relative animate-aurora bg-[length:200%_auto] bg-clip-text text-transparent"
+          className="relative animate-aurora bg-[length:200%_auto] bg-clip-text text-transparent tracking-wide"
           style={gradientStyle}
           aria-hidden="true"
         >

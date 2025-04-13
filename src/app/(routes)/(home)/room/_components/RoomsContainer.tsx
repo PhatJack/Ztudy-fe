@@ -27,7 +27,6 @@ const RoomsContainer = () => {
   const joinRandomRoomMutation = useJoinRandomRoomMutation();
 
   // Pagination states for each room type
-  const { joinChannel } = useRoomDetailContext();
   const [yourRoomsPage, setYourRoomsPage] = useState<number>(1);
   const [suggestedRoomsPage, setSuggestedRoomsPage] = useState<number>(1);
   const [trendingRoomsPage, setTrendingRoomsPage] = useState<number>(1);
@@ -61,17 +60,12 @@ const RoomsContainer = () => {
     [yourRoomsQuery.data, suggestedRoomsQuery.data, trendingRoomsQuery.data]
   );
 
-  const handleJoinRoom = async (roomCode: string) => {
-    await joinRoomMutation.mutateAsync(roomCode.trim(), {
+  const handleJoinRoom = (roomCode: string) => {
+    joinRoomMutation.mutate(roomCode.trim(), {
       onSuccess: async (data) => {
-				if (data.status === 202) {
-					setIsPending(true);
+        if (data.status === 202) {
+          setIsPending(true);
         }
-				await joinChannel({
-					code_invitation: roomCode.trim(),
-					initialAudioEnabled: true,
-					initialVideoEnabled: true,
-				});
         setCurrentRoom(data.data.room);
         setIsAdmin(data.data.participant.role == "ADMIN");
         connectChatSocket(roomCode.trim());

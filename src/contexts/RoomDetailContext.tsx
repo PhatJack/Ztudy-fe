@@ -5,6 +5,8 @@ import React, {
   useEffect,
   ReactNode,
   useMemo,
+  useCallback,
+  useRef,
 } from "react";
 import AgoraRTC, {
   IAgoraRTCClient,
@@ -12,8 +14,15 @@ import AgoraRTC, {
   IMicrophoneAudioTrack,
   ILocalVideoTrack,
   IAgoraRTCRemoteUser,
-  ILocalAudioTrack
+  ILocalAudioTrack,
 } from "agora-rtc-react";
+import {
+  createChannel,
+  createClient,
+  RtmChannel,
+  RtmClient,
+  RtmMessage,
+} from "agora-rtm-react";
 import { getAgoraTokenApi } from "@/service/(rooms)/agora/get-token-agora.api";
 
 interface ExtendedRemoteUser extends IAgoraRTCRemoteUser {
@@ -51,10 +60,12 @@ const RoomDetailContext = createContext<RoomDetailContextType | undefined>(
 );
 
 // Initialize Agora client
-const client: IAgoraRTCClient = AgoraRTC.createClient({
+const rtcClient: IAgoraRTCClient = AgoraRTC.createClient({
   mode: "rtc",
   codec: "vp8",
 });
+
+const useRtmClient = createClient(process.env.NEXT_PUBLIC_AGORA_APP_ID || "");
 
 interface RoomDetailProviderProps {
   children: ReactNode;
@@ -72,6 +83,23 @@ export const RoomDetailProvider = ({ children }: RoomDetailProviderProps) => {
     ILocalVideoTrack | [ILocalVideoTrack, ILocalAudioTrack] | null
   >(null);
   const [isLoading, setIsLoading] = useState(false);
+  const rtmClient = useRtmClient();
+  const rtmChannelRef = useRef<RtmChannel | null>(null);
+
+  // const loginRTM = async (uid: string, token: string) => {
+  //   await rtmClient.login({ uid, token });
+  //   rtmClient.on("ConnectionStateChanged", async (state: any, reason: any) => {
+  //     console.log("ConnectionStateChanged", state, reason);
+  //   });
+  // };
+
+  // const logoutRTM = async () => {
+  //   await rtmClient.logout();
+  //   rtmClient?.removeAllListeners();
+  //   rtmChannelRef.current?.leave();
+  //   rtmChannelRef.current?.removeAllListeners();
+  //   rtmChannelRef.current = null;
+  // };
 
   const cleanup = async () => {
     try {
@@ -83,7 +111,7 @@ export const RoomDetailProvider = ({ children }: RoomDetailProviderProps) => {
 
       // Close screen sharing track
       if (screenTrack) {
-        await client.unpublish(screenTrack);
+        await rtcClient.unpublish(screenTrack);
         if (Array.isArray(screenTrack)) {
           screenTrack.forEach((track) => track.close());
         } else {
@@ -93,12 +121,12 @@ export const RoomDetailProvider = ({ children }: RoomDetailProviderProps) => {
       }
 
       // Leave the channel if connected
-      if (client.connectionState === "CONNECTED") {
-        await client.leave();
+      if (rtcClient.connectionState === "CONNECTED") {
+        await rtcClient.leave();
       }
 
       // Remove all event listeners
-      client.removeAllListeners();
+      rtcClient.removeAllListeners();
       setRemoteUsers([]);
     } catch (err) {
       console.error("Error during cleanup:", err);
@@ -134,14 +162,14 @@ export const RoomDetailProvider = ({ children }: RoomDetailProviderProps) => {
         });
 
         // Publish screen track
-        await client.publish(screenShareTrack);
+        await rtcClient.publish(screenShareTrack);
         setScreenTrack(screenShareTrack);
         setIsScreenSharing(true);
 
         // Handle screen share stop
         if (!Array.isArray(screenShareTrack)) {
           screenShareTrack.on("track-ended", async () => {
-            await client.unpublish(screenShareTrack);
+            await rtcClient.unpublish(screenShareTrack);
             screenShareTrack.close();
             setScreenTrack(null);
             setIsScreenSharing(false);
@@ -149,7 +177,7 @@ export const RoomDetailProvider = ({ children }: RoomDetailProviderProps) => {
         }
       } else if (screenTrack) {
         // Stop screen sharing
-        await client.unpublish(screenTrack);
+        await rtcClient.unpublish(screenTrack);
         if (Array.isArray(screenTrack)) {
           screenTrack.forEach((track) => track.close());
         } else {
@@ -165,6 +193,7 @@ export const RoomDetailProvider = ({ children }: RoomDetailProviderProps) => {
 
   const leaveChannel = async () => {
     await cleanup();
+    // await logoutRTM();
   };
 
   const joinChannel = async ({
@@ -199,13 +228,12 @@ export const RoomDetailProvider = ({ children }: RoomDetailProviderProps) => {
         channel: code_invitation,
         uid: data.uid,
       });
-
-      await client.join(data.app_id, code_invitation, data.token, data.uid);
-      console.log("Successfully joined channel");
+      //RTC join
+      await rtcClient.join(data.app_id, code_invitation, data.token, data.uid);
 
       // Setup event handlers
-      client.on("user-published", async (user, mediaType) => {
-        await client.subscribe(user, mediaType);
+      rtcClient.on("user-published", async (user, mediaType) => {
+        await rtcClient.subscribe(user, mediaType);
         if (mediaType === "video") {
           setRemoteUsers((prevUsers) => {
             if (prevUsers.every((prevUser) => prevUser.uid !== user.uid)) {
@@ -219,7 +247,7 @@ export const RoomDetailProvider = ({ children }: RoomDetailProviderProps) => {
         }
       });
 
-      client.on("user-unpublished", (user, mediaType) => {
+      rtcClient.on("user-unpublished", (user, mediaType) => {
         if (mediaType === "video") {
           setRemoteUsers((prevUsers) =>
             prevUsers.filter((prevUser) => prevUser.uid !== user.uid)
@@ -255,7 +283,7 @@ export const RoomDetailProvider = ({ children }: RoomDetailProviderProps) => {
       setIsVideoEnabled(initialVideoEnabled);
       setLocalTracks([audioTrack, videoTrack]);
 
-      await client.publish([audioTrack, videoTrack]);
+      await rtcClient.publish([audioTrack, videoTrack]);
       setIsLoading(false);
     } catch (error: any) {
       console.error("Error joining channel:", error);
