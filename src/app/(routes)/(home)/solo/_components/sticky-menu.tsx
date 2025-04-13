@@ -35,22 +35,24 @@ const StickyMenu = () => {
     },
     [dispatch]
   );
+
   return (
-    <>
-      <div className="flex gap-6">
-        {/* Pomodoro  */}
+    <div className="fixed w-full bottom-0 left-0 right-0 md:relative flex flex-col md:flex-row items-center justify-between gap-4 p-4 md:p-0 bg-background/95 backdrop-blur-sm md:bg-transparent border-t md:border-t-0 border-border z-50">
+      {/* Timer and Goals */}
+      <div className="flex gap-4 md:gap-6 w-full md:w-auto justify-between md:justify-start">
+        {/* Pomodoro */}
         <div
           onClick={() => {
             dispatch({ type: "TOGGLE_BUTTON", payload: "isOpenPomodoro" });
           }}
-          className="shadow-lg h-full px-4 py-1 flex flex-col justify-center items-center gap-0.5 bg-background hover:bg-background/90 cursor-pointer text-foreground  rounded-md"
+          className="shadow-lg h-full px-3 md:px-4 py-1 flex flex-col justify-center items-center gap-0.5 bg-background hover:bg-background/90 cursor-pointer text-foreground rounded-md flex-1 md:flex-none"
         >
           <div className="flex items-center gap-1">
             <div className="flex items-center">
-              <Clock size={16} />
+              <Clock size={14} />
             </div>
             <span className="text-xs font-medium leading-[1.15rem]">
-              Personal timer
+              Pomodoro Timer
             </span>
           </div>
           <p className="text-sm font-bold">
@@ -70,14 +72,14 @@ const StickyMenu = () => {
               payload: "isOpenSessionGoal",
             });
           }}
-          className="shadow-lg h-full px-4 py-1 flex flex-col justify-center items-center gap-0.5 bg-background hover:bg-background/90 cursor-pointer text-foreground rounded-md"
+          className="shadow-lg h-full px-3 md:px-4 py-1 flex flex-col justify-center items-center gap-0.5 bg-background hover:bg-background/90 cursor-pointer text-foreground rounded-md flex-1 md:flex-none"
         >
           <div className="flex items-center gap-1">
             <div className="flex items-center">
-              <Target size={16} />
+              <Target size={14} />
             </div>
             <span className="text-xs font-medium leading-[1.15rem]">
-              Study goal
+              Session Goals
             </span>
           </div>
           <p className="text-sm">
@@ -87,20 +89,24 @@ const StickyMenu = () => {
           </p>
         </div>
       </div>
-      <div className="flex gap-6">
-        {/* Menu Buttons */}
+
+      {/* Menu Buttons */}
+      <div className="flex gap-4 md:gap-6 w-full md:w-auto justify-between md:justify-start">
         {menuButton.map((item, index) => (
           <TooltipTemplate content={item.label} key={index}>
             <Button
               type="button"
               onClick={() => handleClick(item.variable)}
-              className={cn(`w-12 h-12 [&_svg]:size-5 shadow-lg`)}
+              className={cn(
+                `w-10 h-10 md:w-12 md:h-12 [&_svg]:size-4 md:[&_svg]:size-5 shadow-lg`,
+                state.activePanel === item.variable && "bg-primary text-primary-foreground"
+              )}
               variant={
                 state.activePanel === item.variable ? "default" : "outline"
               }
               size={"icon"}
             >
-              <span className="text-xl">
+              <span className="text-lg md:text-xl">
                 <item.icon />
               </span>
             </Button>
@@ -110,17 +116,17 @@ const StickyMenu = () => {
           <Button
             type="button"
             onClick={toggleFullscreen}
-            className="w-12 h-12 hover:bg-background/90 hover:text-foreground [&_svg]:size-5 shadow-lg"
+            className="w-10 h-10 md:w-12 md:h-12 hover:bg-background/90 hover:text-foreground [&_svg]:size-4 md:[&_svg]:size-5 shadow-lg"
             variant={"outline"}
             size={"icon"}
           >
-            <span className="text-xl">
+            <span className="text-lg md:text-xl">
               {!state.isOpenFullScreen ? <Expand /> : <Minimize />}
             </span>
           </Button>
         </TooltipTemplate>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -50,7 +50,7 @@ export default function Providers({
           </AuthProvider>
         </OnlineWebSocketProvider>
         <Toaster />
-        <ReactQueryDevtools initialIsOpen={false} />
+        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       </QueryClientProvider>
     </ThemeProvider>
   );

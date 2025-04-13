@@ -8,8 +8,10 @@ import { setCookie } from "cookies-next";
 import toast from "react-hot-toast";
 import { CheckCircle2, Loader2, XCircle } from "lucide-react";
 import { getCurrentUserInformationApi } from "@/service/(current-user)/get-current-user-information.api";
+import { useRouter } from "next/navigation";
 
 const GoogleCallbackPage = () => {
+  const router = useRouter();
   const [countdown, setCountdown] = useState(3);
   const [, dispatch] = useAuthContext();
   const { connectOnlineSocket } = useOnlineWebSocket();
@@ -37,7 +39,6 @@ const GoogleCallbackPage = () => {
               dispatch({ type: "CHECK_PREFERENCES", payload: true });
             }
           } catch (err) {
-            // Just log the error or ignore it
             dispatch({ type: "CHECK_PREFERENCES", payload: true });
           }
 
@@ -53,32 +54,34 @@ const GoogleCallbackPage = () => {
           setStatus("error");
           setIsLoading(false);
         }
-
-        // Delay start by 1 tick to let UI show initial state
-        const timer = setInterval(() => {
-          setCountdown((prev) => {
-            if (prev <= 1) {
-              window.location.href =
-                status === "error" ? "/login" : "/dashboard";
-              clearInterval(timer);
-              return 0;
-            }
-            return prev - 1;
-          });
-        }, 1000);
-
-        return () => {
-          clearInterval(timer);
-        };
       } catch (error) {
         console.error("Google authentication error:", error);
         toast.error("Authentication failed");
-        // Router.push("/login");
+        setStatus("error");
+        setIsLoading(false);
       }
     };
 
     handleGoogleCallback();
-  }, []);
+  }, [dispatch, connectOnlineSocket]);
+
+  // Separate effect for countdown and navigation
+  useEffect(() => {
+    if (isLoading) return; // Only start countdown after loading is complete
+
+    const redirectPath = status === "error" ? "/login" : "/dashboard";
+
+    if (countdown <= 0) {
+      router.push(redirectPath);
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setCountdown(countdown - 1);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [countdown, status, isLoading, router]);
 
   return (
     <div className="flex flex-col items-center justify-center">
