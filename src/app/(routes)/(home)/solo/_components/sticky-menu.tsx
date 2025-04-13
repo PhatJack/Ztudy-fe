@@ -37,7 +37,7 @@ const StickyMenu = () => {
   );
 
   return (
-    <div className="fixed w-full bottom-0 left-0 right-0 md:relative flex flex-col md:flex-row items-center justify-between gap-4 p-4 md:p-0 bg-background/95 backdrop-blur-sm md:bg-transparent border-t md:border-t-0 border-border z-50">
+    <div className="fixed w-full bottom-0 left-0 right-0 md:relative flex flex-col md:flex-row items-center justify-between gap-4 p-4 md:p-0 bg-background/95 md:bg-transparent border-t md:border-t-0 border-border z-50">
       {/* Timer and Goals */}
       <div className="flex gap-4 md:gap-6 w-full md:w-auto justify-between md:justify-start">
         {/* Pomodoro */}

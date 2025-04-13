@@ -136,7 +136,7 @@ const TabChat = ({ messages, typingUsers }: Props) => {
       {state.user &&
         typingUsers.size > 0 &&
         !typingUsers.has(state.user.id) && (
-          <div className="absolute bottom-16 left-0 right-0 px-4 py-2 bg-gradient-to-t from-emerald-100 to-transparent">
+          <div className="absolute bottom-16 left-0 right-0 px-4 py-2 bg-gradient-to-t from-emerald-100 to-transparent dark:from-emerald-900">
             <TypingIndicator />
           </div>
         )}

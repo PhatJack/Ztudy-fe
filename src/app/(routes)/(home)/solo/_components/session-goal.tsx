@@ -76,13 +76,13 @@ const SessionGoal = () => {
           className="border p-2"
         />
         <div className="flex flex-col overflow-hidden">
-          <div className="max-h-[250px] overflow-y-auto flex flex-col gap-1">
+          <div className="max-h-[250px] overflow-y-auto pe-2 flex flex-col gap-1">
             {data &&
               data.results.map((goal) => (
                 <GoalItem
                   goal={goal}
                   key={goal.id}
-                  className="bg-gray-100 dark:bg-gray-500	py-1"
+                  className="bg-gray-100 dark:bg-gray-900	py-1"
                   onComplete={handleGoalComplete}
                 />
               ))}
@@ -91,7 +91,7 @@ const SessionGoal = () => {
               state.completedGoals.map((goal) => (
                 <div
                   key={`completed-${goal.id}`}
-                  className="bg-gray-100 p-3 flex gap-2 rounded-lg"
+                  className="bg-gray-100 dark:bg-gray-900 p-3 flex gap-2 rounded-lg"
                 >
                   <Checkbox className="rounded-full" disabled defaultChecked />
                   <span className="text-xs line-through">{goal.goal}</span>

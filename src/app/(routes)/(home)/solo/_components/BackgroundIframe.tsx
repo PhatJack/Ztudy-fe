@@ -1,7 +1,7 @@
 "use client";
 import { useSoloContext } from "@/hooks/useSoloContext";
 import { UrlToEmbeded } from "@/util/urlToEmbed";
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 /**
  * YouTube Embed Parameters:
@@ -28,8 +28,12 @@ function BackgroundIframe() {
   const [state, dispatch] = useSoloContext();
   const youtubeRef = useRef<any>(null);
   const videoRef = useRef<any>(null);
+  const [videoError, setVideoError] = useState<boolean>(false);
+  const [isPlayerReady, setIsPlayerReady] = useState<boolean>(false);
 
   const handleVolumeChange = useCallback(() => {
+    if (!videoRef.current) return;
+
     if (state.volume === 0) {
       videoRef.current.mute();
     } else {
@@ -41,30 +45,51 @@ function BackgroundIframe() {
   useEffect(() => {
     // Function to initialize youtube
     const initializeyoutube = () => {
+      if (!state.backgroundURL) {
+        console.log("No background URL available yet");
+        return;
+      }
+
       const video = UrlToEmbeded(state.backgroundURL);
-      youtubeRef.current = new window.YT.Player("video-youtube", {
-        height: "390",
-        width: "640",
-        videoId: `${video?.videoId}`,
-        playerVars: {
-          playsinline: 1,
-          mute: 1,
-          enablejsapi: 1,
-          autoplay: 1,
-          controls: 0,
-          showinfo: 0,
-          rel: 0,
-          loop: 1,
-          playlist: `${video?.videoId}`,
-        },
-        events: {
-          onReady: (event: any) => {
-            videoRef.current = event.target;
-            event.target.mute();
-            event.target.playVideo();
+      if (!video?.videoId) {
+        console.log("Invalid video URL or couldn't extract video ID");
+        setVideoError(true);
+        return;
+      }
+
+      try {
+        youtubeRef.current = new window.YT.Player("video-youtube", {
+          height: "390",
+          width: "640",
+          videoId: `${video?.videoId}`,
+          playerVars: {
+            playsinline: 1,
+            enablejsapi: 1,
+            autoplay: 1,
+            controls: 0,
+            showinfo: 0,
+            mute: 1, // Phải tắt tiếng ban đầu để đáp ứng chính sách autoplay
+            rel: 0,
+            loop: 1,
+            playlist: `${video?.videoId}`,
           },
-        },
-      });
+          events: {
+            onReady: (event: any) => {
+              videoRef.current = event.target;
+              event.target.playVideo();
+              setIsPlayerReady(true);
+              setVideoError(false);
+            },
+            onError: (event: any) => {
+              console.error("YouTube player error:", event.data);
+              setVideoError(true);
+            },
+          },
+        });
+      } catch (error) {
+        console.error("Error initializing YouTube player:", error);
+        setVideoError(true);
+      }
     };
 
     // Check if YouTube API is already loaded
@@ -77,16 +102,26 @@ function BackgroundIframe() {
       dispatch({ type: "SET_ADD_YTB_SCRIPT", payload: true });
 
       // Set up callback for first load
-      (window as any).onYouTubeIframeAPIReady = initializeyoutube;
-    } else if (window.YT && window.YT.Player) {
+      (window as any).onYouTubeIframeAPIReady = () => {
+        if (state.backgroundURL) {
+          initializeyoutube();
+        }
+      };
+    } else if (window.YT && window.YT.Player && state.backgroundURL) {
       // YouTube API is already loaded, initialize youtube directly
       initializeyoutube();
     }
-  }, [state.backgroundURL, state.isAddYtbScript]);
+  }, [state.backgroundURL, state.isAddYtbScript, dispatch]);
 
   useEffect(() => {
-    if (videoRef.current) {
+    if (videoRef.current && isPlayerReady && state.backgroundURL) {
       const video = UrlToEmbeded(state.backgroundURL);
+      if (!video?.videoId) {
+        console.log("Invalid video URL or couldn't extract video ID");
+        setVideoError(true);
+        return;
+      }
+
       try {
         videoRef.current.loadVideoById({
           videoId: `${video?.videoId}`,
@@ -96,20 +131,27 @@ function BackgroundIframe() {
         });
         videoRef.current.loadPlaylist(video?.videoId);
         videoRef.current.setLoop(true);
+        setVideoError(false);
       } catch (error) {
         console.error("Error loading video:", error);
+        setVideoError(true);
       }
     }
-  }, [state.backgroundURL]);
+  }, [state.backgroundURL, isPlayerReady]);
 
   useEffect(() => {
-    if (videoRef.current) {
+    if (videoRef.current && isPlayerReady) {
       handleVolumeChange();
     }
-  }, [state.volume, videoRef.current]);
+  }, [state.volume, isPlayerReady, handleVolumeChange]);
 
   return (
     <div>
+      {videoError && state.backgroundURL && (
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white bg-black/50 p-4 rounded-md z-10">
+          Video unavailable. Please try another background.
+        </div>
+      )}
       <div
         id="video-youtube"
         className="aspect-video min-w-full w-screen object-cover min-h-full box-border h-[56.25vw] pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"

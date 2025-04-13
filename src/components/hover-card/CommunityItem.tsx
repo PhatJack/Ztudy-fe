@@ -21,7 +21,7 @@ const CommunityItem = ({ user }: Props) => {
     <HoverCard>
       <HoverCardTrigger asChild>
         <div className="flex space-x-2 items-center pt-2 px-2">
-          <div className="relative">
+          <div className="relative border rounded-full overflow-hidden">
             <AvatarCustom
               className="rounded-full w-9 h-9"
               src={user.avatar || "/default.png"}
@@ -33,7 +33,7 @@ const CommunityItem = ({ user }: Props) => {
           <span className="text-sm">{user.username}</span>
         </div>
       </HoverCardTrigger>
-      <HoverCardContent className="w-72 rounded-2xl overflow-hidden shadow-xl border border-gray-100 dark:border-gray-700 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 p-0 transform transition-transform duration-300">
+      <HoverCardContent className="w-[300px] rounded-2xl overflow-hidden shadow-xl border border-gray-100 dark:border-gray-700 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 p-0 transform transition-transform duration-300">
         {/* Gradient Header with Glass Effect */}
         <div className="bg-gradient-to-r from-indigo-600 via-violet-600 to-teal-600 p-4 text-white relative overflow-hidden">
           <div className="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
@@ -60,14 +60,6 @@ const CommunityItem = ({ user }: Props) => {
 
         {/* Body Content */}
         <div className="p-5 space-y-4 text-sm">
-          {/* Email */}
-          <div className="flex items-center gap-3 bg-gray-100/50 dark:bg-gray-800/50 rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-            <span className="text-lg">📧</span>
-            <span className="font-medium text-gray-800 dark:text-gray-100">
-              {user.email}
-            </span>
-          </div>
-
           {/* Study Time */}
           <div className="flex justify-between items-center bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900 dark:to-indigo-900 rounded-lg p-2 hover:shadow-md transition-shadow">
             <span className="text-gray-700 dark:text-gray-200 font-medium">

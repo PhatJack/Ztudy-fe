@@ -53,7 +53,7 @@ const TabPeople = ({ participants, roomCode }: Props) => {
         {filteredParticipants.map((participant, index) => (
           <div
             key={index}
-            className="flex justify-between items-center p-3 rounded-lg hover:bg-gray-50 transition-colors"
+            className="flex justify-between items-center p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
           >
             <div className="flex items-center gap-3">
               <AvatarCustom src={participant.user?.avatar} />

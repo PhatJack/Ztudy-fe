@@ -2,9 +2,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useSoloContext } from "@/hooks/useSoloContext";
 import { useListBackgroundVideos } from "@/service/(solo)/background/list-background-videos.api";
 import { useQuery } from "@tanstack/react-query";
-import { Check } from "lucide-react";
+import { Check, Loader2 } from "lucide-react";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 interface Props {
   activeTab: number;
@@ -12,6 +12,7 @@ interface Props {
 
 const BackgroundOptionsList = ({ activeTab }: Props) => {
   const [state, dispatch] = useSoloContext();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const backgroundVideosQuery = useQuery({
     ...useListBackgroundVideos({ type: activeTab }),
     refetchOnWindowFocus: false,
@@ -19,8 +20,24 @@ const BackgroundOptionsList = ({ activeTab }: Props) => {
 
   const backgroundVideos = backgroundVideosQuery.data?.results;
 
+  useEffect(() => {
+    if (backgroundVideos && backgroundVideos.length > 0) {
+      if (!state.backgroundURL) {
+        dispatch({ type: "SET_BACKGROUND", payload: backgroundVideos[0].youtube_url });
+      }
+    }
+  }, [backgroundVideos, dispatch, state.backgroundURL]);
+
   const handleClick = (youtubeCode: string) => {
+    if (youtubeCode === state.backgroundURL) return; // Skip if already selected
+    
+    setIsLoading(true);
     dispatch({ type: "SET_BACKGROUND", payload: youtubeCode });
+    
+    // Reset loading state after a delay to allow video to load
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
   };
 
   return (
@@ -40,7 +57,7 @@ const BackgroundOptionsList = ({ activeTab }: Props) => {
           <div
             key={backgroundVideo.id}
             onClick={() => handleClick(backgroundVideo.youtube_url)}
-            className="size-[54px] rounded-md relative overflow-hidden cursor-pointer"
+            className="w-full aspect-square rounded-md relative overflow-hidden cursor-pointer"
           >
             <Image
               fill
@@ -52,8 +69,12 @@ const BackgroundOptionsList = ({ activeTab }: Props) => {
               sizes="(min-width: 60em) 24vw, (min-width: 28em) 45vw, 100vw"
             />
             {state.backgroundURL === backgroundVideo.youtube_url ? (
-              <div className="absolute inset-0 bg-black/20 flex justify-center items-center">
-                <Check size={26} className="text-white" />
+              <div className="absolute inset-0 bg-black/40 flex justify-center items-center">
+                {isLoading ? (
+                  <Loader2 size={20} className="text-white animate-spin" />
+                ) : (
+                  <Check size={26} className="text-white" />
+                )}
               </div>
             ) : null}
           </div>

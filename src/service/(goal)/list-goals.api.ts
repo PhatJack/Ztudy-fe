@@ -51,8 +51,7 @@ export const useInfiniteListGoals = (query: GoalQuerySchema = {}) => {
     number // TPageParam: Page parameter type
   >({
     queryKey,
-    queryFn: ({ pageParam = 1 }) =>
-      listGoalsApi({ ...query, page: pageParam, page_size: 25 }),
+    queryFn: ({ pageParam = 1 }) => listGoalsApi({ ...query, page: pageParam }),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
       const nextPage = lastPage.page + 1;

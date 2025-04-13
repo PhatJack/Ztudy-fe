@@ -79,9 +79,8 @@ const initialState: InitialState = {
     content: "Don't let yesterday take up too much of today.",
     author: "Will Rogers",
   },
-  volume: 0.5,
-  backgroundURL:
-    "https://www.youtube.com/watch?v=oIK0XHuMh64&list=RDoIK0XHuMh64",
+  volume: 0,
+  backgroundURL: "",
   isAddYtbScript: false,
   activeSounds: [],
   completedGoals: [],

@@ -24,6 +24,9 @@ const YoutubeLinkInput = () => {
 
   const handleChangeBackground = useCallback(
     debounce((e: React.ChangeEvent<HTMLInputElement>) => {
+      if (e.target.value === "") {
+        return;
+      }
       const video = UrlToEmbeded(e.target.value);
       if (video) {
         setErrorLink(false);
@@ -57,7 +60,7 @@ const YoutubeLinkInput = () => {
         <Input
           id="youtube-link"
           type="text"
-          defaultValue={state.backgroundURL}
+          value={state.backgroundURL || ""}
           onChange={handleChangeBackground}
           placeholder="Paste the youtube link here"
           className="border-muted"

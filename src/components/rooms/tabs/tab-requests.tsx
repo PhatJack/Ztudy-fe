@@ -1,25 +1,27 @@
-"use client"
+"use client";
 import AvatarCustom from "@/components/avatar/AvatarCustom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Participant } from "@/contexts/ChatContext";
-import { useApproveRequestMutation, useRejectRequestMutation } from "@/service/(rooms)/request/request.api";
+import {
+  useApproveRequestMutation,
+  useRejectRequestMutation,
+} from "@/service/(rooms)/request/request.api";
 import { Check, X } from "lucide-react";
 import React from "react";
 
 interface Props {
   requests: Participant[];
-	roomCode: string;
+  roomCode: string;
 }
 
-const TabRequests = ({ requests,roomCode }: Props) => {
-
+const TabRequests = ({ requests, roomCode }: Props) => {
   const { mutate: approveRequest } = useApproveRequestMutation();
   const { mutate: rejectRequest } = useRejectRequestMutation();
 
   return (
     <div className="h-full flex flex-col">
-      <div className="sticky top-[65px] border-b bg-white p-4 shadow-lg">
+      <div className="sticky top-[65px] border-b bg-white dark:bg-background p-4 shadow-lg">
         <Input type="text" placeholder="Search people" />
       </div>
       <div className="overflow-y-auto flex flex-col space-y-4 p-4">
@@ -34,7 +36,9 @@ const TabRequests = ({ requests,roomCode }: Props) => {
                 size={"icon"}
                 className="rounded-full bg-emerald-600 text-white"
                 type="button"
-                onClick={() => approveRequest({roomCode, requestId: request.user.id})}
+                onClick={() =>
+                  approveRequest({ roomCode, requestId: request.user.id })
+                }
               >
                 <Check />
               </Button>
@@ -42,7 +46,9 @@ const TabRequests = ({ requests,roomCode }: Props) => {
                 size={"icon"}
                 className="rounded-full bg-rose-600 text-white"
                 type="button"
-                onClick={() => rejectRequest({roomCode, requestId: request.user.id})}
+                onClick={() =>
+                  rejectRequest({ roomCode, requestId: request.user.id })
+                }
               >
                 <X />
               </Button>

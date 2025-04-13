@@ -55,18 +55,6 @@ const ProfileBlock = () => {
       <div className="w-full flex 2xl:flex-row flex-col justify-between gap-2">
         <div className="w-full p-3 rounded-md bg-input flex gap-2">
           <span className="rounded-md max-w-14 2xl:max-w-12 w-full aspect-square bg-secondary flex items-center justify-center">
-            <Globe />
-          </span>
-          <div className="w-full flex flex-col justify-between gap-1">
-            <span className="text-xs font-semibold">Leaderboard</span>
-            <span className="text-2xl font-extrabold text-yellow-500 inline-flex items-center">
-              <span>#1</span>
-              <span className="pb-1">👑</span>
-            </span>
-          </div>
-        </div>
-        <div className="w-full p-3 rounded-md bg-input flex gap-2">
-          <span className="rounded-md max-w-14 2xl:max-w-12 w-full aspect-square bg-secondary flex items-center justify-center">
             <AlarmClockMinus />
           </span>
           <div className="w-full flex flex-col justify-between gap-1">
