@@ -62,6 +62,9 @@ importers:
       agora-rtc-react:
         specifier: ^2.4.0
         version: 2.4.0(react@18.3.1)
+      agora-rtm-react:
+        specifier: ^1.1.2
+        version: 1.1.2(react@18.3.1)
       axios:
         specifier: ^1.7.9
         version: 1.7.9
@@ -1176,6 +1179,15 @@ packages:
     engines: {node: '>=10'}
     peerDependencies:
       react: '>=16.8'
+
+  agora-rtm-react@1.1.2:
+    resolution: {integrity: sha512-iNIU48khfevojXn0beJU94+HO9zvHZgpO42YJXqaEYEjdVWhZVijZw3bZWC8hTsEMuew5XB0Gk2tNJI0biRPQg==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: ^16.0.0 || ^17 || ^18
+
+  agora-rtm-sdk@1.4.3-203:
+    resolution: {integrity: sha512-uQh9zqRtELAblxt7nXSv20pH7oQfTDj7gC2NI2cDIe9dcKBlQpEVf2wBM68so6sZ767ZLcW+z/FCd5QVCt9RvA==}
 
   ajv@6.12.6:
     resolution: {integrity: sha512-j3fVLgvTo527anyYyJOGTYJbG+vnnQYvE0m5mmkc1TK+nxAppkCLMIL0aZ4dblVCNoGShhm+kzE4ZUykBoMg4g==}
@@ -3857,6 +3869,13 @@ snapshots:
   agora-rtc-react@2.4.0(react@18.3.1):
     dependencies:
       react: 18.3.1
+
+  agora-rtm-react@1.1.2(react@18.3.1):
+    dependencies:
+      agora-rtm-sdk: 1.4.3-203
+      react: 18.3.1
+
+  agora-rtm-sdk@1.4.3-203: {}
 
   ajv@6.12.6:
     dependencies:
