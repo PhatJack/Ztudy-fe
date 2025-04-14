@@ -59,6 +59,7 @@ const config: Config = {
       animation: {
         aurora: "aurora 8s ease-in-out infinite alternate",
         "aurora-bg": "aurora-bg 30s linear infinite",
+        "retro-grid": "retro-grid 30s linear infinite",
       },
       keyframes: {
         aurora: {
@@ -89,6 +90,14 @@ const config: Config = {
           },
           to: {
             backgroundPosition: "350% 50%, 350% 50%",
+          },
+        },
+        "retro-grid": {
+          "0%": {
+            transform: "translateY(-50%)",
+          },
+          "100%": {
+            transform: "translateY(0)",
           },
         },
       },

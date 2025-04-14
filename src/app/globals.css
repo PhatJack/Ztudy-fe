@@ -139,3 +139,16 @@ body {
 		box-shadow: 0 0 5px 0px rgb(69, 180, 109);
 	}
 }
+
+@keyframes stripe {
+	0% {
+		transform: translateX(-100%);
+	}
+	100% {
+		transform: translateX(100%);
+	}
+}
+
+.animate-stripe {
+	animation: stripe 3s ease infinite;
+}
