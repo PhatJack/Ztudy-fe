@@ -105,7 +105,7 @@ const AddFavoriteVideoModal = ({ children }: { children: React.ReactNode }) => {
           <DialogHeader>
             <DialogTitle>Add New Favorite Song</DialogTitle>
             <DialogDescription>
-              Add a new song to your favorites list. Click save when you're
+              Add a new song to your favorites list. Click save when you&apos;re
               done.
             </DialogDescription>
           </DialogHeader>
