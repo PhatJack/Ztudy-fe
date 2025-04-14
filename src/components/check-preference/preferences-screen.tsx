@@ -16,16 +16,17 @@ import Image from "next/image";
 
 const PreferencesScreen = () => {
   const [open, setOpen] = useState<boolean>(true);
+  const [state, dispatch] = useAuthContext();
   const [selectedPreferences, setSelectedPreferences] = useState<number[]>([]);
   const preferencesForm = useForm<AddInterestsBodySchema>();
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const roomCategoriesQuery = useQuery(
-    useStudyListRoomCategories({
+  const roomCategoriesQuery = useQuery({
+    ...useStudyListRoomCategories({
       page_size: 15,
       page: currentPage,
-    })
-  );
-  const [state, dispatch] = useAuthContext();
+    }),
+    enabled: !!state.isCheckPreferences,
+  });
 
   const handleUpdatePreferences = (id: number) => {
     setSelectedPreferences((prev) => {

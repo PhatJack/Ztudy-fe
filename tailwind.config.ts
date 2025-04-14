@@ -58,6 +58,7 @@ const config: Config = {
       },
       animation: {
         aurora: "aurora 8s ease-in-out infinite alternate",
+        "aurora-bg": "aurora-bg 30s linear infinite",
       },
       keyframes: {
         aurora: {
@@ -80,6 +81,14 @@ const config: Config = {
           "100%": {
             backgroundPosition: "0% 50%",
             transform: "rotate(-5deg) scale(0.9)",
+          },
+        },
+        "aurora-bg": {
+          from: {
+            backgroundPosition: "50% 50%, 50% 50%",
+          },
+          to: {
+            backgroundPosition: "350% 50%, 350% 50%",
           },
         },
       },

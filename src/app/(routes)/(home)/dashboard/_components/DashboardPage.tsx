@@ -1,55 +1,25 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import ZtudyCommunity from "./ZtudyCommunity";
-import AvatarCustom from "@/components/avatar/AvatarCustom";
-import { useQuery } from "@tanstack/react-query";
-import { createGetCurrentUserInformationQuery } from "@/service/(current-user)/get-current-user-information.api";
-import TodoContainer from "./TodoContainer";
 import { Button } from "@/components/ui/button";
-import {
-  Users,
-  Brain,
-  BookOpen,
-  Music,
-  Target,
-  Clock,
-  Trophy,
-  Sparkles,
-  ArrowRight,
-} from "lucide-react";
+import { BookOpen, Music, Clock, Trophy, ArrowRight } from "lucide-react";
 import { useOnlineWebSocket } from "@/contexts/OnlineWebSocketContext";
-import { AuroraText } from "@/components/text/AuroraText";
+import { AuroraText } from "@/components/aurora/AuroraText";
 import { useTheme } from "next-themes";
 import SpotifyEmbed from "@/components/spotify/SpotifyEmbedded";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import { AuroraBackground } from "@/components/aurora/AuroraBackground";
 
 const DashboardPage = () => {
   const { theme } = useTheme();
   const { onlineCount } = useOnlineWebSocket();
-  const [openCommunity, setOpenCommunity] = useState(false);
-  const router = useRouter();
-
-  const handleOpenCommunity = () => {
-    setOpenCommunity((prev) => !prev);
-  };
-
-  const handleGetStarted = () => {
-    router.push("/solo");
-  };
-
   return (
     <div className="relative flex h-full overflow-hidden">
       <div className="flex-1 flex justify-center lg:py-10 lg:px-6 px-4 py-10 w-full xl:pr-[296px]">
         <div className="xl:max-w-[1300px] w-full flex flex-col space-y-6">
           {/* Enhanced Hero Section */}
-          <div className="relative overflow-hidden rounded-2xl">
-            {/* Background Elements */}
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5"></div>
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(120,119,198,0.1),rgba(255,255,255,0))]"></div>
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(120,119,198,0.1),rgba(255,255,255,0))]"></div>
-
+          <AuroraBackground className="relative overflow-hidden rounded-2xl h-fit">
             {/* Content */}
             <div className="relative z-10 p-8 md:p-12">
               <div className="flex flex-col items-center text-center space-y-6">
@@ -86,8 +56,9 @@ const DashboardPage = () => {
                 <div className="w-full flex flex-col items-center gap-6 mt-8">
                   <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-background/50 backdrop-blur-sm border border-border">
                     <span className="size-2 bg-emerald-400 animate-pulse-custom rounded-full"></span>
-                    <span className="text-sm font-medium">
-                      {onlineCount} active learners
+                    <span className="text-sm font-medium text-foreground">
+                      <strong>{onlineCount}{" "}</strong>
+                      active learners
                     </span>
                   </div>
                   <Link
@@ -154,7 +125,7 @@ const DashboardPage = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </AuroraBackground>
 
           {/* Main Features Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

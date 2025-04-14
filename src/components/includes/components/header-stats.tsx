@@ -15,7 +15,7 @@ const HeaderStats = ({ user }: Props) => {
           <div className="flex items-center gap-1 text-sm">
             <Clock9
               size={20}
-              className="fill-primary stroke-white border border-accent rounded-full"
+              className="fill-primary stroke-background border border-accent rounded-full"
             />
             <span id="monthly-time">
               <span className="font-bold mr-0.5">
@@ -25,7 +25,10 @@ const HeaderStats = ({ user }: Props) => {
             </span>
           </div>
           <div className="flex items-center gap-1 text-sm">
-            <Aperture size={20} className="fill-primary stroke-white border border-accent rounded-full" />
+            <Aperture
+              size={20}
+              className="fill-primary stroke-background border border-accent rounded-full"
+            />
             <span className=""></span>
             <span id="monthly-level">
               <span className="font-bold mr-0.5">

@@ -17,6 +17,7 @@ import JoinRandomRoomButton from "./JoinRandomRoomButton";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import PaginationCustom from "@/components/pagination/PaginationCustom";
 import { useRoomDetailContext } from "@/contexts/RoomDetailContext";
+import toast from "react-hot-toast";
 
 const RoomsContainer = () => {
   const { connectChatSocket } = useRoomWebSocket();
@@ -62,7 +63,7 @@ const RoomsContainer = () => {
 
   const handleJoinRoom = (roomCode: string) => {
     joinRoomMutation.mutate(roomCode.trim(), {
-      onSuccess: async (data) => {
+      onSuccess: (data) => {
         if (data.status === 202) {
           setIsPending(true);
         }
@@ -71,12 +72,17 @@ const RoomsContainer = () => {
         connectChatSocket(roomCode.trim());
         router.push(`/room/${roomCode}`);
       },
+      onError: (error: any) => {
+        toast.error(
+          error.detail || "An error occurred while joining the room."
+        );
+      },
     });
   };
 
   const handleJoinRandomRoom = () => {
     joinRandomRoomMutation.mutate(undefined, {
-      onSuccess: (data) => {
+      onSuccess: (data: any) => {
         if (data.status === 202) {
           setIsPending(true);
         }

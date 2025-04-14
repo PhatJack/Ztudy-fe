@@ -14,7 +14,6 @@ import LoadingSpinner from "@/components/loading/loading-spinner";
 import MainScreen from "./MainScreen";
 import dynamic from "next/dynamic";
 import { useRoomDetailContext } from "@/contexts/RoomDetailContext";
-import { useAuthContext } from "@/hooks/useAuthContext";
 
 interface Props {
   roomCode: string;
@@ -26,7 +25,6 @@ const PendingScreenDynamic = dynamic(
 );
 
 const RoomDetail = ({ roomCode }: Props) => {
-  const [state] = useAuthContext();
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
   const {
@@ -43,7 +41,8 @@ const RoomDetail = ({ roomCode }: Props) => {
     setCurrentRoom,
     isModerator,
   } = useChatContext();
-  const { connectChatSocket, disconnectChatSocket } = useRoomWebSocket();
+  const { connectChatSocket, disconnectChatSocket, chatSocketRef } =
+    useRoomWebSocket();
 
   const handleCancelRequest = () => {
     disconnectChatSocket();
@@ -53,6 +52,7 @@ const RoomDetail = ({ roomCode }: Props) => {
 
   useEffect(() => {
     connectChatSocket(roomCode);
+    console.log("Connecting to chat socket with room code:", roomCode);
     return () => {
       setMessages([]);
       disconnectChatSocket();
@@ -69,6 +69,7 @@ const RoomDetail = ({ roomCode }: Props) => {
         setLoading(false);
         setCurrentRoom(res.data.room);
         setIsAdmin(res.data.participant.role === "ADMIN");
+        // connectChatSocket(roomCode);
       } catch (error) {
         toast.error("Failed to join room.");
         router.push("/room");

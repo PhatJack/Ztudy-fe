@@ -11,7 +11,6 @@ const ProfilePage = () => {
       <div className="w-full grid grid-cols-1 xl:grid-cols-12 gap-6">
         <div className="xl:col-span-3 flex flex-col space-y-6">
           <ProfileBlock />
-          <ChangePassword />
         </div>
         <div className="xl:col-span-6">
           <div className="w-full rounded-xl bg-background p-6">
@@ -20,6 +19,7 @@ const ProfilePage = () => {
         </div>
         <div className="xl:col-span-3 flex flex-col space-y-6">
           <MonthlyLevel />
+          <ChangePassword />
         </div>
       </div>
     </div>

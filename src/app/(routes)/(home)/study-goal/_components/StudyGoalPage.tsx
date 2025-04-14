@@ -3,7 +3,7 @@ import React from "react";
 import TodoContainer from "../../dashboard/_components/TodoContainer";
 import { useQuery } from "@tanstack/react-query";
 import { createGetCurrentUserInformationQuery } from "@/service/(current-user)/get-current-user-information.api";
-import { AuroraText } from "@/components/text/AuroraText";
+import { AuroraText } from "@/components/aurora/AuroraText";
 import AvatarCustom from "@/components/avatar/AvatarCustom";
 import { useTheme } from "next-themes";
 

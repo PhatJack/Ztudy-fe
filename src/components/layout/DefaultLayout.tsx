@@ -4,11 +4,17 @@ import Sidebar from "../includes/sidebar";
 import Header from "../includes/header";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import PreferencesScreen from "../check-preference/preferences-screen";
 import { useAchievementNotification } from "@/hooks/useAchievementNotification";
 import AchievementPopup from "../popup/AchivementPopup";
 import CookieBanner from "../cookie-banner/CookieBanner";
 import { useWindowSize } from "@/hooks/useWindowSize";
+import dynamic from "next/dynamic";
+
+const PreferencesScreenDynamic = dynamic(
+  () =>
+    import("../check-preference/preferences-screen").then((mod) => mod.default),
+  { ssr: false }
+);
 
 const DefaultLayout = ({
   children,
@@ -36,7 +42,7 @@ const DefaultLayout = ({
           className={cn(
             "h-full flex flex-col relative box-border",
             isShowHeader ? "p-6" : "p-0",
-            !isInRoom ? "md:ml-24" : "",
+            !isInRoom ? "md:ml-24" : ""
           )}
         >
           {!isShowHeader && (
@@ -51,7 +57,7 @@ const DefaultLayout = ({
 					} */}
           {children}
         </main>
-        <PreferencesScreen />
+        <PreferencesScreenDynamic />
       </div>
       <AchievementPopup
         isOpen={showAchievement}
