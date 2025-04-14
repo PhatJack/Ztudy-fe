@@ -24,7 +24,7 @@ const Pomodoro: React.FC = () => {
   const { hours, minutes, seconds } = formatTime(remainingTime);
 
   return (
-    <div className="w-[280px] min-w-[280px] p-5 rounded-md bg-background flex flex-col space-y-2 shadow-lg">
+    <div className="w-[280px] min-w-[280px] p-5 rounded-md bg-background flex flex-col space-y-3 shadow-lg">
       <div className="flex justify-between items-center">
         <span className="text-xs inline-flex items-center gap-1">
           <Clock size={14} />
@@ -130,7 +130,7 @@ const Pomodoro: React.FC = () => {
           <Label htmlFor="loop-mode">Loop automatically</Label>
         </div>
       ) : null}
-      <div className="!mt-2 flex flex-col gap-2">
+      <div className="flex flex-col gap-2">
         {isRunning ? (
           <div className="mt-4">
             <div className="text-center text-sm font-bold">

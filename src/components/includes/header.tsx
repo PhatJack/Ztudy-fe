@@ -63,7 +63,7 @@ const Header = () => {
             <DropdownMenuTrigger>
               <AvatarCustom
                 src={state.user?.avatar}
-                className="w-9 h-9 cursor-pointer"
+                className="w-9 h-9 cursor-pointer border"
               />
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">

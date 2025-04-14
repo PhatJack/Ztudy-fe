@@ -192,9 +192,8 @@ export function LoginForm() {
           Forgot your password?{" "}
           <Link
             href="/forgot-password"
-            className="underline underline-offset-4 text-secondary-foreground"
-          >
-            Click here
+            className="underline underline-offset-4">
+            Reset password
           </Link>
         </div>
       </form>

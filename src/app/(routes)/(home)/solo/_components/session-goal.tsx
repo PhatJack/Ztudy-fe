@@ -5,26 +5,25 @@ import GoalItem from "@/components/goal/goal-item";
 import LoadingSpinner from "@/components/loading/loading-spinner";
 import TooltipTemplate from "@/components/tooltip/TooltipTemplate";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useAuthContext } from "@/hooks/useAuthContext";
 import { useSoloContext } from "@/hooks/useSoloContext";
 import { GoalSchema } from "@/lib/schemas/goal/goal.schema";
-import { createGetCurrentUserInformationQuery } from "@/service/(current-user)/get-current-user-information.api";
 import { useInfiniteListGoals } from "@/service/(goal)/list-goals.api";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { OctagonAlert, Target, X } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 
 const SessionGoal = () => {
   const { ref, inView } = useInView();
-  const currentUserQuery = useQuery(createGetCurrentUserInformationQuery());
-  const userId = currentUserQuery.data?.id;
+  const [stateAuth,] = useAuthContext();
+  const [state, dispatch] = useSoloContext();
+  const userId = stateAuth.user?.id;
 
   const { data, fetchNextPage, isFetchingNextPage } = useInfiniteQuery({
     ...useInfiniteListGoals({ user: userId, status: "OPEN" }),
     placeholderData: (previousData) => previousData,
   });
-
-  const [state, dispatch] = useSoloContext();
 
   useEffect(() => {
     if (inView) {
@@ -71,7 +70,7 @@ const SessionGoal = () => {
       </div>
       <div className="flex flex-col space-y-2">
         <AddTodoForm
-          user={currentUserQuery.data}
+          user={stateAuth.user}
           isDisplayIcon={false}
           className="border p-2"
         />

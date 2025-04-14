@@ -19,7 +19,7 @@ const DashboardPage = () => {
       <div className="flex-1 flex justify-center lg:py-10 lg:px-6 px-4 py-10 w-full xl:pr-[296px]">
         <div className="xl:max-w-[1300px] w-full flex flex-col space-y-6">
           {/* Enhanced Hero Section */}
-          <AuroraBackground className="relative overflow-hidden rounded-2xl h-fit">
+          <AuroraBackground className="relative overflow-hidden rounded-2xl h-fit border">
             {/* Content */}
             <div className="relative z-10 p-8 md:p-12">
               <div className="flex flex-col items-center text-center space-y-6">

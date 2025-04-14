@@ -21,7 +21,7 @@ const CommunityItem = ({ user }: Props) => {
     <HoverCard>
       <HoverCardTrigger asChild>
         <div className="flex space-x-2 items-center pt-2 px-2">
-          <div className="relative border rounded-full overflow-hidden">
+          <div className="relative border rounded-full">
             <AvatarCustom
               className="rounded-full w-9 h-9"
               src={user.avatar || "/default.png"}

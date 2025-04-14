@@ -14,7 +14,7 @@ import { CurrentUserResponseSchema } from "@/service/(current-user)/get-current-
 import { cn } from "@/lib/utils";
 
 interface Props {
-  user?: CurrentUserResponseSchema;
+  user?: CurrentUserResponseSchema | null;
   isDisplayIcon?: boolean;
   className?: string;
 }

@@ -6,7 +6,10 @@ export default function AuthLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <div className="grid min-h-svh">
+    <div className="grid min-h-svh relative">
+      {/* <div className="w-72 h-36 rounded-md border-2 absolute z-50 top-[20%] left-[10%] overflow-hidden animate-[bounce_5s_infinite]">
+        <Image fill src={"/preview-dashboard.png"} alt="Preview Dashboard" />
+      </div> */}
       {/* Form Side */}
       <RetroGrid
         angle={0}
@@ -33,7 +36,7 @@ export default function AuthLayout({
             {children}
           </div>
         </div>
-        <div className="text-center text-muted-foreground text-sm mt-4">
+        <div className="text-center text-foreground relative text-sm mt-4">
           © {new Date().getFullYear()} Ztudy. All rights reserved.
         </div>
       </div>

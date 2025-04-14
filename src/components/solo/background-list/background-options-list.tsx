@@ -20,14 +20,6 @@ const BackgroundOptionsList = ({ activeTab }: Props) => {
 
   const backgroundVideos = backgroundVideosQuery.data?.results;
 
-  useEffect(() => {
-    if (backgroundVideos && backgroundVideos.length > 0) {
-      if (!state.backgroundURL) {
-        dispatch({ type: "SET_BACKGROUND", payload: backgroundVideos[0].youtube_url });
-      }
-    }
-  }, [backgroundVideos, dispatch, state.backgroundURL]);
-
   const handleClick = (youtubeCode: string) => {
     if (youtubeCode === state.backgroundURL) return; // Skip if already selected
     

@@ -4,7 +4,11 @@ import {
   paginationRequestSchema,
 } from "@/lib/schemas/pagination.schema";
 import { userFavoriteVideoSchema } from "@/lib/schemas/user-favorite-video/user-favorite-video.schema";
-import { queryOptions, useMutation } from "@tanstack/react-query";
+import {
+  infiniteQueryOptions,
+  queryOptions,
+  useMutation,
+} from "@tanstack/react-query";
 import { isAxiosError } from "axios";
 import { z } from "zod";
 
@@ -28,8 +32,11 @@ export type ListUserFavoriteVideoQuerySchema = z.infer<
 export const listUserFavoriteVideoApi = async (
   query: ListUserFavoriteVideoQuerySchema
 ) => {
-  const res = await apiClient.get("/user-favorite-videos/", query);
-  return res;
+  const res = await apiClient.get<ListUserFavoriteVideosResponseSchema>(
+    "/user-favorite-videos/",
+    query
+  );
+  return res.data;
 };
 
 export const useListUserFavoriteVideoApi = (
@@ -41,6 +48,40 @@ export const useListUserFavoriteVideoApi = (
     queryKey,
     queryFn: () =>
       listUserFavoriteVideoApi(listUserFavoriteVideosQuerySchema.parse(query)),
+    throwOnError: isAxiosError,
+  });
+};
+
+export const useInfiniteListUserFavoriteVideo = (
+  query: ListUserFavoriteVideoQuerySchema = {}
+) => {
+  const queryKey = ["user-favorite-videos", query];
+
+  return infiniteQueryOptions<
+    ListUserFavoriteVideosResponseSchema, // TQueryFnData: Raw data from the query
+    unknown, // TError: Error type
+    ListUserFavoriteVideosResponseSchema, // TData: Transformed/selected data
+    Array<string | ListUserFavoriteVideoQuerySchema>, // TQueryKey: Query key type
+    number // TPageParam: Page parameter type
+  >({
+    queryKey,
+    queryFn: ({ pageParam = 1 }) =>
+      listUserFavoriteVideoApi({ ...query, page: pageParam }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      const nextPage = lastPage.page + 1;
+      return nextPage > lastPage.totalPages ? undefined : nextPage;
+    },
+    getPreviousPageParam: (firstPage) => {
+      const previousPage = firstPage.page - 1;
+      return previousPage < 1 ? undefined : previousPage;
+    },
+    select: (data) => ({
+      totalItems: data.pages[0]?.totalItems || 0,
+      totalPages: data.pages[0]?.totalPages || 0,
+      page: data.pages[0]?.page || 1,
+      results: data.pages.flatMap((page) => page.results),
+    }),
     throwOnError: isAxiosError,
   });
 };
