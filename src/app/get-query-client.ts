@@ -16,11 +16,11 @@ function makeQueryClient() {
           if (isAxiosError(error)) return true; // Nếu lỗi từ Axios, ném lỗi
           if (error instanceof ZodError) {
             // Nếu lỗi từ Zod, log lỗi rồi trả về false
-            console.error(
-              "ZodError",
-              error.errors.map((e) => e.message),
-              error
-            );
+            // console.error(
+            //   "ZodError",
+            //   error.errors.map((e) => e.message),
+            //   error
+            // );
           }
           return false;
         },
@@ -30,11 +30,11 @@ function makeQueryClient() {
           if (isAxiosError(error)) return true; // Nếu lỗi từ Axios, ném lỗi
           if (error instanceof ZodError) {
             // Nếu lỗi từ Zod, log lỗi rồi trả về false
-            console.error(
-              "ZodError",
-              error.errors.map((e) => e.message),
-              error
-            );
+            // console.error(
+            //   "ZodError",
+            //   error.errors.map((e) => e.message),
+            //   error
+            // );
           }
           return false;
         },

@@ -37,6 +37,7 @@ const PaginationCustom = ({
         {totalPages > 0 && (
           <PaginationItem>
             <PaginationPrevious
+              rel="nofollow"
               aria-disabled={currentPage === 1}
               className={`cursor-pointer ${
                 currentPage === 1 ? "opacity-50 pointer-events-none" : ""
@@ -68,6 +69,7 @@ const PaginationCustom = ({
         {totalPages > 0 && (
           <PaginationItem>
             <PaginationNext
+              rel="nofollow"
               aria-disabled={currentPage === totalPages}
               className={`cursor-pointer ${
                 currentPage === totalPages

@@ -34,6 +34,7 @@ const ProfileBlock = () => {
         <AvatarCustom
           src={state.user?.avatar}
           className="w-[100px] h-[100px] border"
+					alt={state.user?.username}
         />
         <Image
           fill

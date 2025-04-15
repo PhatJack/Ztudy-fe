@@ -17,6 +17,7 @@ const SpotifyEmbed: React.FC<SpotifyEmbedProps> = ({ url, height = 352 }) => {
         frameBorder="0"
         allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
         loading="lazy"
+				title="Spotify Embed"
       />
     </div>
   );

@@ -20,6 +20,7 @@ const StudyGoalPage = () => {
               <AvatarCustom
                 src={userQuery.data?.avatar}
                 className="w-12 h-12"
+								alt={userQuery.data?.username}
               />
               <div className="xl:text-left text-center">
                 <h1 className="font-medium text-muted-foreground">

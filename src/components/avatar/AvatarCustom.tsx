@@ -6,12 +6,24 @@ interface Props {
   src?: string | null;
   fallback?: string;
   className?: string;
+  alt?: string;
 }
 
-const AvatarCustom = ({ src, fallback = "ZT", className }: Props) => {
+const AvatarCustom = ({
+  src,
+  fallback = "ZT",
+  className,
+  alt = "ztudy",
+}: Props) => {
   return (
     <Avatar className={className}>
-      <AvatarImage src={src || "/default.png"} className="object-cover" />
+      <AvatarImage
+        src={src || "/default.png"}
+        alt={alt}
+        className="object-cover"
+        width={100}
+        height={100}
+      />
       <AvatarFallback>{fallback}</AvatarFallback>
     </Avatar>
   );

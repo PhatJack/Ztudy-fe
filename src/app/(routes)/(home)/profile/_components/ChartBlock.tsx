@@ -95,7 +95,10 @@ function ChartBlock() {
             setSelectedOption(value as StudyTimeChartFilter);
           }}
         >
-          <SelectTrigger className="w-[120px] bg-background border-gray-400">
+          <SelectTrigger
+            aria-label="Filter Period"
+            className="w-[120px] bg-background border-gray-400"
+          >
             <SelectValue placeholder="Period" />
           </SelectTrigger>
           <SelectContent>

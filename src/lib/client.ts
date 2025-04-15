@@ -86,7 +86,7 @@ client.interceptors.response.use(
       }
     }
     if (isAxiosError(error)) {
-			console.log(error)
+			// console.log(error)
       if (error.code === "ERR_NETWORK") {
         throw {
           type: "NetworkError",

@@ -64,6 +64,7 @@ const Header = () => {
               <AvatarCustom
                 src={state.user?.avatar}
                 className="w-9 h-9 cursor-pointer border"
+                alt={state.user?.avatar || "me"}
               />
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
@@ -72,6 +73,7 @@ const Header = () => {
                   <AvatarCustom
                     src={state.user?.avatar}
                     className="cursor-pointer"
+                    alt={state.user?.avatar || "me"}
                   />
                   <span className="text-lg">{state.user?.username}</span>
                 </div>

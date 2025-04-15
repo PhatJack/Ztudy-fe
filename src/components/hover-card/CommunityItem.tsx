@@ -25,6 +25,7 @@ const CommunityItem = ({ user }: Props) => {
             <AvatarCustom
               className="rounded-full w-9 h-9"
               src={user.avatar || "/default.png"}
+              alt={user.username}
             />
             {user.is_online && (
               <span className="size-3 rounded-full bg-emerald-400 absolute right-0 bottom-0 border-2 border-white"></span>
@@ -42,6 +43,7 @@ const CommunityItem = ({ user }: Props) => {
               <AvatarCustom
                 className="w-12 h-12 rounded-full border-4 border-white shadow-lg transition-transform duration-300"
                 src={user.avatar || "/default.png"}
+                alt={user.username}
               />
               {user.is_online && (
                 <span className="absolute bottom-0 right-0 size-3 bg-emerald-400 border-3 border-white rounded-full animate-pulse" />
