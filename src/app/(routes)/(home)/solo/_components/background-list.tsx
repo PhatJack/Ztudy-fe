@@ -11,7 +11,7 @@ const BackgroundList = () => {
     setActiveTab(value as "default" | "favorite");
   };
   return (
-    <div className="w-[280px] min-w-[280px] bg-background rounded-md p-5 shadow-lg flex flex-col space-y-4">
+    <div className="w-full bg-background rounded-md p-5 shadow-lg flex flex-col space-y-4">
       <Tabs
         value={activeTab}
         onValueChange={onTabChange}

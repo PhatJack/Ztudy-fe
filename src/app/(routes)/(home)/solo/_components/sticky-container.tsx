@@ -7,27 +7,27 @@ import { useOnlineWebSocket } from "@/contexts/OnlineWebSocketContext";
 
 const QuoteDynamic = dynamic(() => import("./quote"), {
   ssr: false,
-  loading: () => <Skeleton className="h-[500px] w-[280px]" />,
+  loading: () => <Skeleton className="h-[500px] w-72" />,
 });
 const SoundListDynamic = dynamic(() => import("./sound-list"), {
   ssr: false,
-  loading: () => <Skeleton className="h-[500px] w-[280px]" />,
+  loading: () => <Skeleton className="h-[500px] w-72" />,
 });
 const SessionGoalDynamic = dynamic(() => import("./session-goal"), {
   ssr: false,
-  loading: () => <Skeleton className="h-[500px] w-[280px]" />,
+  loading: () => <Skeleton className="h-[500px] w-72" />,
 });
 const StudyStatDynamic = dynamic(() => import("./study-stat"), {
   ssr: false,
-  loading: () => <Skeleton className="h-[500px] w-[280px]" />,
+  loading: () => <Skeleton className="h-[500px] w-72" />,
 });
 const BackgroundListDynamic = dynamic(() => import("./background-list"), {
   ssr: false,
-  loading: () => <Skeleton className="h-[500px] w-[280px]" />,
+  loading: () => <Skeleton className="h-[500px] w-72" />,
 });
 const PomodoroDynamic = dynamic(() => import("./pomodoro"), {
   ssr: false,
-  loading: () => <Skeleton className="h-[500px] w-[280px]" />,
+  loading: () => <Skeleton className="h-[500px] w-72" />,
 });
 
 const StickyContainer = () => {

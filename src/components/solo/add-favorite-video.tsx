@@ -37,9 +37,7 @@ const AddFavoriteVideoModal = ({ children }: { children: React.ReactNode }) => {
   const [state, dispatch] = useAuthContext();
   const [open, setOpen] = useState(false);
   const [playVideoOpen, setPlayVideoOpen] = useState(false);
-  const [videoEmbed, setVideoEmbed] = useState<
-    { videoId: string; embedUrl: string } | undefined
-  >(undefined);
+  const [videoEmbed, setVideoEmbed] = useState<string | undefined>(undefined);
   const createFavoriteMutation = useCreateUserFavoriteVideoApi();
 
   const form = useForm<CreateUserFavoriteVideoSchema>({
@@ -57,7 +55,9 @@ const AddFavoriteVideoModal = ({ children }: { children: React.ReactNode }) => {
       toast.error("Youtube URL is required.");
       return;
     }
-    const video = UrlToEmbeded(data.youtube_url);
+    const url = new URL(data.youtube_url);
+    const youtubeId = url.searchParams.get("v");
+    const video = UrlToEmbeded(`https://www.youtube.com/watch?v=${youtubeId}`);
     if (!video) {
       toast.error("Invalid Youtube URL.");
       return;
@@ -74,23 +74,23 @@ const AddFavoriteVideoModal = ({ children }: { children: React.ReactNode }) => {
         form.reset();
         setOpen(false);
         // Save video embed info and show play confirmation dialog
-        setVideoEmbed(video);
+        setVideoEmbed(data.youtube_url);
         setPlayVideoOpen(true);
       },
-      onError: (error) => {
-        console.error(error);
-        toast.error("Failed to add favorite song. Please try again.");
+      onError: (error: any) => {
+        toast.error(
+          error.youtube_url || "Failed to add favorite song. Please try again."
+        );
       },
     });
   };
 
   const handlePlayVideo = () => {
-    console.log(videoEmbed?.embedUrl);
     // Dispatch action to play the video in the app
     if (videoEmbed && dispatchSolo) {
       dispatchSolo({
         type: "SET_BACKGROUND",
-        payload: videoEmbed.embedUrl,
+        payload: videoEmbed,
       });
       toast.success("Playing your favorite song!");
     }

@@ -14,6 +14,7 @@ import { useInfiniteListUserFavoriteVideo } from "@/service/(user-favorite-video
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Check, Loader2, Plus, Trash2 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useInView } from "react-intersection-observer";
@@ -78,6 +79,7 @@ const UserFavoriteVideos = () => {
                   onClick={() => handleClick(backgroundVideo.youtube_url)}
                   className="w-full aspect-square rounded-md relative overflow-hidden cursor-pointer"
                 >
+                  <span>{backgroundVideo.image}</span>
                   <Image
                     fill
                     src={
@@ -86,7 +88,7 @@ const UserFavoriteVideos = () => {
                         backgroundVideo.youtube_url.split("v=")[1]
                       }/1.jpg`
                     }
-                    alt={"video youtube"}
+                    alt={backgroundVideo.name}
                     sizes="(min-width: 60em) 24vw, (min-width: 28em) 45vw, 100vw"
                   />
                   {state.backgroundURL === backgroundVideo.youtube_url ? (
@@ -105,7 +107,31 @@ const UserFavoriteVideos = () => {
               </HoverCardTrigger>
               <HoverCardContent className="max-w-md bg-background shadow-lg border rounded-xl p-4">
                 <div className="flex flex-col gap-2">
-                  <h3 className="text-base font-semibold text-primary">
+                  <p className="text-sm">
+                    Youtube:{" "}
+                    <Link
+                      href={backgroundVideo.author_url}
+                      target="_blank"
+                      prefetch={false}
+                      className="underline font-bold hover:text-primary transition-all"
+                    >
+                      {backgroundVideo.author_name}
+                    </Link>
+                  </p>
+                  <div className="w-full h-32 max-h-32 relative rounded-lg overflow-hidden">
+                    <Image
+                      src={
+                        backgroundVideo.image ??
+                        `https://img.youtube.com/vi/${
+                          backgroundVideo.youtube_url.split("v=")[1]
+                        }/1.jpg`
+                      }
+                      fill
+                      alt={backgroundVideo.name}
+                      sizes="(min-width: 60em) 24vw, (min-width: 28em) 45vw, 100vw"
+                    />
+                  </div>
+                  <h3 className="text-sm font-semibold">
                     {backgroundVideo.name}
                   </h3>
                   <div className="flex items-center justify-between text-sm text-muted-foreground">

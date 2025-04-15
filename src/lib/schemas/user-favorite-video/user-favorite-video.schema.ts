@@ -7,6 +7,8 @@ export const userFavoriteVideoSchema = z.object({
   user: z.coerce.number(),
   name: z.string(),
   created_at: z.string(),
+  author_name: z.string(),
+  author_url: z.string(),
 });
 
 export type UserFavoriteVideoSchema = z.infer<typeof userFavoriteVideoSchema>;

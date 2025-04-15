@@ -62,7 +62,7 @@ const SoundList = () => {
   );
 
   return (
-    <div className="w-[280px] min-w-[280px] bg-background rounded-md p-5 shadow-lg flex flex-col space-y-2">
+    <div className="w-full bg-background rounded-md p-5 shadow-lg flex flex-col space-y-2">
       <div className="flex flex-col">
         <Label htmlFor="volume" className="flex items-center gap-1 text-xs">
           <span>

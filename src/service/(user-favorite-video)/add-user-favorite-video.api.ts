@@ -8,8 +8,10 @@ export const createUserFavoriteVideoSchema = userFavoriteVideoSchema
   .omit({
     id: true,
     image: true,
-		name: true,
-		created_at: true,
+    name: true,
+    created_at: true,
+    author_name: true,
+    author_url: true,
   })
   .partial({
     user: true,

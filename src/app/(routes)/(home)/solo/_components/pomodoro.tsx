@@ -3,7 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { usePomodoroContext } from "@/contexts/SoloPomodoroContext";
-import { Clock, Minus, OctagonAlert, Plus } from "lucide-react";
+import { useSoloContext } from "@/hooks/useSoloContext";
+import { Clock, Minus, OctagonAlert, Plus, X } from "lucide-react";
 import React from "react";
 
 const Pomodoro: React.FC = () => {
@@ -20,11 +21,11 @@ const Pomodoro: React.FC = () => {
     resetTimer,
     setIsLoopMode,
   } = usePomodoroContext();
-
+  const [state, dispatch] = useSoloContext();
   const { hours, minutes, seconds } = formatTime(remainingTime);
 
   return (
-    <div className="w-[280px] min-w-[280px] p-5 rounded-md bg-background flex flex-col space-y-3 shadow-lg">
+    <div className="w-full p-5 rounded-md bg-background flex flex-col space-y-3 shadow-lg">
       <div className="flex justify-between items-center">
         <span className="text-xs inline-flex items-center gap-1">
           <Clock size={14} />
@@ -45,6 +46,14 @@ const Pomodoro: React.FC = () => {
               <OctagonAlert size={16} />
             </span>
           </TooltipTemplate>
+          <span
+            onClick={() =>
+              dispatch({ type: "TOGGLE_BUTTON", payload: "isOpenPomodoro" })
+            }
+						className="cursor-pointer"
+          >
+            <X size={16} />
+          </span>
         </div>
       </div>
       {!isRunning ? (

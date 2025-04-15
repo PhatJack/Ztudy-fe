@@ -43,7 +43,7 @@ const StudyStat = () => {
   const [, dispatch] = useSoloContext();
 
   return (
-    <div className="shadow-lg p-5 rounded-md bg-background w-[280px] min-w-[280px]">
+    <div className="shadow-lg p-5 rounded-md bg-background w-full">
       <div className="flex justify-between items-center">
         <span className="text-xs inline-flex items-center gap-1">
           <ChartNoAxesColumn size={14} />

@@ -1,5 +1,5 @@
 /** @type {import('next').NextConfig} */
-import bundleAnalyzer  from '@next/bundle-analyzer'
+import bundleAnalyzer from '@next/bundle-analyzer'
 const nextConfig = {
 	images: {
 		remotePatterns: [
@@ -20,6 +20,12 @@ const nextConfig = {
 				port: "",
 				pathname: "/**",
 				hostname: "img.youtube.com",
+			},
+			{
+				protocol: "https",
+				port: "",
+				pathname: "/**",
+				hostname: "i.ytimg.com",
 			},
 		],
 	},

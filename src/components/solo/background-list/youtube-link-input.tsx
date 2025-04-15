@@ -4,12 +4,13 @@ import { useSoloContext } from "@/hooks/useSoloContext";
 import { UrlToEmbeded } from "@/util/urlToEmbed";
 import debounce from "lodash.debounce";
 import { Info } from "lucide-react";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import VolumeChange from "../volume-change";
 
 const YoutubeLinkInput = () => {
   const [errorLink, setErrorLink] = useState<boolean>(false);
   const [state, dispatch] = useSoloContext();
+  const [inputValue, setInputValue] = useState(state.backgroundURL || "");
 
   const debouncedSetVolume = useCallback(
     (val: number[]) => {
@@ -21,22 +22,41 @@ const YoutubeLinkInput = () => {
   const handleMute = useCallback(() => {
     dispatch({ type: "SET_VOLUME", payload: state.volume > 0 ? 0 : 100 });
   }, [state.volume, dispatch]);
-
-  const handleChangeBackground = useCallback(
-    debounce((e: React.ChangeEvent<HTMLInputElement>) => {
-      if (e.target.value === "") {
+  
+  // Create a debounced function to validate and update the background
+  const debouncedUpdateBackground = useCallback(
+    debounce((value: string) => {
+      if (value === "") {
+        setErrorLink(false);
         return;
       }
-      const video = UrlToEmbeded(e.target.value);
+      const video = UrlToEmbeded(value);
       if (video) {
         setErrorLink(false);
-        dispatch({ type: "SET_BACKGROUND", payload: e.target.value });
+        dispatch({ type: "SET_BACKGROUND", payload: value });
       } else {
         setErrorLink(true);
       }
     }, 500),
-    [dispatch, debounce]
+    [dispatch]
   );
+
+  // Handle input change immediately for UI responsiveness
+  const handleChangeBackground = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const newValue = e.target.value;
+      setInputValue(newValue); // Update input value immediately
+      debouncedUpdateBackground(newValue); // Validate and update background after debounce
+    },
+    [debouncedUpdateBackground]
+  );
+
+  // Update inputValue if backgroundURL changes externally
+  useEffect(() => {
+    if (state.backgroundURL !== inputValue) {
+      setInputValue(state.backgroundURL || "");
+    }
+  }, [state.backgroundURL]);
 
   return (
     <>
@@ -60,7 +80,7 @@ const YoutubeLinkInput = () => {
         <Input
           id="youtube-link"
           type="text"
-          value={state.backgroundURL || ""}
+          value={inputValue}
           onChange={handleChangeBackground}
           placeholder="Paste the youtube link here"
           className="border-muted"
