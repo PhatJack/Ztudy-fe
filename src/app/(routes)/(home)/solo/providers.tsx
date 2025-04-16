@@ -1,7 +1,14 @@
 "use client";
-import { SoloProvider } from "@/contexts/SoloContext";
 import { SoloPomodoroProvider } from "@/contexts/SoloPomodoroContext";
 import { SoloSoundProvider } from "@/contexts/SoloSoundContext";
+import dynamic from "next/dynamic";
+
+const SoloProviderDynamic = dynamic(
+  () => import("@/contexts/SoloContext").then((mod) => mod.SoloProvider),
+  {
+    ssr: false,
+  }
+);
 
 export default function SoloProviders({
   children,
@@ -9,10 +16,10 @@ export default function SoloProviders({
   children: React.ReactNode;
 }>) {
   return (
-    <SoloProvider>
+    <SoloProviderDynamic>
       <SoloPomodoroProvider>
         <SoloSoundProvider>{children}</SoloSoundProvider>
       </SoloPomodoroProvider>
-    </SoloProvider>
+    </SoloProviderDynamic>
   );
 }

@@ -20,7 +20,7 @@ const ZtudyCommunity = () => {
   }, [fetchNextPage, inView]);
 
   return (
-    <div className="flex flex-col space-y-2 divide-y divide-background dark:divide-input overflow-y-auto">
+    <div className="flex flex-col space-y-2 divide-y divide-input overflow-y-auto">
       {isLoading ||
         (isFetching && (
           <div className="h-full w-full flex justify-center items-center">
@@ -32,7 +32,7 @@ const ZtudyCommunity = () => {
           <CommunityItem user={user} key={index} />
         ))}
       {
-        <div ref={ref} className="text-center w-full text-sm !mt-3">
+        <div ref={ref} className="text-center w-full text-sm pt-2">
           {isFetchingNextPage ? (
             <LoadingSpinner />
           ) : (

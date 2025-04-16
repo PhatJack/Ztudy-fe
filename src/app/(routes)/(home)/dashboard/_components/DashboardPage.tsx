@@ -128,7 +128,7 @@ const DashboardPage = () => {
           </AuroraBackground>
 
           {/* Main Features Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
             <div className="p-6 rounded-xl bg-background border border-border hover:border-primary/50 transition-all group">
               <div className="flex items-center gap-3">
                 <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
@@ -137,7 +137,7 @@ const DashboardPage = () => {
                 <div>
                   <h3 className="font-semibold">Study Rooms</h3>
                   <p className="text-sm text-muted-foreground">
-                    Join collaborative learning spaces
+                    Join learning spaces
                   </p>
                 </div>
               </div>
