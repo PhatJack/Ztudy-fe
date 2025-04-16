@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -55,7 +56,14 @@ const AddFavoriteVideoModal = ({ children }: { children: React.ReactNode }) => {
       toast.error("Youtube URL is required.");
       return;
     }
-    const url = new URL(data.youtube_url);
+
+    let url: URL;
+    try {
+      url = new URL(data.youtube_url);
+    } catch {
+      toast.error("Invalid Youtube URL.");
+      return;
+    }
     const youtubeId = url.searchParams.get("v");
     const video = UrlToEmbeded(`https://www.youtube.com/watch?v=${youtubeId}`);
     if (!video) {
@@ -74,7 +82,7 @@ const AddFavoriteVideoModal = ({ children }: { children: React.ReactNode }) => {
         form.reset();
         setOpen(false);
         // Save video embed info and show play confirmation dialog
-        setVideoEmbed(data.youtube_url);
+        setVideoEmbed(`https://www.youtube.com/watch?v=${youtubeId}`);
         setPlayVideoOpen(true);
       },
       onError: (error: any) => {
@@ -121,6 +129,12 @@ const AddFavoriteVideoModal = ({ children }: { children: React.ReactNode }) => {
                     <FormControl>
                       <Input placeholder="Enter youtube URL" {...field} />
                     </FormControl>
+                    <FormDescription>
+                      For example:{" "}
+                      <span className="font-bold">
+                        https://www.youtube.com/watch?v=VIDEO_ID
+                      </span>
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}

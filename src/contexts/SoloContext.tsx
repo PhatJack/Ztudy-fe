@@ -80,7 +80,9 @@ const initialState: InitialState = {
     author: "Will Rogers",
   },
   volume: 0,
-  backgroundURL: "https://www.youtube.com/watch?v=5wRWniH7rt8",
+  backgroundURL:
+    localStorage.getItem("last_selected_video") ??
+    "https://www.youtube.com/watch?v=5wRWniH7rt8",
   isAddYtbScript: false,
   activeSounds: [],
   completedGoals: [],
@@ -113,6 +115,7 @@ const reducer = (state: InitialState, action: Action): InitialState => {
     case "SET_VOLUME":
       return { ...state, volume: action.payload };
     case "SET_BACKGROUND":
+      localStorage.setItem("last_selected_video", action.payload);
       return { ...state, backgroundURL: action.payload };
     case "SET_ADD_YTB_SCRIPT":
       return { ...state, isAddYtbScript: action.payload };

@@ -8,7 +8,7 @@ import { setCookie } from "cookies-next";
 import toast from "react-hot-toast";
 import { CheckCircle2, Loader2, XCircle } from "lucide-react";
 import { getCurrentUserInformationApi } from "@/service/(current-user)/get-current-user-information.api";
-import { useRouter } from "next/navigation";
+import { useRouter } from "nextjs-toploader/app";
 
 const GoogleCallbackPage = () => {
   const router = useRouter();
