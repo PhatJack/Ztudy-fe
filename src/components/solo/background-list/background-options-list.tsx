@@ -4,7 +4,7 @@ import { useListBackgroundVideos } from "@/service/(solo)/background/list-backgr
 import { useQuery } from "@tanstack/react-query";
 import { Check, Loader2 } from "lucide-react";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 interface Props {
   activeTab: number;
@@ -22,25 +22,25 @@ const BackgroundOptionsList = ({ activeTab }: Props) => {
 
   const handleClick = (youtubeCode: string) => {
     if (youtubeCode === state.backgroundURL) return; // Skip if already selected
-    
+
     setIsLoading(true);
     dispatch({ type: "SET_BACKGROUND", payload: youtubeCode });
-    
+
     // Reset loading state after a delay to allow video to load
     setTimeout(() => {
       setIsLoading(false);
-    }, 1500);
+    }, 1000);
   };
 
   return (
     <div className="w-full grid grid-cols-4 gap-1 ">
       {backgroundVideosQuery.isLoading
-        ? Array.from({ length: 10 }).map((_, i) => (
+        ? Array.from({ length: 9 }).map((_, i) => (
             <Skeleton className="size-14" key={i} />
           ))
         : null}
       {backgroundVideos?.length === 0 && (
-        <div className="text-xs text-gray-800">
+        <div className="text-xs text-gray-800 col-span-4">
           No background videos found for this category
         </div>
       )}
@@ -55,8 +55,12 @@ const BackgroundOptionsList = ({ activeTab }: Props) => {
               fill
               src={
                 backgroundVideo.image ??
-                `https://img.youtube.com/vi/${backgroundVideo.youtube_url.split("v=")[1]}/1.jpg`
+                `https://img.youtube.com/vi/${
+                  backgroundVideo.youtube_url.split("v=")[1]
+                }/1.jpg`
               }
+              quality={75}
+              className="bg-muted"
               alt={"video youtube"}
               sizes="(min-width: 60em) 24vw, (min-width: 28em) 45vw, 100vw"
             />

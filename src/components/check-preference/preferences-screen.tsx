@@ -131,7 +131,7 @@ const PreferencesScreen = () => {
                     ${
                       isSelected(category.id)
                         ? "bg-primary text-white border-primary"
-                        : "hover:bg-gray-100"
+                        : "hover:bg-gray-100 dark:hover:bg-gray-700"
                     }`}
                 onClick={(e) => {
                   e.stopPropagation();

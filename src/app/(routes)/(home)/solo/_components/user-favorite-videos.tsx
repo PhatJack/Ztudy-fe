@@ -49,7 +49,7 @@ const UserFavoriteVideos = () => {
     // Reset loading state after a delay to allow video to load
     setTimeout(() => {
       setIsLoading(false);
-    }, 1500);
+    }, 1000);
   };
 
   const handleDelete = (videoId: number) => {
@@ -79,7 +79,7 @@ const UserFavoriteVideos = () => {
                   onClick={() => handleClick(backgroundVideo.youtube_url)}
                   className="w-full aspect-square rounded-md relative overflow-hidden cursor-pointer"
                 >
-                  <span>{backgroundVideo.image}</span>
+                  <span>{backgroundVideo.youtube_url}</span>
                   <Image
                     fill
                     src={

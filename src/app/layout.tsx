@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import "./theme-toggle.css";
-import { Nunito, Quicksand } from "next/font/google";
+import { Nunito } from "next/font/google";
 import Providers from "./providers";
 
 const nunito = Nunito({
@@ -10,8 +10,8 @@ const nunito = Nunito({
 });
 export const metadata: Metadata = {
   title: {
-    template: "%s | Ztudy",
-    default: "Home | Ztudy",
+    template: "%s | Ztudy - Stay Focused",
+    default: "Home | Ztudy - Stay Focused",
   },
   authors: [
     { name: "Jack Phat", url: "https://jackphat.vercel.app/" },
@@ -22,23 +22,23 @@ export const metadata: Metadata = {
     { name: "Hoang Gia Bao" },
   ],
   description:
-    "Ztudy is a collaborative learning platform where you can study with friends or solo. Enjoy features like video calls, chat, screen sharing, and distraction-free modes—like muting mics—to stay 100% focused. Boost productivity and learning together!",
+    "Ztudy is a collaborative study platform with video calls, chat, screen sharing, and focus tools like mic muting—perfect for solo or group learning.",
   keywords: [
+    "Ztudy",
+    "study together",
     "study app",
     "collaborative learning",
     "focus tool",
     "video call study",
     "productivity app",
-    "technology study",
     "study with friends",
     "distraction-free study",
     "study platform",
     "online learning",
-    "study tools",
     "study group",
   ],
   openGraph: {
-    title: "Ztudy - Study Together, Stay Focused",
+    title: "Ztudy - Stay Focused",
     description:
       "Ztudy is a collaborative learning platform where you can study with friends or solo. Enjoy features like video calls, chat, screen sharing, and distraction-free modes—like muting mics—to stay 100% focused. Boost productivity and learning together!",
     url: "https://ztudy.io.vn",
@@ -49,13 +49,13 @@ export const metadata: Metadata = {
         url: "https://ztudy.io.vn/og-image.webp",
         width: 1200,
         height: 630,
-        alt: "Ztudy - Study Together, Stay Focused",
+        alt: "Ztudy - Stay Focused",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ztudy - Study Together, Stay Focused",
+    title: "Ztudy - Stay Focused",
     description:
       "Ztudy is a collaborative learning platform where you can study with friends or solo. Enjoy features like video calls, chat, screen sharing, and distraction-free modes—like muting mics—to stay 100% focused. Boost productivity and learning together!",
     creator: "@jackphatdev",
@@ -64,11 +64,15 @@ export const metadata: Metadata = {
         url: "https://ztudy.io.vn/og-image.webp",
         width: 1200,
         height: 630,
-        alt: "Ztudy - Study Together, Stay Focused",
+        alt: "Ztudy - Stay Focused",
       },
     ],
   },
   metadataBase: new URL("https://ztudy.io.vn"),
+  // <meta name="google-site-verification" content="TYbYwRqKc8Fxxmo-tVarr6-MBeL1y1LTKFFJ5WgGqR0" />
+  verification: {
+    google: "TYbYwRqKc8Fxxmo-tVarr6-MBeL1y1LTKFFJ5WgGqR0",
+  },
 };
 
 export default function RootLayout({
