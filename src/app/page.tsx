@@ -49,7 +49,7 @@ const Page = () => {
             </h1>
             <p className="text-lg text-muted-foreground mb-8 max-w-xl">
               Your ultimate platform for efficient learning and study
-              management. Transform the way you learn with Ztudy's powerful
+              management. Transform the way you learn with Ztudy&apos;s powerful
               tools and features.
             </p>
             <div className="flex space-x-4">
@@ -145,7 +145,7 @@ const Page = () => {
             </h2>
             <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
               Join thousands of students who have improved their learning
-              outcomes with Ztudy's powerful platform.
+              outcomes with Ztudy&apos;s powerful platform.
             </p>
             <Button
               size={"lg"}

@@ -29,7 +29,7 @@ const CommunityItem = ({ user }: Props) => {
               alt={user.username}
             />
             {user.is_online && (
-              <span className="size-3 rounded-full bg-emerald-400 absolute right-1 bottom-1 border-2 border-white"></span>
+              <span className="size-3 rounded-full bg-emerald-400 absolute right-0 bottom-0 border-2 border-white"></span>
             )}
           </div>
           <span className="text-sm">{user.username}</span>
@@ -114,7 +114,12 @@ const CommunityItem = ({ user }: Props) => {
               <span className="text-yellow-500 text-lg">🎉</span>
               Joined: {new Date(user.date_joined).toLocaleDateString()}
             </p>
-            <Link href={`/users/${user.id}`} className="underline underline-offset-2 text-sm text-primary">View Profile</Link>
+            <Link
+              href={`/users/${user.id}`}
+              className="underline underline-offset-2 text-sm text-primary"
+            >
+              View Profile
+            </Link>
           </div>
         </div>
       </HoverCardContent>

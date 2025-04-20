@@ -74,6 +74,7 @@ const AddFavoriteVideoModal = ({ children }: { children: React.ReactNode }) => {
     const newData = {
       ...data,
       user: state.user?.id,
+      youtube_url: `https://www.youtube.com/watch?v=${youtubeId}`,
     };
 
     createFavoriteMutation.mutate(newData, {
@@ -96,6 +97,7 @@ const AddFavoriteVideoModal = ({ children }: { children: React.ReactNode }) => {
   const handlePlayVideo = () => {
     // Dispatch action to play the video in the app
     if (videoEmbed && dispatchSolo) {
+      console.log(videoEmbed);
       dispatchSolo({
         type: "SET_BACKGROUND",
         payload: videoEmbed,
