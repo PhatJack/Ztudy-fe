@@ -74,6 +74,7 @@ const AddFavoriteVideoModal = ({ children }: { children: React.ReactNode }) => {
     const newData = {
       ...data,
       user: state.user?.id,
+      youtube_url: `https://www.youtube.com/watch?v=${youtubeId}`,
     };
 
     createFavoriteMutation.mutate(newData, {

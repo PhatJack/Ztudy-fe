@@ -73,6 +73,7 @@ export const metadata: Metadata = {
   verification: {
     google: "TYbYwRqKc8Fxxmo-tVarr6-MBeL1y1LTKFFJ5WgGqR0",
   },
+	creator: "Ztudy Team",
 };
 
 export default function RootLayout({
