@@ -6,7 +6,6 @@ import type { NextRequest } from "next/server";
 // This function can be marked `async` if using `await` inside
 export function middleware(request: NextRequest) {
   const protectedRoutes = [
-    "/",
     "/dashboard",
     "/profile",
     "/solo",
@@ -15,10 +14,6 @@ export function middleware(request: NextRequest) {
     "/room",
     "/room/:roomCode",
   ];
-
-  if (request.nextUrl.pathname === "/") {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
-  }
 
   const currentPath = request.nextUrl.pathname;
   const isProtected = protectedRoutes.some(
@@ -51,6 +46,6 @@ export const config = {
     "/reset-password",
     "/privacy-policy",
     "/terms-and-conditions",
-		"/google-callback",
+    "/google-callback",
   ],
 };

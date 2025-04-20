@@ -27,6 +27,7 @@ const UserFavoriteVideos = () => {
   const { data, fetchNextPage, isFetchingNextPage } = useInfiniteQuery({
     ...useInfiniteListUserFavoriteVideo({
       user: stateAuth.user?.id,
+			ordering: "created_at",
       page_size: 12,
     }),
     placeholderData: (previousData) => previousData,
