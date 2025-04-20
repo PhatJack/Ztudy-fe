@@ -97,7 +97,6 @@ const AddFavoriteVideoModal = ({ children }: { children: React.ReactNode }) => {
   const handlePlayVideo = () => {
     // Dispatch action to play the video in the app
     if (videoEmbed && dispatchSolo) {
-      console.log(videoEmbed);
       dispatchSolo({
         type: "SET_BACKGROUND",
         payload: videoEmbed,
