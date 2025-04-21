@@ -4,8 +4,19 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Timer } from "lucide-react";
+import { useRouter } from "nextjs-toploader/app";
+import { getCookie } from "cookies-next";
 
 const Page = () => {
+  const router = useRouter();
+  const handleClick = () => {
+    if (getCookie("isLoggedIn") === "1") {
+      router.push("/dashboard");
+    } else {
+      router.push("/login");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Navigation Bar */}
@@ -25,8 +36,13 @@ const Page = () => {
             </Link>
           </div>
           <div className="flex space-x-4">
-            <Button asChild size={"lg"}>
-              <Link href={"/login"}>Login</Link>
+            <Button
+              asChild
+              size={"lg"}
+              onClick={handleClick}
+              className="cursor-pointer"
+            >
+              <span>Login</span>
             </Button>
             <Button
               asChild
@@ -43,7 +59,7 @@ const Page = () => {
       {/* Hero Section */}
       <section className="container mx-auto px-6 py-16">
         <div className="flex flex-col md:flex-row items-center">
-          <div className="md:w-1/2 mb-8 md:mb-0">
+          <div className="md:w-1/2 w-full mb-8 md:mb-0">
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
               Learn Better. <span className="text-primary">Study Smarter.</span>
             </h1>
@@ -62,13 +78,13 @@ const Page = () => {
               </Button>
             </div>
           </div>
-          <div className="md:w-1/2 relative">
-            <div className="w-full h-64 md:h-[360px] bg-gradient-to-r from-primary/20 to-accent/20 rounded-lg overflow-hidden relative shadow-lg">
+          <div className="md:w-1/2 w-full relative">
+            <div className="w-full h-64 md:h-96 bg-gradient-to-r from-primary/20 to-accent/20 rounded-lg overflow-hidden relative shadow-lg">
               <Image
                 src={"/preview-dashboard.png"}
                 alt="Hero Image"
                 fill
-                className="object-contain"
+                className="object-fill"
               />
             </div>
           </div>
@@ -150,9 +166,10 @@ const Page = () => {
             <Button
               size={"lg"}
               asChild
-              className="px-8 py-3 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+              onClick={handleClick}
+              className="px-8 py-3 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors cursor-pointer"
             >
-              <Link href={"/login"}>Get Started for Free</Link>
+              <span>Get Started for Free</span>
             </Button>
           </div>
         </div>
