@@ -10,7 +10,7 @@ import { getCookie } from "cookies-next";
 const Page = () => {
   const router = useRouter();
   const handleClick = () => {
-    if (getCookie("isLoggedIn") == "1") {
+    if (getCookie("isLoggedIn") === "1") {
       router.push("/dashboard");
     } else {
       router.push("/login");
