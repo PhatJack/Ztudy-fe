@@ -6,6 +6,7 @@ import { usePomodoroContext } from "@/contexts/SoloPomodoroContext";
 import { useSoloContext } from "@/hooks/useSoloContext";
 import { Clock, Minus, OctagonAlert, Plus, X } from "lucide-react";
 import React from "react";
+import PomodoroTimer from "./PomodoroTimer";
 
 const Pomodoro: React.FC = () => {
   const {
@@ -15,11 +16,13 @@ const Pomodoro: React.FC = () => {
     isFocusMode,
     remainingTime,
     isLoopMode,
+    isPaused,
     formatTime,
     handleTimeChange,
     toggleTimer,
     resetTimer,
     setIsLoopMode,
+    togglePause,
   } = usePomodoroContext();
   const [state, dispatch] = useSoloContext();
   const { hours, minutes, seconds } = formatTime(remainingTime);
@@ -50,7 +53,7 @@ const Pomodoro: React.FC = () => {
             onClick={() =>
               dispatch({ type: "TOGGLE_BUTTON", payload: "isOpenPomodoro" })
             }
-						className="cursor-pointer"
+            className="cursor-pointer"
           >
             <X size={16} />
           </span>
@@ -150,9 +153,19 @@ const Pomodoro: React.FC = () => {
             </div>
           </div>
         ) : null}
-        <Button className="font-semibold" onClick={toggleTimer}>
-          {isRunning ? "Pause" : "Start"} timer
-        </Button>
+        {!isRunning ? (
+          <Button className="font-semibold" onClick={toggleTimer}>
+            Start timer
+          </Button>
+        ) : (
+          <Button
+            className="font-semibold"
+            variant={isPaused ? "default" : "black"}
+            onClick={togglePause}
+          >
+            {isPaused ? "Continue timer" : "Pause timer"}
+          </Button>
+        )}
         {isRunning && (
           <Button
             variant="outline"
@@ -162,6 +175,7 @@ const Pomodoro: React.FC = () => {
             Reset timer
           </Button>
         )}
+        <PomodoroTimer />
       </div>
     </div>
   );

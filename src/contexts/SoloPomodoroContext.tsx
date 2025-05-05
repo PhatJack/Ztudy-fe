@@ -28,6 +28,7 @@ interface PomodoroState {
   isFocusMode: boolean;
   remainingTime: number;
   isLoopMode: boolean;
+  isPaused: boolean;
 }
 
 interface PomodoroContextType extends PomodoroState {
@@ -37,6 +38,7 @@ interface PomodoroContextType extends PomodoroState {
   resetTimer: () => void;
   switchMode: () => void;
   setIsLoopMode: (value: boolean) => void;
+  togglePause: () => void;
 }
 
 // Constants
@@ -58,7 +60,8 @@ type PomodoroAction =
   | { type: "SET_IS_FOCUS_MODE"; payload: boolean }
   | { type: "SET_REMAINING_TIME"; payload: number }
   | { type: "SET_IS_LOOP_MODE"; payload: boolean }
-  | { type: "RESET_TIMER" };
+  | { type: "RESET_TIMER" }
+  | { type: "TOGGLE_PAUSE" };
 
 const pomodoroReducer = (
   state: PomodoroState,
@@ -84,6 +87,8 @@ const pomodoroReducer = (
         isFocusMode: true,
         remainingTime: state.focusTime,
       };
+    case "TOGGLE_PAUSE":
+      return { ...state, isPaused: !state.isPaused };
     default:
       return state;
   }
@@ -100,6 +105,7 @@ export const SoloPomodoroProvider: React.FC<{ children: React.ReactNode }> = ({
     isFocusMode: true,
     remainingTime: DEFAULT_FOCUS_TIME,
     isLoopMode: false,
+    isPaused: false,
   };
 
   const [state, dispatch] = useReducer(pomodoroReducer, initialState);
@@ -158,10 +164,14 @@ export const SoloPomodoroProvider: React.FC<{ children: React.ReactNode }> = ({
     dispatch({ type: "SET_IS_LOOP_MODE", payload: value });
   }, []);
 
+  const togglePause = useCallback(() => {
+    dispatch({ type: "TOGGLE_PAUSE" });
+  }, []);
+
   useEffect(() => {
     let interval: NodeJS.Timeout | undefined;
 
-    if (state.isRunning && state.remainingTime > 0) {
+    if (state.isRunning && !state.isPaused && state.remainingTime > 0) {
       interval = setInterval(() => {
         dispatch({
           type: "SET_REMAINING_TIME",
@@ -203,6 +213,7 @@ export const SoloPomodoroProvider: React.FC<{ children: React.ReactNode }> = ({
     state.isRunning,
     state.remainingTime,
     state.isFocusMode,
+		state.isPaused,
   ]);
 
   // Display timer in title
@@ -226,6 +237,7 @@ export const SoloPomodoroProvider: React.FC<{ children: React.ReactNode }> = ({
     resetTimer,
     switchMode,
     setIsLoopMode,
+    togglePause,
   };
 
   return (
