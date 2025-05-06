@@ -15,8 +15,9 @@ const PendingScreen = ({
   handleCancelRequest,
   roomCode,
 }: PendingScreenProps) => {
-  // const { isAudioEnabled, isVideoEnabled, toggleAudio, toggleVideo } =
-  //   useRoomDetailContext();
+  const { isAudioEnabled, isVideoEnabled, toggleAudio, toggleVideo } =
+    useRoomDetailContext();
+  console.log(isAudioEnabled, isVideoEnabled);
   const leaveRoomMutation = useCancelRequestMutation();
 
   const onClick = () => {
@@ -31,12 +32,12 @@ const PendingScreen = ({
     <div className="size-full flex xl:flex-row flex-col gap-4 xl:h-[calc(100vh-3rem)] overflow-hidden ">
       <div className="p-6 w-full bg-white rounded-lg flex justify-center items-center space-x-6">
         <div className="w-full flex flex-col space-y-6 justify-center items-center">
-          {/* <CameraDisplay
+          <CameraDisplay
             cameraEnabled={isVideoEnabled}
             micEnabled={isAudioEnabled}
-          /> */}
+          />
           <div className="flex space-x-6 flex-wrap">
-            {/* <TooltipTemplate content="Camera">
+            <TooltipTemplate content="Camera">
               <Button
                 type="button"
                 size={"icon"}
@@ -46,8 +47,8 @@ const PendingScreen = ({
               >
                 {isVideoEnabled ? <Camera /> : <CameraOff />}
               </Button>
-            </TooltipTemplate> */}
-            {/* <TooltipTemplate content="Mutes">
+            </TooltipTemplate>
+            <TooltipTemplate content="Mutes">
               <Button
                 type="button"
                 size={"icon"}
@@ -57,12 +58,12 @@ const PendingScreen = ({
               >
                 {isAudioEnabled ? <Mic /> : <MicOff />}
               </Button>
-            </TooltipTemplate> */}
+            </TooltipTemplate>
           </div>
         </div>
         <div className="w-full flex flex-col space-y-6 justify-center items-center">
           <LoadingSpinner size={50} className="text-primary" />
-          <h2 className="text-2xl font-bold"> for Approval</h2>
+          <h2 className="text-2xl font-bold">waiting for approval</h2>
           <p>
             Your request to join this room is pending approval from an admin.
           </p>

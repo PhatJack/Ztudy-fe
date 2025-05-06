@@ -41,8 +41,7 @@ const RoomDetail = ({ roomCode }: Props) => {
     setCurrentRoom,
     isModerator,
   } = useChatContext();
-  const { connectChatSocket, disconnectChatSocket, chatSocketRef } =
-    useRoomWebSocket();
+  const { connectChatSocket, disconnectChatSocket } = useRoomWebSocket();
 
   const handleCancelRequest = () => {
     disconnectChatSocket();
@@ -52,7 +51,6 @@ const RoomDetail = ({ roomCode }: Props) => {
 
   useEffect(() => {
     connectChatSocket(roomCode);
-    console.log("Connecting to chat socket with room code:", roomCode);
     return () => {
       setMessages([]);
       disconnectChatSocket();
@@ -69,7 +67,6 @@ const RoomDetail = ({ roomCode }: Props) => {
         setLoading(false);
         setCurrentRoom(res.data.room);
         setIsAdmin(res.data.participant.role === "ADMIN");
-        // connectChatSocket(roomCode);
       } catch (error) {
         toast.error("Failed to join room.");
         router.push("/room");
