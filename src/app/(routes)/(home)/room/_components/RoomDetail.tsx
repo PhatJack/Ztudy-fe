@@ -13,7 +13,6 @@ import { joinRoomApi } from "@/service/(rooms)/room/join-room.api";
 import LoadingSpinner from "@/components/loading/loading-spinner";
 import MainScreen from "./MainScreen";
 import dynamic from "next/dynamic";
-import { useRoomDetailContext } from "@/contexts/RoomDetailContext";
 
 interface Props {
   roomCode: string;

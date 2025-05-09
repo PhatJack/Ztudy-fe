@@ -21,8 +21,8 @@ import toast from "react-hot-toast";
 
 const RoomsContainer = () => {
   const { connectChatSocket } = useRoomWebSocket();
-  const { joinChannel, isAudioEnabled, isVideoEnabled } =
-    useRoomDetailContext();
+  // const { joinChannel, isAudioEnabled, isVideoEnabled } =
+  //   useRoomDetailContext();
   const { setIsPending, setCurrentRoom, setIsAdmin } = useChatContext();
   const router = useRouter();
   const [state] = useAuthContext();
