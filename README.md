@@ -45,6 +45,23 @@ This web application was built for study around the world can study online toget
     * Python
     * Django
 ```
+## Some pages of the site:
+Home Page                   |                   Dashboard Page
+:---------------------------------:        |      :------------------------------:
+<img src="./public/screen/1_man_hinh_gioi_thieu_web.jpg" height="200"> | <img src="./public/screen/5_man_hinh_dashboard_1.jpg" height="200">
+
+Login Page                   |                   Register Page
+:---------------------------------:        |      :------------------------------:
+<img src="./public/screen/2_man_hinh_login.jpg" height="200">  | <img src="./public/screen/3_man_hinh_register.jpg" height="200">
+
+Solo Page                   |                   Study Goal Page
+:---------------------------------:        |      :------------------------------:
+<img src="./public/screen/10_man_hinh_solo_study (study stats)_1.jpg" height="200">  | <img src="./public/screen/16_man_hinh_study_goal_1.jpg" height="200">
+
+Leaderboard Page                   |                   Profile Page
+:---------------------------------:        |      :------------------------------:
+<img src="./public/screen/7_man_hinh_leaderboard.jpg" height="200">  | <img src="./public/screen/9_man_hinh_profile_chon_bo_loc.jpg" height="200">
+
 
 ## How to run
 

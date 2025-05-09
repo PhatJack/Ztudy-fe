@@ -13,7 +13,6 @@ import { joinRoomApi } from "@/service/(rooms)/room/join-room.api";
 import LoadingSpinner from "@/components/loading/loading-spinner";
 import MainScreen from "./MainScreen";
 import dynamic from "next/dynamic";
-import { useRoomDetailContext } from "@/contexts/RoomDetailContext";
 
 interface Props {
   roomCode: string;
@@ -41,8 +40,7 @@ const RoomDetail = ({ roomCode }: Props) => {
     setCurrentRoom,
     isModerator,
   } = useChatContext();
-  const { connectChatSocket, disconnectChatSocket, chatSocketRef } =
-    useRoomWebSocket();
+  const { connectChatSocket, disconnectChatSocket } = useRoomWebSocket();
 
   const handleCancelRequest = () => {
     disconnectChatSocket();
@@ -52,7 +50,6 @@ const RoomDetail = ({ roomCode }: Props) => {
 
   useEffect(() => {
     connectChatSocket(roomCode);
-    console.log("Connecting to chat socket with room code:", roomCode);
     return () => {
       setMessages([]);
       disconnectChatSocket();
@@ -69,7 +66,6 @@ const RoomDetail = ({ roomCode }: Props) => {
         setLoading(false);
         setCurrentRoom(res.data.room);
         setIsAdmin(res.data.participant.role === "ADMIN");
-        // connectChatSocket(roomCode);
       } catch (error) {
         toast.error("Failed to join room.");
         router.push("/room");

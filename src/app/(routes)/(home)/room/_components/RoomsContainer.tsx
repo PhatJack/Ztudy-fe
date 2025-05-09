@@ -21,6 +21,7 @@ import toast from "react-hot-toast";
 
 const RoomsContainer = () => {
   const { connectChatSocket } = useRoomWebSocket();
+// Removed commented-out code related to joinChannel.
   const { setIsPending, setCurrentRoom, setIsAdmin } = useChatContext();
   const router = useRouter();
   const [state] = useAuthContext();
@@ -70,6 +71,11 @@ const RoomsContainer = () => {
         setCurrentRoom(data.data.room);
         setIsAdmin(data.data.participant.role == "ADMIN");
         connectChatSocket(roomCode.trim());
+        // joinChannel({
+        //   code_invitation: roomCode.trim(),
+        //   initialAudioEnabled: isAudioEnabled,
+        //   initialVideoEnabled: isVideoEnabled,
+        // });
         router.push(`/room/${roomCode}`);
       },
       onError: (error: any) => {
@@ -89,6 +95,11 @@ const RoomsContainer = () => {
         setCurrentRoom(data.data.room);
         setIsAdmin(data.data.participant.is_admin);
         connectChatSocket(data.data.room.code_invite);
+        // joinChannel({
+        //   code_invitation: data.data.room.code_invite.trim(),
+        //   initialAudioEnabled: isAudioEnabled,
+        //   initialVideoEnabled: isVideoEnabled,
+        // });
         router.push(`/room/${data.data.room.code_invite}`);
       },
     });

@@ -16,13 +16,6 @@ import AgoraRTC, {
   IAgoraRTCRemoteUser,
   ILocalAudioTrack,
 } from "agora-rtc-react";
-import {
-  createChannel,
-  createClient,
-  RtmChannel,
-  RtmClient,
-  RtmMessage,
-} from "agora-rtm-react";
 import { getAgoraTokenApi } from "@/service/(rooms)/agora/get-token-agora.api";
 
 interface ExtendedRemoteUser extends IAgoraRTCRemoteUser {
@@ -65,8 +58,6 @@ const rtcClient: IAgoraRTCClient = AgoraRTC.createClient({
   codec: "vp8",
 });
 
-const useRtmClient = createClient(process.env.NEXT_PUBLIC_AGORA_APP_ID || "");
-
 interface RoomDetailProviderProps {
   children: ReactNode;
 }
@@ -83,23 +74,6 @@ export const RoomDetailProvider = ({ children }: RoomDetailProviderProps) => {
     ILocalVideoTrack | [ILocalVideoTrack, ILocalAudioTrack] | null
   >(null);
   const [isLoading, setIsLoading] = useState(false);
-  const rtmClient = useRtmClient();
-  const rtmChannelRef = useRef<RtmChannel | null>(null);
-
-  // const loginRTM = async (uid: string, token: string) => {
-  //   await rtmClient.login({ uid, token });
-  //   rtmClient.on("ConnectionStateChanged", async (state: any, reason: any) => {
-  //     console.log("ConnectionStateChanged", state, reason);
-  //   });
-  // };
-
-  // const logoutRTM = async () => {
-  //   await rtmClient.logout();
-  //   rtmClient?.removeAllListeners();
-  //   rtmChannelRef.current?.leave();
-  //   rtmChannelRef.current?.removeAllListeners();
-  //   rtmChannelRef.current = null;
-  // };
 
   const cleanup = async () => {
     try {
@@ -321,7 +295,10 @@ export const RoomDetailProvider = ({ children }: RoomDetailProviderProps) => {
       isAudioEnabled,
       isScreenSharing,
       screenTrack,
-      isLoading,
+      toggleAudio,
+      toggleScreenShare,
+      leaveChannel,
+      joinChannel,
     ]
   );
 
