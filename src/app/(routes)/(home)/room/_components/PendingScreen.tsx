@@ -17,7 +17,7 @@ const PendingScreen = ({
 }: PendingScreenProps) => {
   const { isAudioEnabled, isVideoEnabled, toggleAudio, toggleVideo } =
     useRoomDetailContext();
-  console.log(isAudioEnabled, isVideoEnabled);
+  // console.log(isAudioEnabled, isVideoEnabled);
   const leaveRoomMutation = useCancelRequestMutation();
 
   const onClick = () => {
