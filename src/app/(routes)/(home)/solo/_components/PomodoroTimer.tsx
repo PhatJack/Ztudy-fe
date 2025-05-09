@@ -148,7 +148,7 @@ const PomodoroTimer: React.FC = () => {
       }, 5000); // Try to refocus every 5 seconds
       
       // Clean up the interval when the PIP is closed
-      const originalSetInterval = checkPipClosedRef.current;
+// Line removed as it is unused.
       checkPipClosedRef.current = setInterval(() => {
         if (pipWindowRef.current?.closed) {
           setIsPip(false);
